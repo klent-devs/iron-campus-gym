@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · QR attendance scanner</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:38px;padding:0 14px;font-size:13px}
+.in{width:100%;height:50px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:16px Inter,sans-serif}
+.st{background:#151619;border:1px solid #292B30;border-radius:16px;padding:18px 20px}
+.st span{font-size:14px;color:#A1A1AA}.st b{display:block;font:700 32px Poppins,sans-serif;margin-top:4px}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="attendance" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Attendance</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Scan once to check in. Scan again to check out.</p></div>
+<a class="btn" href="AttendanceRecords.dc.html" style="color: #FFFFFF">Attendance Records</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div class="st"><span>Today’s Attendance</span><b>124</b></div>
+<div class="st"><span>Currently Inside</span><b style="color: #FF6A3D">34 <span style="font: 500 16px Inter, sans-serif; color: #A1A1AA">/ 60</span></b></div>
+<div class="st"><span>Checked Out</span><b>90</b></div>
+<div class="st"><span>Rejected Today</span><b style="color: #F07070">3</b></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+<section class="card" style="flex: 1.2 1 440px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">QR Code Scanner</h2><span style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #3DD598"><i style="width: 8px; height: 8px; border-radius: 50%; background: #24B47E"></i>Camera on</span></div>
+<div style="position: relative; height: 340px; border-radius: 16px; background: #050506; border: 1px solid #292B30; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<div style="position: relative; width: 230px; height: 230px">
+<svg width="230" height="230" viewBox="0 0 230 230" fill="none" stroke="#FF3D0A" stroke-width="6" stroke-linecap="round" aria-hidden="true"><path d="M4 54V16A12 12 0 0 1 16 4h38M176 4h38a12 12 0 0 1 12 12v38M226 176v38a12 12 0 0 1-12 12h-38M54 226H16A12 12 0 0 1 4 214v-38"/></svg>
+<div style="position: absolute; left: 16px; right: 16px; top: 112px; height: 3px; border-radius: 2px; background: #FF3D0A; box-shadow: 0 0 18px 3px rgba(255,61,10,.55)"></div>
+</div>
+<p style="position: absolute; bottom: 14px; left: 0; right: 0; margin: 0; text-align: center; font-size: 14px; color: #D4D4D8">Hold the member’s QR code inside the frame</p>
+</div>
+<button class="btn" style="width: 100%">Open Camera</button>
+<div style="border-top: 1px solid #292B30; padding-top: 16px">
+<label for="mid" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px">No QR? Type the Member ID or name</label>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><input class="in" id="mid" placeholder="e.g. ICG-2025-0291" style="flex: 1 1 200px"><button class="btn pri">Check In</button><button class="btn">Check Out</button></div>
+</div>
+</section>
+
+<section style="{{box}}" aria-live="polite">
+<div style="{{head}}">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; flex: none"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="{{iconColor}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{icon}}"/></svg></span>
+<div><div style="font: 800 28px Poppins, sans-serif; letter-spacing: 0.03em">{{title}}</div><div style="font-size: 15px; opacity: .92">{{sub}}</div></div>
+</div>
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 18px; flex: 1">
+<sc-if value="{{hasMember}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 16px; align-items: center">
+<div style="width: 88px; height: 88px; border-radius: 50%; background: #2A2C31; display: flex; align-items: center; justify-content: center; font: 700 30px Poppins, sans-serif">{{ini}}</div>
+<div><h3 style="font-size: 24px">{{name}}</h3><div style="font: 15px ui-monospace, Menlo, monospace; color: #D4D4D8; margin-top: 4px">{{id}}</div></div>
+</div>
+<dl style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0">
+<sc-for list="{{facts}}" as="f" hint-placeholder-count="4"><div style="background: #1D1F23; border-radius: 12px; padding: 14px"><dt style="font-size: 13px; color: #A1A1AA">{{f.k}}</dt><dd style="{{f.vs}}">{{f.v}}</dd></div></sc-for>
+</dl>
+</sc-if>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #D4D4D8">{{note}}</p>
+<div style="display: flex; gap: 10px; margin-top: auto; flex-wrap: wrap"><sc-for list="{{actions}}" as="a" hint-placeholder-count="2"><a href="{{a.href}}" class="{{a.cls}}" style="flex: 1; color: #FFFFFF">{{a.label}}</a></sc-for></div>
+</div>
+</section>
+</div>
+
+<section class="card">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Currently Inside · 34</h2><a href="AttendanceRecords.dc.html" style="font-size: 14px; font-weight: 600">See all</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 14px">
+<sc-for list="{{inside}}" as="p" hint-placeholder-count="6"><div style="display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 12px; background: #1D1F23">
+<span style="width: 40px; height: 40px; border-radius: 50%; background: #2A2C31; display: inline-flex; align-items: center; justify-content: center; font: 600 13px Poppins, sans-serif">{{p.ini}}</span>
+<div style="flex: 1"><b style="font-size: 14px">{{p.name}}</b><div style="font-size: 13px; color: #A1A1AA">In at {{p.t}} · {{p.dur}}</div></div>
+<button class="btn sm">Check Out</button>
+</div></sc-for>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"result":{"editor":"enum","options":["granted","checkout","expired","suspended","invalid"],"default":"granted"},"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const r = this.props.result ?? 'granted';
+    const check = 'M20 6 9 17l-5-5', x = 'M6 6l12 12M18 6 6 18', out = 'M9 20H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3M15 16l4-4-4-4M19 12H9', q = 'M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.5V14M12 17v.5';
+    const V = {
+      granted: { c: '#24B47E', ic: '#1A8A60', icon: check, title: 'ACCESS GRANTED', sub: 'Checked in at 10:38 AM', name: 'Andrea Lim', id: 'ICG-2025-0291', ini: 'AL', facts: [['Membership Plan', 'Monthly'], ['Membership Status', 'Active', '#3DD598'], ['Time In', '10:38 AM'], ['Expires', '08 Dec 2026 (29 days)']], note: 'Scan her code again when she leaves to record the time out.', actions: [['Next Scan', '#', 'btn pri']] },
+      checkout: { c: '#1D1F23', ic: '#FF3D0A', icon: out, title: 'CHECKED OUT', sub: 'Time out recorded at 12:20 PM', name: 'Andrea Lim', id: 'ICG-2025-0291', ini: 'AL', facts: [['Time In', '10:38 AM'], ['Time Out', '12:20 PM'], ['Duration', '1h 42m', '#FF6A3D'], ['Visits this month', '8']], note: 'She was already inside, so this scan closed her open session instead of creating a second check-in.', actions: [['Next Scan', '#', 'btn pri']] },
+      expired: { c: '#E34D4D', ic: '#E34D4D', icon: x, title: 'MEMBERSHIP EXPIRED', sub: 'Entry not allowed', name: 'Jerome Castro', id: 'ICG-2025-0356', ini: 'JC', facts: [['Membership Plan', 'Monthly'], ['Membership Status', 'Expired', '#F07070'], ['Expired on', '28 Oct 2026'], ['Days since', '12 days']], note: 'Offer a renewal, or register today’s visit as a walk-in.', actions: [['Renew Membership', 'Renewal.dc.html', 'btn pri'], ['Register Walk-in', 'WalkIn.dc.html', 'btn']] },
+      suspended: { c: '#3F3F46', ic: '#3F3F46', icon: x, title: 'MEMBERSHIP SUSPENDED', sub: 'Entry not allowed', name: 'Lea Gonzales', id: 'ICG-2025-0377', ini: 'LG', facts: [['Suspended on', '02 Nov 2026'], ['Membership Status', 'Suspended', '#C4C4CC'], ['Reason', 'Unpaid balance'], ['Balance', '₱1,200.00']], note: 'Only the Owner can lift a suspension. Ask the member to settle the balance first.', actions: [['View Profile', 'MemberProfile.dc.html', 'btn']] },
+      invalid: { c: '#F2A93B', ic: '#C27B12', icon: q, title: 'INVALID QR CODE', sub: 'Code not recognized', name: '', id: '', ini: '', facts: [], note: 'This code is old, was refreshed in the app, or isn’t an IRON CAMPUS GYM code. Ask the member to open My QR in the app, or type their Member ID below the scanner.', actions: [['Try Again', '#', 'btn pri']] }
+    };
+    const v = V[r];
+    return {
+      box: 'flex:1 1 380px;border-radius:16px;overflow:hidden;background:#151619;display:flex;flex-direction:column;border:2px solid ' + (v.c === '#1D1F23' ? '#FF3D0A' : v.c),
+      head: 'padding:20px 24px;display:flex;gap:16px;align-items:center;color:' + (r === 'invalid' ? '#090A0C' : '#FFFFFF') + ';background:' + v.c,
+      iconColor: v.ic, icon: v.icon, title: v.title, sub: v.sub, name: v.name, id: v.id, ini: v.ini, hasMember: !!v.name, note: v.note,
+      facts: v.facts.map(f => ({ k: f[0], v: f[1], vs: 'margin:4px 0 0;font-size:17px;font-weight:700;color:' + (f[2] || '#FFFFFF') })),
+      actions: v.actions.map(a => ({ label: a[0], href: a[1], cls: a[2] })),
+      inside: [['AL', 'Andrea Lim', '10:38 AM', '4 min'], ['PR', 'Paolo Reyes', '10:20 AM', '22 min'], ['CT', 'Carlo Tan (walk-in)', '10:20 AM', '22 min'], ['MR', 'Miguel Ramos', '9:58 AM', '44 min'], ['KD', 'Kyla Mae Dizon', '9:31 AM', '1h 11m'], ['DC', 'Daniel Cruz', '8:40 AM', '2h 02m']].map(p => ({ ini: p[0], name: p[1], t: p[2], dur: p[3] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

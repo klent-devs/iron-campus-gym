@@ -1,0 +1,17 @@
+# Optional: run PostgreSQL in Docker instead of a local install.
+# Usage: set POSTGRES_PASSWORD in .env (repo root), then: docker compose up -d
+# Compose refuses to start if POSTGRES_PASSWORD is missing, so no default password is ever used.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: iron_campus_gym
+    ports:
+      - '5432:5432'
+    volumes:
+      - icg_pgdata:/var/lib/postgresql/data
+volumes:
+  icg_pgdata:

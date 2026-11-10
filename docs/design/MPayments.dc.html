@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM app · Payment history</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#090A0C}</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #090A0C; font-family: Inter, system-ui, sans-serif; color: #FFFFFF">
+<div style="height: 756px; overflow-y: auto; padding: 48px 20px 24px; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<a href="MProfile.dc.html" aria-label="Back" style="width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; color: #FFFFFF"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></a>
+<h1 style="margin: 0; font: 700 24px Poppins, sans-serif">Payment History</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px">
+<sc-for list="{{tx}}" as="t" hint-placeholder-count="5"><article style="border-radius: 18px; background: #151619; border: 1px solid #292B30; padding: 16px">
+<div style="display: flex; justify-content: space-between; gap: 10px"><div><div style="font-size: 16px; font-weight: 600">{{t.desc}}</div><div style="font-size: 13px; color: #A1A1AA; margin-top: 2px">{{t.date}} · {{t.m}}</div></div><b style="{{t.as}}">{{t.amt}}</b></div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px"><span style="font: 13px ui-monospace, Menlo, monospace; color: #D4D4D8">{{t.no}}</span><span style="{{t.pill}}">{{t.st}}</span></div>
+<sc-if value="{{t.has}}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 8px; margin-top: 12px"><a href="#" style="flex: 1; height: 46px; border-radius: 12px; background: #1D1F23; border: 1px solid #292B30; color: #FFFFFF; font: 600 14px Inter, sans-serif; display: flex; align-items: center; justify-content: center; text-decoration: none">View Receipt</a><a href="#" aria-label="Download receipt {{t.no}}" style="flex: 1; height: 46px; border-radius: 12px; background: #1D1F23; border: 1px solid #292B30; color: #FFFFFF; font: 600 14px Inter, sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download</a></div></sc-if>
+</article></sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0"><dc-import name="TabBar" active="profile" hint-size="390px,88px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = [['Monthly renewal', '09 Nov 2026', 'GCash', '₱1,200.00', 'TXN-2026-11-0391', 'Paid'], ['Monthly renewal', '09 Oct 2026', 'Cash', '₱1,200.00', 'TXN-2026-10-0288', 'Paid'], ['Protein shake ×2', '27 Sep 2026', 'Cash', '₱240.00', 'TXN-2026-09-0412', 'Paid'], ['Monthly renewal', '09 Sep 2026', 'GCash', '₱1,200.00', 'TXN-2026-09-0170', 'Refunded'], ['Quarterly membership', '09 Jun 2026', 'Bank Transfer', '₱3,300.00', 'TXN-2026-06-0091', 'Paid']];
+    const c = { Paid: ['#3DD598', 'rgba(36,180,126,.15)'], Refunded: ['#C4C4CC', 'rgba(161,161,170,.15)'] };
+    return { tx: T.map(t => ({ desc: t[0], date: t[1], m: t[2], amt: t[3], no: t[4], st: t[5], has: t[5] === 'Paid',
+      as: 'font:700 18px Poppins,sans-serif;white-space:nowrap;' + (t[5] === 'Refunded' ? 'color:#A1A1AA;text-decoration:line-through' : ''),
+      pill: 'height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;color:' + c[t[5]][0] + ';background:' + c[t[5]][1] })) };
+  }
+}
+</script>
+</body>
+</html>

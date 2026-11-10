@@ -1,0 +1,11 @@
+{
+  "name": "@icg/tailwind-preset",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON CAMPUS GYM brand tokens for Tailwind CSS (admin + member portal)",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}

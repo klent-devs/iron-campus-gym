@@ -1,0 +1,7 @@
+{
+  "name": "@icg/sync",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON CAMPUS GYM — Local PostgreSQL <-> Supabase sync service (built in milestone 8)"
+}

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Renew membership</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 22px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:50px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:16px Inter,sans-serif}
+.opt{flex:1;min-height:72px;padding:12px 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#D4D4D8;font:600 15px Inter,sans-serif;cursor:pointer;text-align:left}
+.opt span{display:block;font-weight:500;font-size:13px;color:#A1A1AA;margin-top:2px}
+.opt.on{border-color:#FF3D0A;background:rgba(255,61,10,.1);color:#FFFFFF}
+.row{display:flex;justify-content:space-between;font-size:15px;padding:10px 0;border-top:1px solid #292B30;color:#D4D4D8}
+.row b{color:#FFFFFF}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="members" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="padding: 4px 4px 0"><h1 style="font-size: 26px; font-weight: 700">Renew Membership</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">The member keeps the same Member ID and QR code. No new account is created.</p></div>
+
+<ol aria-label="Steps" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="5"><li style="{{s.box}}"><span style="{{s.num}}">{{s.n}}</span><span>{{s.label}}</span></li></sc-for>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 2 1 560px; min-width: 0">
+<sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+<h2 style="font-size: 20px">1. Search for the member</h2>
+<label class="l" for="q" style="margin-top: 16px">Name, Member ID or mobile number</label><input class="in" id="q" value="Paolo" style="border-color: #FF3D0A">
+<div style="margin-top: 12px; border: 1px solid #292B30; border-radius: 12px; overflow: hidden">
+<button onClick="{{next}}" style="display: flex; width: 100%; gap: 12px; align-items: center; padding: 14px; border: 0; background: rgba(255,61,10,.08); color: #FFFFFF; text-align: left; cursor: pointer; font-family: inherit"><span style="width: 40px; height: 40px; border-radius: 50%; background: #2A2C31; display: inline-flex; align-items: center; justify-content: center; font: 600 13px Poppins, sans-serif">PR</span><span style="flex: 1"><b style="display: block; font-size: 15px">Paolo Reyes</b><span style="font-size: 13px; color: #A1A1AA">ICG-2025-0318 · Quarterly · expires 12 Nov 2026</span></span><span style="font-size: 13px; color: #F5B95A; font-weight: 600">3 days left</span></button>
+<div style="display: flex; gap: 12px; align-items: center; padding: 14px; border-top: 1px solid #292B30"><span style="width: 40px; height: 40px; border-radius: 50%; background: #2A2C31; display: inline-flex; align-items: center; justify-content: center; font: 600 13px Poppins, sans-serif">PG</span><span style="flex: 1"><b style="display: block; font-size: 15px">Paolo Gutierrez</b><span style="font-size: 13px; color: #A1A1AA">ICG-2024-0090 · Monthly · expired 30 Sep 2026</span></span></div>
+</div>
+</sc-if>
+<sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+<h2 style="font-size: 20px">2. Select the membership plan</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="4"><button type="button" onClick="{{p.pick}}" class="{{p.cls}}">{{p.name}}<span>{{p.meta}}</span></button></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+<h2 style="font-size: 20px">3. Confirm the renewal period</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px">
+<div><label class="l" for="ns">New start date</label><input class="in" id="ns" value="13 Nov 2026"></div>
+<div><label class="l" for="ne">New expiration date (automatic)</label><input class="in" id="ne" value="{{end}}" readonly style="color: #A1A1AA"></div>
+</div>
+<p style="margin: 14px 0 0; padding: 14px; border-radius: 12px; background: #1D1F23; font-size: 14px; color: #D4D4D8">Starts the day after the current plan ends (12 Nov), so Paolo doesn’t lose his remaining 3 days.</p>
+</sc-if>
+<sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+<h2 style="font-size: 20px">4. Record payment</h2>
+<span class="l" style="margin-top: 16px">Payment method</span>
+<div style="display: flex; gap: 10px"><button type="button" class="opt on" style="min-height: 50px">Cash</button><button type="button" class="opt" style="min-height: 50px">GCash</button><button type="button" class="opt" style="min-height: 50px">Bank Transfer</button></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px">
+<div><label class="l" for="ad">Amount due</label><input class="in" id="ad" value="{{price}}" readonly style="color: #A1A1AA"></div>
+<div><label class="l" for="ar">Amount received</label><input class="in" id="ar" value="₱3,500.00"></div>
+</div>
+<p style="margin: 12px 0 0; font-size: 15px; color: #D4D4D8">Change to give: <b style="color: #3DD598">₱200.00</b></p>
+</sc-if>
+<sc-if value="{{s5}}" hint-placeholder-val="{{ false }}">
+<h2 style="font-size: 20px">5. Save renewal</h2>
+<p style="margin: 8px 0 0; color: #A1A1AA">Check the details on the right, then save.</p>
+</sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<div style="text-align: center; padding: 20px 0">
+<span style="width: 64px; height: 64px; border-radius: 50%; background: #24B47E; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+<h2 style="font-size: 24px; margin-top: 14px">Membership renewed</h2>
+<p style="margin: 6px 0 18px; color: #A1A1AA">Paolo Reyes is active until {{end}}. Receipt TXN-2026-11-0405 saved.</p>
+<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap"><button class="btn">Print Receipt</button><button class="btn pri" onClick="{{restart}}">Renew Another</button></div>
+</div>
+</sc-if>
+<sc-if value="{{nav}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #292B30">
+<button class="btn" onClick="{{back}}">Back</button>
+<button class="btn pri" onClick="{{next}}">{{nextLabel}}</button>
+</div>
+</sc-if>
+</section>
+
+<aside class="card" style="flex: 1 1 320px">
+<h2 style="font-size: 18px">Renewal summary</h2>
+<div style="display: flex; gap: 12px; align-items: center; margin: 16px 0 6px"><span style="width: 44px; height: 44px; border-radius: 50%; background: #2A2C31; border: 2px solid #FF3D0A; display: inline-flex; align-items: center; justify-content: center; font: 600 14px Poppins, sans-serif">PR</span><div><b>Paolo Reyes</b><div style="font: 13px ui-monospace, Menlo, monospace; color: #A1A1AA">ICG-2025-0318 · same QR</div></div></div>
+<div class="row"><span>Current plan ends</span><b>12 Nov 2026</b></div>
+<div class="row"><span>New plan</span><b>{{plan}}</b></div>
+<div class="row"><span>New period</span><b>13 Nov – {{end}}</b></div>
+<div class="row"><span>Payment</span><b>Cash</b></div>
+<div class="row"><span>Total</span><b style="font: 700 24px Poppins, sans-serif; color: #FF6A3D">{{price}}</b></div>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const s = st.s ?? 1, pi = st.p ?? 2;
+    const L = ['Find member', 'Choose plan', 'Confirm period', 'Record payment', 'Save renewal'];
+    const P = [['Monthly', '₱1,200 · 30 days', '₱1,200.00', '12 Dec 2026'], ['Student Monthly', '₱900 · school ID', '₱900.00', '12 Dec 2026'], ['Quarterly', '₱3,300 · 3 months', '₱3,300.00', '12 Feb 2027'], ['Annual', '₱12,000 · 12 months', '₱12,000.00', '12 Nov 2027']];
+    return {
+      s1: s === 1, s2: s === 2, s3: s === 3, s4: s === 4, s5: s === 5, done: s === 6, nav: s < 6,
+      plan: P[pi][0], price: P[pi][2], end: P[pi][3],
+      nextLabel: s === 5 ? 'Save Renewal' : 'Next',
+      next: () => this.setState({ s: Math.min(6, s + 1) }), back: () => this.setState({ s: Math.max(1, s - 1) }), restart: () => this.setState({ s: 1 }),
+      plans: P.map((p, i) => ({ name: p[0], meta: p[1], cls: 'opt' + (i === pi ? ' on' : ''), pick: () => this.setState({ p: i }) })),
+      steps: L.map((label, i) => { const n = i + 1, cur = n === s, past = n < s; return { n: past ? '✓' : n, label,
+        box: 'display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;border:1px solid ' + (cur ? '#FF3D0A;background:rgba(255,61,10,.08);color:#FFFFFF' : '#292B30;background:#151619;color:' + (past ? '#D4D4D8' : '#A1A1AA')),
+        num: 'width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:700 13px Poppins,sans-serif;flex:none;' + (cur ? 'background:#FF3D0A;color:#FFFFFF' : past ? 'background:#24B47E;color:#FFFFFF' : 'background:#1D1F23;color:#A1A1AA') }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

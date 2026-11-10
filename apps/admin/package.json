@@ -1,0 +1,7 @@
+{
+  "name": "@icg/admin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON CAMPUS GYM — React + Vite + Tailwind admin website (built in milestone 2)"
+}

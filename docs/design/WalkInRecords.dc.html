@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Walk-in records</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:38px;padding:0 14px;font-size:13px}
+.in{height:46px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 16px;border-top:1px solid #292B30;white-space:nowrap}
+.tbl tr:hover td{background:#1A1B1F}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.bad{background:rgba(227,77,77,.15);color:#F07070}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}
+.st{background:#151619;border:1px solid #292B30;border-radius:16px;padding:18px 20px}
+.st span{font-size:14px;color:#A1A1AA}.st b{display:block;font:700 28px Poppins,sans-serif;margin-top:4px}
+.opt{flex:1;height:50px;border-radius:12px;font:600 15px Inter,sans-serif;cursor:pointer}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="walkin" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Walk-in Records</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Every day-pass visit. Kept separate from member attendance.</p></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><a class="btn" href="Reports.dc.html" style="color: #FFFFFF">Export Report</a><a class="btn pri" href="WalkInRegister.dc.html" style="height: 52px; padding: 0 24px; font: 700 15px Poppins, sans-serif; letter-spacing: 0.03em; color: #FFFFFF">+ REGISTER WALK-IN</a></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div class="st"><span>Walk-ins Today</span><b>{{sTotal}}</b></div>
+<div class="st"><span>Still Inside</span><b style="color: #FF6A3D">{{sInside}}</b></div>
+<div class="st"><span>Collected Today</span><b>{{sPaid}}</b></div>
+<div class="st" style="{{unpaidBox}}"><span>Unpaid</span><b style="color: #F07070">{{sUnpaid}}</b></div>
+</div>
+
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px; border-bottom: 1px solid #292B30">
+<label style="flex: 1 1 240px; max-width: 320px; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid #292B30; background: #0D0E10; color: #A1A1AA"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input aria-label="Search walk-in customer" placeholder="Search customer name or number" style="flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #FFFFFF; font: 14px Inter, sans-serif"></label>
+<select class="in" aria-label="Date"><option>Today · Mon, 09 Nov</option><option>Yesterday</option><option>This week</option><option>This month</option><option>Pick dates…</option></select>
+<div style="flex: 1"></div>
+<div role="group" aria-label="Show" style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.label}} <span style="opacity: .75">{{c.count}}</span></button></sc-for></div>
+</div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Customer Name</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th><th style="text-align: right">Fee</th><th>Payment Status</th><th style="text-align: right">Actions</th></tr></thead>
+<tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="8"><tr>
+<td><b style="font-weight: 600">{{r.name}}</b><div style="font-size: 12px; color: #A1A1AA">{{r.meta}}</div></td>
+<td style="color: #D4D4D8">09 Nov 2026</td>
+<td style="color: #3DD598">↘ {{r.in}}</td>
+<td style="{{r.os}}">{{r.outLabel}}</td>
+<td>{{r.dur}}</td>
+<td style="text-align: right; font-weight: 700">₱{{r.fee}}</td>
+<td><span class="pill {{r.tone}}">{{r.payLabel}}</span></td>
+<td style="text-align: right">
+<sc-if value="{{r.canPay}}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{r.pay}}" style="background: #FF3D0A; border-color: #FF3D0A">Record Payment</button> </sc-if>
+<sc-if value="{{r.canOut}}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{r.out}}">Complete Visit</button> </sc-if>
+<button class="btn sm" onClick="{{r.hist}}">View History</button>
+</td>
+</tr></sc-for></tbody></table>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 20px; text-align: center"><b style="font: 600 17px Poppins, sans-serif">Nothing here</b><p style="margin: 6px 0 0; color: #A1A1AA">No walk-ins match this filter today.</p></div>
+</sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 14px 16px; border-top: 1px solid #292B30; font-size: 14px; color: #A1A1AA">
+<span>{{footer}}</span>
+<span>Regular visitor? Open <b style="color: #FFFFFF">View History</b> → <b style="color: #FFFFFF">Make Member</b>. No duplicate record is created.</span>
+</div>
+</section>
+</main>
+
+<sc-if value="{{payOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.72); display: flex; align-items: flex-start; justify-content: center; padding: 200px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="pt" style="width: 100%; max-width: 480px; background: #151619; border: 1px solid #292B30; border-radius: 20px; padding: 24px">
+<h2 id="pt" style="font-size: 21px">Record Payment</h2>
+<p style="margin: 6px 0 18px; font-size: 15px; color: #D4D4D8">{{sel.name}} · walk-in in at {{sel.in}}</p>
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 16px; border-radius: 12px; background: #1D1F23"><span style="color: #D4D4D8">Amount due</span><b style="font: 700 26px Poppins, sans-serif; color: #FF6A3D">₱{{sel.fee}}.00</b></div>
+<span style="display: block; font-size: 14px; font-weight: 600; color: #D4D4D8; margin: 16px 0 8px">Payment Method</span>
+<div style="display: flex; gap: 10px"><sc-for list="{{methods}}" as="m" hint-placeholder-count="2"><button type="button" class="opt" onClick="{{m.pick}}" aria-pressed="{{m.pressed}}" style="{{m.style}}">{{m.label}}</button></sc-for></div>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px"><button class="btn" onClick="{{closeAll}}">Cancel</button><button class="btn pri" onClick="{{confirmPay}}">Record Payment</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{outOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.72); display: flex; align-items: flex-start; justify-content: center; padding: 200px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="ot" style="width: 100%; max-width: 480px; background: #151619; border: 1px solid #292B30; border-radius: 20px; padding: 24px">
+<h2 id="ot" style="font-size: 21px">Complete Visit</h2>
+<p style="margin: 6px 0 18px; font-size: 15px; color: #D4D4D8">Save the time out for {{sel.name}}.</p>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 13px; color: #A1A1AA">Time In</div><b>{{sel.in}}</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 13px; color: #A1A1AA">Time Out</div><b style="color: #FF6A3D">10:52 AM</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 13px; color: #A1A1AA">Duration</div><b>{{selDur}}</b></div>
+</div>
+<sc-if value="{{sel.unpaid}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(227,77,77,.1); border: 1px solid rgba(227,77,77,.4); font-size: 14px; color: #F4F4F5">This visit is still <b style="color: #F07070">unpaid (₱{{sel.fee}})</b>. Record the payment before they leave.</p></sc-if>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px"><button class="btn" onClick="{{closeAll}}">Cancel</button><button class="btn pri" onClick="{{confirmOut}}">Save Time Out</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{histOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.6); display: flex; justify-content: flex-end">
+<aside role="dialog" aria-modal="true" aria-labelledby="ht" style="width: 100%; max-width: 440px; min-height: 100%; background: #151619; border-left: 1px solid #292B30; padding: 28px 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><div><h2 id="ht" style="font-size: 22px">{{sel.name}}</h2><div style="font-size: 14px; color: #A1A1AA; margin-top: 4px">{{sel.phone}} · walk-in customer</div></div><button onClick="{{closeAll}}" aria-label="Close" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: #1D1F23; color: #FFFFFF; font-size: 18px; cursor: pointer">✕</button></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 12px; color: #A1A1AA">This month</div><b style="font: 700 20px Poppins, sans-serif">{{hist.count}}</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 12px; color: #A1A1AA">Spent</div><b style="font: 700 20px Poppins, sans-serif">{{hist.spent}}</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 12px; color: #A1A1AA">First visit</div><b style="font-size: 15px">{{hist.first}}</b></div>
+</div>
+<sc-if value="{{hist.suggest}}" hint-placeholder-val="{{ false }}"><div style="padding: 14px; border-radius: 12px; background: rgba(255,61,10,.08); border: 1px solid rgba(255,61,10,.35); font-size: 14px; line-height: 1.5">{{hist.suggest}}</div></sc-if>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{hist.visits}}" as="v" hint-placeholder-count="4"><li style="display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-top: 1px solid #292B30; font-size: 14px"><span><b>{{v.d}}</b><span style="display: block; color: #A1A1AA">{{v.t}}</span></span><span style="text-align: right">{{v.fee}}<span style="display: block; color: #A1A1AA">{{v.m}}</span></span></li></sc-for>
+</ul>
+<div style="flex: 1"></div>
+<a class="btn pri" href="AddMember.dc.html" style="height: 52px; color: #FFFFFF">Make Member</a>
+<p style="margin: 0; font-size: 13px; color: #A1A1AA">Their walk-in visits and payments move to the new member profile.</p>
+</aside>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  mins(t) { const m = t.match(/(\d+):(\d+) (AM|PM)/); let h = +m[1] % 12; if (m[3] === 'PM') h += 12; return h * 60 + +m[2]; }
+  dur(a, b) { const d = this.mins(b) - this.mins(a); return Math.floor(d / 60) + 'h ' + String(d % 60).padStart(2, '0') + 'm'; }
+  renderVals() {
+    const st = this.state || {};
+    const base = [
+      { name: 'Ella Bautista', phone: '—', meta: 'Regular', in: '10:44 AM', out: '', fee: 100, pay: 'Cash' },
+      { name: 'Kenji Ramos', phone: '0917 330 1182', meta: 'Regular', in: '10:02 AM', out: '', fee: 100, pay: 'Cash' },
+      { name: 'Trisha Gomez', phone: '0995 120 3381', meta: 'Regular', in: '9:15 AM', out: '', fee: 100, pay: 'GCash' },
+      { name: 'Nathan Lopez', phone: '—', meta: 'Regular', in: '8:40 AM', out: '', fee: 100, pay: '' },
+      { name: 'Lara Santos', phone: '0966 410 2259', meta: 'Student', in: '9:40 AM', out: '10:30 AM', fee: 80, pay: 'GCash' },
+      { name: 'Joanna Flores', phone: '0916 330 5590', meta: 'Regular', in: '7:30 AM', out: '9:05 AM', fee: 100, pay: 'Cash' },
+      { name: 'Ryan Pascual', phone: '0919 004 2287', meta: 'Regular · 4th visit this month', in: '6:55 AM', out: '8:20 AM', fee: 100, pay: 'Cash' },
+      { name: 'Mae Dizon', phone: '—', meta: 'Student', in: '6:20 AM', out: '7:41 AM', fee: 80, pay: 'Refunded' }
+    ];
+    const rows = st.rows || base;
+    const f = st.f || 'All';
+    const upd = (i, patch) => this.setState({ rows: rows.map((r, j) => j === i ? Object.assign({}, r, patch) : r), modal: null });
+    const isIn = r => !r.out, isUnpaid = r => !r.pay;
+    const match = r => f === 'All' || (f === 'Inside' && isIn(r)) || (f === 'Completed' && !isIn(r)) || (f === 'Unpaid' && isUnpaid(r));
+    const counts = { All: rows.length, Inside: rows.filter(isIn).length, Completed: rows.filter(r => !isIn(r)).length, Unpaid: rows.filter(isUnpaid).length };
+    const paid = rows.filter(r => r.pay && r.pay !== 'Refunded').reduce((a, r) => a + r.fee, 0);
+    const unpaidAmt = rows.filter(isUnpaid).reduce((a, r) => a + r.fee, 0);
+    const si = st.i ?? 0, sel = rows[si];
+    const method = st.m || 'Cash';
+    const H = {
+      'Ryan Pascual': { count: '4 visits', spent: '₱400', first: '14 Sep', suggest: 'Ryan has spent ₱400 this month. A Monthly plan (₱1,200) pays off at 12 visits — worth offering if he trains 3× a week.', visits: [['Mon, 09 Nov', '6:55 – 8:20 AM', '₱100', 'Cash'], ['Fri, 06 Nov', '6:50 – 8:05 AM', '₱100', 'Cash'], ['Tue, 03 Nov', '7:02 – 8:31 AM', '₱100', 'GCash'], ['Sun, 01 Nov', '8:15 – 9:40 AM', '₱100', 'Cash']] }
+    };
+    const h = H[sel.name] || { count: '1 visit', spent: '₱' + sel.fee, first: '09 Nov', suggest: '', visits: [['Mon, 09 Nov', sel.in + (sel.out ? ' – ' + sel.out : ' – now'), '₱' + sel.fee, sel.pay || 'Unpaid']] };
+    const chip = on => 'height:40px;padding:0 14px;border-radius:999px;font:600 13px Inter,sans-serif;cursor:pointer;' + (on ? 'background:#FF3D0A;border:1px solid #FF3D0A;color:#FFFFFF' : 'background:transparent;border:1px solid #292B30;color:#D4D4D8');
+    const shown = rows.map((r, i) => Object.assign({}, r, { i })).filter(match);
+    return {
+      sTotal: rows.length, sInside: counts.Inside, sPaid: '₱' + paid.toLocaleString('en-PH'), sUnpaid: counts.Unpaid ? counts.Unpaid + ' · ₱' + unpaidAmt : '0',
+      unpaidBox: counts.Unpaid ? 'border-color:rgba(227,77,77,.5)' : '',
+      chips: ['All', 'Inside', 'Completed', 'Unpaid'].map(k => ({ label: k, count: counts[k], pressed: k === f ? 'true' : 'false', style: chip(k === f), pick: () => this.setState({ f: k }) })),
+      rows: shown.map(r => ({
+        name: r.name, meta: r.meta, in: r.in, fee: r.fee,
+        outLabel: r.out ? '↗ ' + r.out : 'Inside', os: r.out ? 'color:#F07070' : 'color:#FF6A3D;font-weight:600',
+        dur: r.out ? this.dur(r.in, r.out) : '—',
+        payLabel: !r.pay ? 'Unpaid' : r.pay === 'Refunded' ? 'Refunded' : 'Paid · ' + r.pay, tone: !r.pay ? 'bad' : r.pay === 'Refunded' ? 'mute' : 'ok',
+        canPay: !r.pay, canOut: !r.out,
+        pay: () => this.setState({ modal: 'pay', i: r.i, m: 'Cash' }), out: () => this.setState({ modal: 'out', i: r.i }), hist: () => this.setState({ modal: 'hist', i: r.i })
+      })),
+      empty: shown.length === 0,
+      footer: rows.length + ' walk-ins today · ₱' + paid.toLocaleString('en-PH') + ' collected' + (unpaidAmt ? ' · ₱' + unpaidAmt + ' unpaid' : ''),
+      payOpen: st.modal === 'pay', outOpen: st.modal === 'out', histOpen: st.modal === 'hist',
+      sel: { name: sel.name, in: sel.in, fee: sel.fee, phone: sel.phone, unpaid: !sel.pay },
+      selDur: this.dur(sel.in, '10:52 AM'),
+      methods: ['Cash', 'GCash'].map(m => ({ label: m, pressed: m === method ? 'true' : 'false', pick: () => this.setState({ m }),
+        style: m === method ? 'border:2px solid #FF3D0A;background:rgba(255,61,10,.12);color:#FFFFFF' : 'border:1px solid #292B30;background:#0D0E10;color:#D4D4D8' })),
+      hist: { count: h.count, spent: h.spent, first: h.first, suggest: h.suggest, visits: h.visits.map(v => ({ d: v[0], t: v[1], fee: v[2], m: v[3] })) },
+      closeAll: () => this.setState({ modal: null }),
+      confirmPay: () => upd(si, { pay: method }),
+      confirmOut: () => upd(si, { out: '10:52 AM' })
+    };
+  }
+}
+</script>
+</body>
+</html>

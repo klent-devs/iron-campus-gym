@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Attendance records</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.in{height:46px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:13px 16px;border-top:1px solid #292B30;white-space:nowrap}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="attendance" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Attendance Records</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Every check-in and check-out, saved automatically.</p></div>
+<div style="display: flex; gap: 10px"><a class="btn" href="Reports.dc.html" style="color: #FFFFFF">Export Report</a><a class="btn pri" href="Attendance.dc.html" style="color: #FFFFFF">Open Scanner</a></div>
+</div>
+
+<div role="alert" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 14px 18px; border-radius: 14px; background: rgba(242,169,59,.08); border: 1px solid rgba(242,169,59,.35)">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5B95A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/></svg>
+<span style="flex: 1; font-size: 15px">2 members from yesterday have <b>no time out</b>. Fix them so their hours are correct.</span>
+</div>
+
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px">
+<label style="flex: 1 1 260px; max-width: 360px; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid #292B30; background: #0D0E10; color: #A1A1AA"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input aria-label="Search member" placeholder="Search member name or ID" style="flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #FFFFFF; font: 14px Inter, sans-serif"></label>
+<select class="in" aria-label="Date"><option>Today · 09 Nov 2026</option><option>Yesterday · 08 Nov</option><option>This week</option><option>Pick a date…</option></select>
+</div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Member Name</th><th>Member ID</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th><th></th></tr></thead>
+<tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="9"><tr>
+<td style="font-weight: 600">{{r.name}}</td><td style="font: 13px ui-monospace, Menlo, monospace; color: #D4D4D8">{{r.id}}</td><td style="color: #D4D4D8">{{r.d}}</td>
+<td style="color: #3DD598">↘ {{r.i}}</td><td style="{{r.os}}">{{r.o}}</td><td>{{r.dur}}</td>
+<td style="text-align: right"><sc-if value="{{r.fix}}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{open}}" style="border-color: #F2A93B; color: #F5B95A">Fix Time Out</button></sc-if></td>
+</tr></sc-for></tbody></table>
+</div>
+<div style="padding: 14px 16px; border-top: 1px solid #292B30; font-size: 14px; color: #A1A1AA">Today: 124 check-ins · 90 check-outs · average stay 1h 34m</div>
+</section>
+</main>
+
+<sc-if value="{{modal}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: flex-start; justify-content: center; padding: 180px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="ct" style="width: 100%; max-width: 500px; background: #151619; border: 1px solid #292B30; border-radius: 18px; padding: 24px">
+<h2 id="ct" style="font-size: 20px">Fix missed check-out</h2>
+<p style="margin: 6px 0 16px; font-size: 15px; color: #A1A1AA">Jerome Castro · checked in 08 Nov at 5:02 PM</p>
+<label class="l" for="to">Correct time out</label><input class="in" id="to" value="7:10 PM" style="width: 100%">
+<label class="l" for="rs" style="margin-top: 14px">Reason (required)</label>
+<select class="in" id="rs" style="width: 100%"><option>Member forgot to scan out</option><option>Scanner was offline</option><option>Wrong member scanned</option></select>
+<p style="margin: 14px 0 0; font-size: 13px; color: #A1A1AA">Saved in the audit history under your name (Joy Mercado). Receptionists can fix the last 48 hours only.</p>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px"><button class="btn" onClick="{{close}}">Cancel</button><button class="btn pri" onClick="{{close}}">Save Changes</button></div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const m = !!(this.state && this.state.m);
+    const R = [['Andrea Lim', 'ICG-2025-0291', '09 Nov 2026', '10:38 AM', '', 'Inside'], ['Paolo Reyes', 'ICG-2025-0318', '09 Nov 2026', '10:20 AM', '', 'Inside'], ['Bianca Santos', 'ICG-2025-0402', '09 Nov 2026', '8:17 AM', '10:05 AM', '1h 48m'], ['Miguel Ramos', 'ICG-2024-0107', '09 Nov 2026', '9:58 AM', '', 'Inside'], ['Trisha Navarro', 'ICG-2026-0611', '09 Nov 2026', '6:05 AM', '7:28 AM', '1h 23m'], ['Daniel Cruz', 'ICG-2026-0588', '09 Nov 2026', '6:02 AM', '7:41 AM', '1h 39m'], ['Jerome Castro', 'ICG-2025-0356', '08 Nov 2026', '5:02 PM', 'MISSING', '—'], ['Lea Gonzales', 'ICG-2025-0377', '08 Nov 2026', '6:40 PM', 'MISSING', '—'], ['Kyla Mae Dizon', 'ICG-2026-0642', '08 Nov 2026', '4:12 PM', '6:01 PM', '1h 49m']];
+    return {
+      modal: m, open: () => this.setState({ m: true }), close: () => this.setState({ m: false }),
+      rows: R.map(r => ({ name: r[0], id: r[1], d: r[2], i: r[3], fix: r[4] === 'MISSING',
+        o: r[4] === 'MISSING' ? 'No time out' : r[4] ? '↗ ' + r[4] : 'Still inside',
+        os: r[4] === 'MISSING' ? 'color:#F5B95A;font-weight:600' : r[4] ? 'color:#F07070' : 'color:#FF6A3D;font-weight:600', dur: r[5] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

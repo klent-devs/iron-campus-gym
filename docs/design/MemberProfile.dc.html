@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Member profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.dng{background:transparent;border-color:#5C2526;color:#F07070}
+.btn.dngf{background:#E34D4D;border-color:#E34D4D;color:#FFFFFF;font-weight:700}
+.kv{display:grid;grid-template-columns:140px minmax(0,1fr);gap:12px;font-size:15px;margin:16px 0 0}
+.kv dt{color:#A1A1AA}.kv dd{margin:0}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:12px 14px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 14px;border-top:1px solid #292B30;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}
+</style>
+</helmet>
+<div style="position: relative; display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="members" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<nav aria-label="Breadcrumb" style="font-size: 14px; color: #A1A1AA; padding: 0 4px"><a href="Members.dc.html">Members</a> / Andrea Lim</nav>
+
+<section class="card" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center">
+<div style="width: 96px; height: 96px; border-radius: 50%; background: #2A2C31; border: 3px solid #FF3D0A; display: flex; align-items: center; justify-content: center; font: 700 32px Poppins, sans-serif">AL</div>
+<div style="flex: 1 1 260px">
+<div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap"><h1 style="font-size: 26px; font-weight: 700">Andrea Lim</h1><span class="pill ok">Active</span></div>
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; font-size: 15px; color: #D4D4D8"><span>Member ID <b style="font-family: ui-monospace, Menlo, monospace">ICG-2025-0291</b></span><span>Monthly · expires 08 Dec 2026</span></div>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button class="btn">Edit Information</button>
+<button class="btn">View QR Code</button>
+<button class="btn dng" onClick="{{ask}}">Suspend Membership</button>
+<a class="btn pri" href="Renewal.dc.html" style="color: #FFFFFF">Renew Membership</a>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 20px">
+<section class="card">
+<h2 style="font-size: 17px; font-weight: 600">Current Membership</h2>
+<div style="display: flex; align-items: baseline; gap: 8px; margin-top: 14px"><b style="font: 700 40px Poppins, sans-serif; color: #FF6A3D">29</b><span style="color: #D4D4D8">days remaining</span></div>
+<div style="height: 10px; border-radius: 5px; background: #292B30; margin: 10px 0 6px"><div style="width: 3%; height: 10px; border-radius: 5px; background: #FF3D0A"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #A1A1AA"><span>Start 09 Nov 2026</span><span>Expires 08 Dec 2026</span></div>
+</section>
+<section class="card" style="display: flex; gap: 18px; align-items: center">
+<div style="background: #FFFFFF; border-radius: 12px; padding: 8px; flex: none"><svg width="112" height="112" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="Member QR code"><path d="{{qr}}" fill="#090A0C" fill-rule="evenodd"/></svg></div>
+<div style="font-size: 14px; color: #D4D4D8; line-height: 1.55"><b style="display: block; font-size: 15px; color: #FFFFFF">Personal QR code</b>Same code since registration. It does not change when the member renews.<div style="margin-top: 10px"><button class="btn" style="height: 38px; font-size: 13px">Print QR Card</button></div></div>
+</section>
+<section class="card">
+<h2 style="font-size: 17px; font-weight: 600">Contact Information</h2>
+<dl class="kv"><dt>Mobile</dt><dd>0905 337 9021</dd><dt>Email</dt><dd>andrea.lim@gmail.com</dd><dt>Address</dt><dd>Sampaloc, Manila</dd><dt>Member since</dt><dd>04 Feb 2025</dd></dl>
+</section>
+</div>
+
+<section class="card" style="flex: 2 1 520px; min-width: 0; padding: 0; overflow: hidden">
+<div role="tablist" style="display: flex; gap: 4px; padding: 10px 14px 0; border-bottom: 1px solid #292B30">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2"><button role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button></sc-for>
+</div>
+<div style="overflow-x: auto; padding: 16px">
+<sc-if value="{{isPay}}" hint-placeholder-val="{{ true }}">
+<table class="tbl"><thead><tr><th>Transaction No.</th><th>Date</th><th>Description</th><th>Method</th><th style="text-align: right">Amount</th><th>Status</th></tr></thead>
+<tbody><sc-for list="{{pays}}" as="p" hint-placeholder-count="4"><tr><td style="font: 13px ui-monospace, Menlo, monospace">{{p.no}}</td><td>{{p.d}}</td><td>{{p.desc}}</td><td>{{p.m}}</td><td style="text-align: right; font-weight: 700">{{p.amt}}</td><td><span class="pill {{p.tone}}">{{p.st}}</span></td></tr></sc-for></tbody></table>
+</sc-if>
+<sc-if value="{{isAtt}}" hint-placeholder-val="{{ false }}">
+<table class="tbl"><thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th></tr></thead>
+<tbody><sc-for list="{{att}}" as="a" hint-placeholder-count="5"><tr><td>{{a.d}}</td><td style="color: #3DD598">↘ {{a.i}}</td><td style="{{a.os}}">{{a.o}}</td><td>{{a.dur}}</td></tr></sc-for></tbody></table>
+</sc-if>
+</div>
+</section>
+</div>
+</main>
+
+<sc-if value="{{confirm}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: flex-start; justify-content: center; padding: 200px 16px">
+<div role="alertdialog" aria-labelledby="st" style="width: 100%; max-width: 460px; background: #151619; border: 1px solid #292B30; border-radius: 18px; padding: 24px">
+<h2 id="st" style="font-size: 20px">Suspend Andrea Lim?</h2>
+<p style="margin: 8px 0 14px; font-size: 15px; line-height: 1.55; color: #D4D4D8">Her QR code will be rejected at check-in until you lift the suspension. Days remaining are paused.</p>
+<label for="sr" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px">Reason</label>
+<select id="sr" style="width: 100%; height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid #292B30; background: #0D0E10; color: #FFFFFF; font: 15px Inter, sans-serif"><option>Unpaid balance</option><option>Rule violation</option><option>Member request (freeze)</option></select>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px"><button class="btn" onClick="{{cancel}}">Cancel</button><button class="btn dngf" onClick="{{cancel}}">Suspend Membership</button></div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  qr(seed) {
+    let s = seed, d = '';
+    const r = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+    const fin = (x, y) => { d += 'M' + x + ' ' + y + 'h7v7h-7zM' + (x + 1) + ' ' + (y + 1) + 'v5h5v-5zM' + (x + 2) + ' ' + (y + 2) + 'h3v3h-3z'; };
+    fin(0, 0); fin(18, 0); fin(0, 18);
+    for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) {
+      const inF = (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+      if (!inF && r() < 0.48) d += 'M' + x + ' ' + y + 'h1v1h-1z';
+    }
+    return d;
+  }
+  renderVals() {
+    const st = this.state || {};
+    const tab = st.tab || 'pay';
+    const T = [['pay', 'Payment History'], ['att', 'Attendance History']];
+    return {
+      qr: this.qr(291), isPay: tab === 'pay', isAtt: tab === 'att', confirm: !!st.confirm,
+      ask: () => this.setState({ confirm: true }), cancel: () => this.setState({ confirm: false }),
+      tabs: T.map(([id, label]) => ({ label, sel: id === tab ? 'true' : 'false', pick: () => this.setState({ tab: id }),
+        style: 'height:48px;padding:0 16px;border:0;background:transparent;font:600 15px Inter,sans-serif;cursor:pointer;margin-bottom:-1px;' + (id === tab ? 'color:#FFFFFF;border-bottom:3px solid #FF3D0A' : 'color:#A1A1AA;border-bottom:3px solid transparent') })),
+      pays: [
+        { no: 'TXN-2026-11-0391', d: '09 Nov 2026', desc: 'Monthly renewal', m: 'GCash', amt: '₱1,200.00', st: 'Paid', tone: 'ok' },
+        { no: 'TXN-2026-10-0288', d: '09 Oct 2026', desc: 'Monthly renewal', m: 'Cash', amt: '₱1,200.00', st: 'Paid', tone: 'ok' },
+        { no: 'TXN-2026-09-0412', d: '27 Sep 2026', desc: 'Protein shake ×2', m: 'Cash', amt: '₱240.00', st: 'Paid', tone: 'ok' },
+        { no: 'TXN-2026-09-0170', d: '09 Sep 2026', desc: 'Monthly renewal', m: 'GCash', amt: '₱1,200.00', st: 'Refunded', tone: 'mute' }
+      ],
+      att: [
+        { d: 'Mon, 09 Nov', i: '7:12 AM', o: 'Inside now', os: 'color:#FF6A3D;font-weight:600', dur: '—' },
+        { d: 'Sat, 07 Nov', i: '8:05 AM', o: '↗ 9:44 AM', os: 'color:#F07070', dur: '1h 39m' },
+        { d: 'Thu, 05 Nov', i: '6:48 PM', o: '↗ 8:20 PM', os: 'color:#F07070', dur: '1h 32m' },
+        { d: 'Tue, 03 Nov', i: '6:52 PM', o: '↗ 8:41 PM', os: 'color:#F07070', dur: '1h 49m' },
+        { d: 'Mon, 02 Nov', i: '6:10 AM', o: '↗ 7:35 AM', os: 'color:#F07070', dur: '1h 25m' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

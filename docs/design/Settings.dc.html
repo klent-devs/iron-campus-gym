@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.tg{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;border-top:1px solid #292B30;font-size:15px}
+.tg span{display:block;font-size:13px;color:#A1A1AA}
+.sn a{display:flex;align-items:center;height:46px;padding:0 14px;border-radius:12px;color:#D4D4D8;font-size:15px;font-weight:500}
+.sn a.on{background:#1D1F23;color:#FFFFFF;font-weight:700;box-shadow:inset 3px 0 0 #FF3D0A}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:999px;background:rgba(255,61,10,.14);color:#FF7A50;font-size:12px;font-weight:700}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="settings" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Settings</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Only the Owner can change these. Receptionists see Change Password only.</p></div>
+<button class="btn pri">Save Changes</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<nav class="card sn" aria-label="Settings sections" style="flex: 1 1 220px; max-width: 260px; padding: 10px">
+<a href="#info" class="on">Gym Information</a><a href="Memberships.dc.html">Membership Plans</a><a href="#pay">Payment Methods</a><a href="#cap">Gym Capacity</a><a href="Staff.dc.html">Staff Accounts</a><a href="#pw">Change Password</a>
+</nav>
+<div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section id="info" class="card">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Gym Information</h2><span class="tag">Owner only</span></div>
+<div style="display: flex; gap: 18px; align-items: center; margin: 18px 0; flex-wrap: wrap">
+<div style="width: 88px; height: 88px; border-radius: 20px; background: #0D0E10; border: 1px solid #292B30; display: flex; align-items: center; justify-content: center"><svg width="60" height="60" viewBox="0 0 48 48" aria-hidden="true"><path d="M36.7 11.3A18 18 0 1 0 36.7 36.7" fill="none" stroke="#FF3D0A" stroke-width="7" stroke-linecap="round"/><path d="M18 13h12M18 35h12M24 13v22" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/></svg></div>
+<div><b>Gym Logo</b><div style="font-size: 13px; color: #A1A1AA; margin: 2px 0 10px">Shown on receipts, reports and the member app. PNG or SVG.</div><button class="btn" style="height: 40px">Upload New Logo</button></div>
+</div>
+<div class="g">
+<div><label class="l" for="gn">Gym Name</label><input class="in" id="gn" value="IRON CAMPUS GYM"></div>
+<div><label class="l" for="gc">Contact Number</label><input class="in" id="gc" placeholder="[CONTACT NO.]"></div>
+<div style="grid-column: 1 / -1"><label class="l" for="ga">Address</label><input class="in" id="ga" placeholder="[GYM ADDRESS]"></div>
+<div><label class="l" for="go">Opening Time</label><input class="in" id="go" value="6:00 AM"></div>
+<div><label class="l" for="gx">Closing Time</label><input class="in" id="gx" value="10:00 PM"></div>
+</div>
+</section>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section id="pay" class="card" style="flex: 1 1 300px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Payment Methods</h2><span class="tag">Owner only</span></div>
+<div style="margin-top: 10px">
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="4"><div class="tg"><div>{{m.name}}<span>{{m.note}}</span></div><button role="switch" aria-checked="{{m.on}}" aria-label="{{m.name}}" onClick="{{m.toggle}}" style="{{m.sw}}"><i style="{{m.knob}}"></i></button></div></sc-for>
+</div>
+<button class="btn" style="margin-top: 12px; height: 40px">+ Add Payment Method</button>
+</section>
+<section id="cap" class="card" style="flex: 1 1 300px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Gym Capacity</h2><span class="tag">Owner only</span></div>
+<div style="margin-top: 16px"><label class="l" for="mc">Maximum people inside at once</label><input class="in" id="mc" value="60"></div>
+<div class="tg" style="margin-top: 14px"><div>Show capacity on dashboard<span>Uses live check-in / check-out data</span></div><button role="switch" aria-checked="true" aria-label="Show capacity" style="width: 52px; height: 30px; border-radius: 999px; border: 0; background: #FF3D0A; position: relative"><i style="position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; background: #FFFFFF"></i></button></div>
+<div class="tg"><div>Warn the front desk at<span>Shows a banner on the scanner</span></div><select class="in" aria-label="Warning level" style="width: 110px; height: 40px"><option>90%</option><option>80%</option></select></div>
+</section>
+</div>
+<section id="pw" class="card">
+<h2 style="font-size: 18px; font-weight: 600">Change Password</h2>
+<div class="g" style="margin-top: 16px">
+<div><label class="l" for="p0">Current Password</label><input class="in" id="p0" type="password" value="oldpassword"></div>
+<div><label class="l" for="p1">New Password</label><input class="in" id="p1" type="password" value="short"><span style="font-size: 13px; color: #F07070">Use at least 8 characters</span></div>
+<div><label class="l" for="p2">Confirm New Password</label><input class="in" id="p2" type="password"></div>
+</div>
+<button class="btn pri" style="margin-top: 16px">Update Password</button>
+</section>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const off = (this.state && this.state.off) || { 3: true };
+    const M = [['Cash', 'Front desk'], ['GCash', 'Staff enters the reference number'], ['Bank Transfer', 'Owner confirms before it counts as paid'], ['Card (POS)', 'Turn on if you get a card terminal']];
+    return { methods: M.map((m, i) => { const on = !off[i]; return { name: m[0], note: m[1], on: on ? 'true' : 'false', toggle: () => this.setState({ off: Object.assign({}, off, { [i]: on }) }),
+      sw: 'width:52px;height:30px;border-radius:999px;border:0;position:relative;cursor:pointer;flex:none;background:' + (on ? '#FF3D0A' : '#3F3F46'),
+      knob: 'position:absolute;top:4px;width:22px;height:22px;border-radius:50%;background:#FFFFFF;' + (on ? 'right:4px' : 'left:4px') }; }) };
+  }
+}
+</script>
+</body>
+</html>

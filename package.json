@@ -1,0 +1,32 @@
+{
+  "name": "iron-campus-gym",
+  "private": true,
+  "version": "0.1.0",
+  "description": "IRON CAMPUS GYM — gym management system (admin website, local API, cloud sync, member portal)",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace @icg/api",
+    "db:migrate": "npm run db:migrate --workspace @icg/api",
+    "db:rollback": "npm run db:rollback --workspace @icg/api",
+    "db:seed": "npm run db:seed --workspace @icg/api",
+    "db:reset": "npm run db:rollback --workspace @icg/api -- --all && npm run db:migrate && npm run db:seed",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "vitest": "^2.1.8"
+  }
+}

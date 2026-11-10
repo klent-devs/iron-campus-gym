@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{display:flex;align-items:center;gap:10px;height:54px;padding:0 16px;border-radius:14px;border:1px solid #292B30;background:#151619;color:#A1A1AA}
+.in input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#FFFFFF;font:16px Inter,sans-serif}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh">
+<section style="flex: 1 1 520px; position: relative; overflow: hidden; background: #0D0E10; padding: 56px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px; min-height: 520px">
+<svg width="760" height="760" viewBox="0 0 48 48" aria-hidden="true" style="position: absolute; right: -220px; bottom: -200px; opacity: .07"><path d="M36.7 11.3A18 18 0 1 0 36.7 36.7" fill="none" stroke="#FF3D0A" stroke-width="7" stroke-linecap="round"/><circle cx="24" cy="24" r="10" fill="none" stroke="#FFFFFF" stroke-width="1"/><circle cx="24" cy="24" r="3" fill="none" stroke="#FFFFFF" stroke-width="1"/></svg>
+<div style="position: relative; display: flex; align-items: center; gap: 14px">
+<svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><path d="M36.7 11.3A18 18 0 1 0 36.7 36.7" fill="none" stroke="#FF3D0A" stroke-width="7" stroke-linecap="round"/><path d="M18 13h12M18 35h12M24 13v22" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/></svg>
+<span style="line-height: 1.05"><span style="display: block; font: 800 22px Poppins, sans-serif; letter-spacing: 0.04em">IRON CAMPUS</span><span style="display: block; font: 700 14px Poppins, sans-serif; letter-spacing: 0.4em; color: #FF6A3D">GYM</span></span>
+</div>
+<div style="position: relative">
+<h1 style="margin: 0; font: 800 64px/1.02 Poppins, sans-serif; letter-spacing: -0.01em">STRONGER<br>EVERY <span style="color: #FF3D0A">DAY.</span></h1>
+<p style="margin: 20px 0 0; max-width: 440px; font-size: 17px; line-height: 1.6; color: #A1A1AA">Members, check-ins, walk-ins, payments and stock — all from one front desk.</p>
+</div>
+<p style="position: relative; margin: 0; font-size: 13px; color: #71717A">Staff accounts are created by the gym owner.</p>
+</section>
+<section style="flex: 1 1 480px; display: flex; align-items: center; justify-content: center; padding: 48px 24px; background: #090A0C">
+<form style="width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 22px">
+<div><h2 style="margin: 0; font: 700 34px Poppins, sans-serif">Welcome Back</h2><p style="margin: 8px 0 0; font-size: 16px; color: #A1A1AA">Sign in to manage the gym.</p></div>
+<div><label class="l" for="u">Username or email</label><div class="in"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><input id="u" value="joy.frontdesk" autocomplete="username"></div></div>
+<div><label class="l" for="p">Password</label><div class="in"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><input id="p" type="{{ptype}}" value="ironcampus26" autocomplete="current-password"><button type="button" onClick="{{toggle}}" style="height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: #1D1F23; color: #D4D4D8; font: 600 13px Inter, sans-serif; cursor: pointer">{{toggleLabel}}</button></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center">
+<label style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: #D4D4D8; min-height: 44px; cursor: pointer"><input type="checkbox" checked style="width: 20px; height: 20px; accent-color: #FF3D0A">Remember Me</label>
+<a href="#" style="font-size: 15px; font-weight: 600; padding: 12px 0">Forgot Password?</a>
+</div>
+<a href="Main.dc.html" style="height: 56px; border-radius: 14px; background: #FF3D0A; color: #FFFFFF; font: 700 17px Poppins, sans-serif; display: flex; align-items: center; justify-content: center">Sign In</a>
+</form>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = !!(this.state && this.state.show);
+    return { ptype: s ? 'text' : 'password', toggleLabel: s ? 'Hide' : 'Show', toggle: () => this.setState({ show: !s }) };
+  }
+}
+</script>
+</body>
+</html>

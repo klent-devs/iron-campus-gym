@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Add item &amp; stock in/out</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 20px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:48px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.step{width:48px;height:48px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:700 20px Inter,sans-serif;cursor:pointer}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="inventory" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="padding: 4px 4px 0"><nav aria-label="Breadcrumb" style="font-size: 14px; color: #A1A1AA"><a href="Inventory.dc.html">Inventory</a> / Items &amp; Stock</nav><h1 style="font-size: 26px; font-weight: 700; margin-top: 6px">Add Item &amp; Update Stock</h1></div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 1 1 400px">
+<h2 style="font-size: 19px; font-weight: 600">Add / Edit Item</h2>
+<p style="margin: 4px 0 18px; font-size: 14px; color: #A1A1AA">Editing: Bottled Water 500ml</p>
+<form style="display: flex; flex-direction: column; gap: 14px">
+<div><label class="l" for="in">Item Name</label><input class="in" id="in" value="Bottled Water 500ml"></div>
+<div><label class="l" for="ic">Category</label><select class="in" id="ic"><option>Drinks and Beverages</option><option>Protein Products</option><option>Gym Supplies</option><option>Cleaning Materials</option><option>Other Products</option></select></div>
+<div class="g2">
+<div><label class="l" for="cp">Cost Price (₱)</label><input class="in" id="cp" value="9.50"></div>
+<div><label class="l" for="sp">Selling Price (₱)</label><input class="in" id="sp" value="20.00"></div>
+</div>
+<div class="g2">
+<div><label class="l" for="un">Unit</label><select class="in" id="un"><option>pcs</option><option>bottle</option><option>sachet</option><option>roll</option></select></div>
+<div><label class="l" for="ra">Warn me when below</label><input class="in" id="ra" value="24"></div>
+</div>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px"><a class="btn" href="Inventory.dc.html" style="color: #FFFFFF">Cancel</a><button type="button" class="btn pri">Save Changes</button></div>
+</form>
+</section>
+
+<section class="card" style="flex: 1.2 1 440px; border-color: #FF3D0A">
+<h2 style="font-size: 19px; font-weight: 600">Stock In / Stock Out</h2>
+<div role="group" aria-label="Movement" style="display: flex; padding: 4px; margin-top: 16px; border-radius: 14px; background: #0D0E10; border: 1px solid #292B30">
+<button onClick="{{setIn}}" aria-pressed="{{inP}}" style="{{inS}}">Stock In</button>
+<button onClick="{{setOut}}" aria-pressed="{{outP}}" style="{{outS}}">Stock Out</button>
+</div>
+<form style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px">
+<div><label class="l" for="si">Select Item</label><select class="in" id="si"><option>Bottled Water 500ml — 8 pcs left</option></select></div>
+<div><label class="l" for="mt">Movement Type</label><select class="in" id="mt"><sc-for list="{{types}}" as="t" hint-placeholder-count="3"><option>{{t}}</option></sc-for></select></div>
+<div class="g2">
+<div><span class="l">Quantity</span><div style="display: flex; gap: 8px; align-items: center"><button type="button" class="step" onClick="{{minus}}" aria-label="Decrease">−</button><input class="in" aria-label="Quantity" value="{{qty}}" style="text-align: center; font-weight: 700; font-size: 18px"><button type="button" class="step" onClick="{{plus}}" aria-label="Increase">+</button></div></div>
+<div><label class="l" for="dt">Date</label><input class="in" id="dt" value="09 Nov 2026"></div>
+</div>
+<div><label class="l" for="rm">Remarks</label><input class="in" id="rm" value="{{remark}}"></div>
+<div style="{{calcBox}}">
+<span style="font-size: 15px; color: #D4D4D8">Stock after saving</span>
+<span style="font: 700 20px Poppins, sans-serif"><span style="color: #FF7A50">8</span> → <span style="{{afterStyle}}">{{after}} pcs</span></span>
+</div>
+<sc-if value="{{err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 14px; color: #F07070">You can’t remove more than the 8 pcs in stock.</p></sc-if>
+<button type="button" class="btn pri" style="height: 54px">{{saveLabel}}</button>
+</form>
+</section>
+</div>
+
+<section class="card">
+<h2 style="font-size: 18px; font-weight: 600">Stock history · Bottled Water 500ml</h2>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0">
+<sc-for list="{{hist}}" as="h" hint-placeholder-count="5"><li style="display: flex; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid #292B30; font-size: 14px">
+<b style="{{h.qs}}">{{h.q}}</b><span style="flex: 1">{{h.type}} <span style="color: #A1A1AA">· {{h.note}}</span></span><span style="color: #A1A1AA">{{h.by}}</span><span style="color: #A1A1AA; width: 120px; text-align: right">{{h.when}}</span>
+</li></sc-for>
+</ul>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1250}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const mode = st.mode || 'in', qty = st.q ?? 48;
+    const on = 'flex:1;height:48px;border:0;border-radius:10px;font:700 15px Inter,sans-serif;cursor:pointer;background:#FF3D0A;color:#FFFFFF';
+    const off = 'flex:1;height:48px;border:0;border-radius:10px;font:600 15px Inter,sans-serif;cursor:pointer;background:transparent;color:#A1A1AA';
+    const after = mode === 'in' ? 8 + qty : 8 - qty, err = after < 0;
+    return {
+      inP: mode === 'in' ? 'true' : 'false', outP: mode === 'out' ? 'true' : 'false', inS: mode === 'in' ? on : off, outS: mode === 'out' ? on : off,
+      setIn: () => this.setState({ mode: 'in', q: 48 }), setOut: () => this.setState({ mode: 'out', q: 2 }),
+      types: mode === 'in' ? ['Delivery from supplier', 'Returned by customer', 'Count correction (add)'] : ['Sold', 'Used by gym', 'Damaged / expired', 'Count correction (remove)'],
+      remark: mode === 'in' ? 'Aqua Fresh delivery · DR-55821' : 'Sold at front desk',
+      qty, plus: () => this.setState({ q: qty + 1 }), minus: () => this.setState({ q: Math.max(1, qty - 1) }),
+      after: err ? '—' : after, err,
+      afterStyle: 'color:' + (err ? '#F07070' : after === 0 ? '#F07070' : after <= 24 ? '#FF7A50' : '#3DD598'),
+      calcBox: 'display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:12px;background:#1D1F23;border:1px solid ' + (err ? '#E34D4D' : '#292B30'),
+      saveLabel: mode === 'in' ? 'Add Stock' : 'Remove Stock',
+      hist: [['+60', 'Delivery from supplier', 'DR-55702', 'Jomar P.', '02 Nov, 9:10 AM', '#3DD598'], ['−12', 'Sold', 'front desk', 'Joy M.', '08 Nov', '#F07070'], ['−2', 'Damaged / expired', 'leaking bottles', 'Joy M.', '06 Nov', '#F07070'], ['−38', 'Sold', 'front desk (week total)', 'Joy M.', '01–07 Nov', '#F07070'], ['±0', 'Count correction', 'monthly count matched', 'Marco V.', '01 Nov', '#A1A1AA']].map(h => ({ q: h[0], type: h[1], note: h[2], by: h[3], when: h[4], qs: 'width:48px;font:700 15px Poppins,sans-serif;color:' + h[5] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

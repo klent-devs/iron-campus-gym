@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Membership plans</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 16px;border-top:1px solid #292B30;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.warn{background:rgba(242,169,59,.15);color:#F5B95A}.bad{background:rgba(227,77,77,.15);color:#F07070}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="members" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Membership Plans</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Set your prices and watch who needs to renew.</p></div>
+<a class="btn pri" href="#add" style="color: #FFFFFF">+ Add Membership Plan</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 2 1 560px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px">
+<sc-for list="{{plans}}" as="p" hint-placeholder-count="5">
+<article style="{{p.card}}">
+<div style="display: flex; justify-content: space-between; align-items: center"><span class="pill {{p.tone}}">{{p.st}}</span><span style="font-size: 13px; color: #A1A1AA">{{p.members}} members</span></div>
+<h3 style="font-size: 19px; margin-top: 14px">{{p.name}}</h3>
+<div style="font: 700 30px Poppins, sans-serif; margin-top: 4px">{{p.price}}<span style="font-size: 14px; font-weight: 500; color: #A1A1AA"> / {{p.dur}}</span></div>
+<p style="margin: 8px 0 16px; font-size: 14px; line-height: 1.5; color: #A1A1AA; min-height: 42px">{{p.desc}}</p>
+<div style="display: flex; gap: 8px"><button class="btn sm" style="flex: 1">Edit</button><button class="btn sm" style="flex: 1" onClick="{{p.toggle}}">{{p.tlabel}}</button></div>
+</article>
+</sc-for>
+</div>
+<section id="add" class="card" style="flex: 1 1 320px">
+<h2 style="font-size: 18px; font-weight: 600">Add Membership Plan</h2>
+<form style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px">
+<div><label class="l" for="pn">Plan Name</label><input class="in" id="pn" placeholder="e.g. Semi-Annual"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div><label class="l" for="du">Duration</label><select class="in" id="du"><option>1 month</option><option>3 months</option><option>6 months</option><option>12 months</option></select></div>
+<div><label class="l" for="pr">Price (₱)</label><input class="in" id="pr" placeholder="0.00"></div>
+</div>
+<div><label class="l" for="ds">Description</label><input class="in" id="ds" placeholder="Short note shown to staff and members"></div>
+<label style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: #D4D4D8; min-height: 44px"><input type="checkbox" checked style="width: 20px; height: 20px; accent-color: #FF3D0A">Active — available for new sign-ups</label>
+<button type="submit" class="btn pri" style="height: 48px">Save Plan</button>
+<p style="margin: 0; font-size: 13px; color: #A1A1AA">Only the Owner can add or change plans. Price changes apply to new sign-ups and renewals only.</p>
+</form>
+</section>
+</div>
+
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 18px">
+<h2 style="font-size: 18px; font-weight: 600">Membership Monitoring</h2>
+<div role="group" aria-label="Filter" style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.label}}</button></sc-for></div>
+</div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Member Name</th><th>Membership Plan</th><th>Start Date</th><th>Expiration Date</th><th>Days Remaining</th><th>Status</th><th></th></tr></thead>
+<tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="8"><tr>
+<td style="font-weight: 600">{{r.name}}</td><td>{{r.plan}}</td><td style="color: #D4D4D8">{{r.start}}</td><td style="color: #D4D4D8">{{r.end}}</td>
+<td><b style="{{r.ds}}">{{r.days}}</b></td><td><span class="pill {{r.tone}}">{{r.st}}</span></td>
+<td style="text-align: right"><a class="btn sm" href="Renewal.dc.html" style="color: #FFFFFF">Renew</a></td>
+</tr></sc-for></tbody></table>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const off = st.off || { 4: true };
+    const f = st.f || 'All';
+    const P = [['Monthly', '₱1,200', '30 days', 'Full gym access, all opening hours.', 248], ['Student Monthly', '₱900', '30 days', 'Valid school ID required at sign-up and renewal.', 96], ['Quarterly', '₱3,300', '3 months', 'Save ₱300 compared with paying monthly.', 51], ['Annual', '₱12,000', '12 months', 'Best value. Includes 1 month free.', 23], ['Summer Promo', '₱1,000', '30 days', 'Seasonal plan for April – May.', 0]];
+    const tone = { Active: 'ok', 'Expiring Soon': 'warn', Expired: 'bad' };
+    const R = [['Paolo Reyes', 'Quarterly', '13 Aug 2026', '12 Nov 2026', 3], ['Bianca Santos', 'Student Monthly', '11 Oct 2026', '10 Nov 2026', 1], ['Jasmine Uy', 'Monthly', '15 Oct 2026', '14 Nov 2026', 5], ['Andrea Lim', 'Monthly', '09 Nov 2026', '08 Dec 2026', 29], ['Miguel Ramos', 'Annual', '15 Mar 2026', '14 Mar 2027', 125], ['Jerome Castro', 'Monthly', '29 Sep 2026', '28 Oct 2026', -12], ['Renz Aquino', 'Quarterly', '16 Jul 2026', '15 Oct 2026', -25], ['Kyla Mae Dizon', 'Monthly', '09 Nov 2026', '08 Dec 2026', 29]];
+    const sOf = d => d < 0 ? 'Expired' : d <= 7 ? 'Expiring Soon' : 'Active';
+    const col = { Active: '#3DD598', 'Expiring Soon': '#F5B95A', Expired: '#F07070' };
+    return {
+      plans: P.map((p, i) => { const on = !off[i]; return { name: p[0], price: p[1], dur: p[2], desc: p[3], members: p[4], st: on ? 'Active' : 'Inactive', tone: on ? 'ok' : 'mute', tlabel: on ? 'Deactivate' : 'Activate',
+        toggle: () => this.setState({ off: Object.assign({}, off, { [i]: on }) }),
+        card: 'background:#151619;border:1px solid #292B30;border-radius:16px;padding:20px;' + (on ? '' : 'opacity:.6') }; }),
+      chips: ['All', 'Active', 'Expiring Soon', 'Expired'].map(k => ({ label: k, pressed: k === f ? 'true' : 'false', pick: () => this.setState({ f: k }),
+        style: 'height:40px;padding:0 16px;border-radius:999px;font:600 13px Inter,sans-serif;cursor:pointer;' + (k === f ? 'background:#FF3D0A;border:1px solid #FF3D0A;color:#FFFFFF' : 'background:transparent;border:1px solid #292B30;color:#D4D4D8') })),
+      rows: R.filter(r => f === 'All' || sOf(r[4]) === f).map(r => { const s = sOf(r[4]); return { name: r[0], plan: r[1], start: r[2], end: r[3], st: s, tone: tone[s], days: r[4] < 0 ? 'Expired ' + Math.abs(r[4]) + 'd ago' : r[4] + ' days', ds: 'color:' + col[s] }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

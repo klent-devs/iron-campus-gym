@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Overview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}.btn.pri:hover{background:#E93408}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.kebab{width:32px;height:32px;border:0;background:transparent;color:#A1A1AA;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.warn{background:rgba(242,169,59,.15);color:#F5B95A}.bad{background:rgba(227,77,77,.15);color:#F07070}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="overview" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px 20px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Manage Your Gym Business</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Welcome back! Here’s your gym overview.</p></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<a class="btn" href="Attendance.dc.html" style="color: #FFFFFF">Check In Member</a>
+<a class="btn pri" href="AddMember.dc.html" style="color: #FFFFFF">+ Add Member</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<section class="card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="width: 36px; height: 36px; border-radius: 10px; background: #1D1F23; color: #FF6A3D; display: inline-flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{s.icon}}"/></svg></span>
+<h2 style="flex: 1; font-size: 15px; font-weight: 600">{{s.label}}</h2>
+<button class="kebab" aria-label="More options for {{s.label}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg></button>
+</div>
+<div style="font: 700 32px Poppins, sans-serif; letter-spacing: -0.01em">{{s.value}}</div>
+<div style="font-size: 13px; color: #A1A1AA; display: flex; gap: 8px; align-items: center"><b style="{{s.deltaStyle}}">{{s.delta}}</b><span>{{s.note}}</span></div>
+</section>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section class="card" style="flex: 1 1 320px; padding: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 17px; font-weight: 600">Gym Capacity</h2><span class="pill ok">Live</span></div>
+<p style="margin: 4px 0 0; font-size: 13px; color: #A1A1AA">Updates with every check-in and check-out</p>
+<div style="position: relative; width: 260px; height: 160px; margin: 18px auto 0">
+<svg width="260" height="160" viewBox="0 0 260 160" aria-hidden="true">
+<path d="M30 140 A100 100 0 0 1 230 140" fill="none" stroke="#292B30" stroke-width="26" stroke-linecap="round"/>
+<path d="M30 140 A100 100 0 0 1 230 140" fill="none" stroke="#FF3D0A" stroke-width="26" stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="136"/>
+</svg>
+<div style="position: absolute; left: 0; right: 0; top: 70px; text-align: center"><div style="font: 700 34px Poppins, sans-serif">56.7%</div><span class="pill warn" style="height: 22px; font-size: 11px">Getting busy</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; text-align: center">
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 12px; color: #A1A1AA">Inside now</div><div style="font: 700 22px Poppins, sans-serif; color: #FF6A3D">34</div></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 12px"><div style="font-size: 12px; color: #A1A1AA">Max capacity</div><div style="font: 700 22px Poppins, sans-serif">60</div></div>
+</div>
+</section>
+
+<section class="card" style="flex: 2.4 1 520px; min-width: 0; padding: 20px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<h2 style="font-size: 17px; font-weight: 600">Revenue Analytics</h2>
+<div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
+<span style="display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: #D4D4D8"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF3D0A"></i>Revenue</span>
+<span style="display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: #D4D4D8"><i style="width: 10px; height: 10px; border-radius: 3px; background: #52525B"></i>Expenses</span>
+<select aria-label="Date range" style="height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #292B30; background: #0D0E10; color: #FFFFFF; font: 600 13px Inter, sans-serif"><option>Last 12 months</option><option>This year</option><option>Last 6 months</option></select>
+</div>
+</div>
+<div style="display: flex; gap: 10px; margin-top: 18px">
+<div style="display: flex; flex-direction: column; justify-content: space-between; height: 240px; font-size: 12px; color: #A1A1AA; text-align: right; width: 44px"><span>₱600k</span><span>₱400k</span><span>₱200k</span><span>₱0</span></div>
+<div style="flex: 1; min-width: 0; position: relative">
+<div style="position: absolute; inset: 0 0 0 0; height: 240px; display: flex; flex-direction: column; justify-content: space-between"><i style="border-top: 1px dashed #292B30"></i><i style="border-top: 1px dashed #292B30"></i><i style="border-top: 1px dashed #292B30"></i><i style="border-top: 1px solid #292B30"></i></div>
+<div style="position: relative; height: 240px; display: flex; align-items: flex-end; gap: 10px; padding: 0 4px">
+<sc-for list="{{rev}}" as="r" hint-placeholder-count="12">
+<div style="flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px" title="{{r.tip}}"><div style="{{r.a}}"></div><div style="{{r.b}}"></div></div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 10px; padding: 8px 4px 0; font-size: 12px; color: #A1A1AA"><sc-for list="{{rev}}" as="r" hint-placeholder-count="12"><span style="{{r.lbl}}">{{r.m}}</span></sc-for></div>
+</div>
+</div>
+<div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid #292B30; font-size: 13px; color: #A1A1AA">
+<span>12-month revenue <b style="color: #FFFFFF">₱5,214,600</b></span><span>Expenses <b style="color: #FFFFFF">₱3,082,400</b></span><span>Net <b style="color: #3DD598">₱2,132,200</b></span>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<section class="card" style="flex: 2 1 480px; min-width: 0; padding: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 17px; font-weight: 600">Recent Activities</h2><a href="AttendanceRecords.dc.html" style="font-size: 14px; font-weight: 600">View all</a></div>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0">
+<sc-for list="{{acts}}" as="a" hint-placeholder-count="6">
+<li style="display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid #292B30">
+<span style="{{a.iconStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.icon}}"/></svg></span>
+<div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 500">{{a.text}}</div><div style="font-size: 13px; color: #A1A1AA">{{a.sub}}</div></div>
+<span style="font-size: 13px; color: #A1A1AA; white-space: nowrap">{{a.time}}</span>
+</li>
+</sc-for>
+</ul>
+</section>
+<section class="card" style="flex: 1 1 340px; padding: 20px">
+<h2 style="font-size: 17px; font-weight: 600">Alerts</h2>
+<div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px">
+<div style="padding: 14px; border-radius: 12px; background: rgba(242,169,59,.08); border: 1px solid rgba(242,169,59,.35)">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="color: #F5B95A">21 memberships expiring soon</b></div>
+<p style="margin: 4px 0 10px; font-size: 13px; color: #D4D4D8">Within the next 7 days · 6 expire tomorrow</p>
+<a class="btn sm" href="Memberships.dc.html" style="color: #FFFFFF">See members</a>
+</div>
+<div style="padding: 14px; border-radius: 12px; background: rgba(227,77,77,.08); border: 1px solid rgba(227,77,77,.35)">
+<b style="color: #F07070">37 expired memberships</b>
+<p style="margin: 4px 0 10px; font-size: 13px; color: #D4D4D8">Not renewed yet · 9 expired this week</p>
+<a class="btn sm" href="Renewal.dc.html" style="color: #FFFFFF">Renew Membership</a>
+</div>
+<div style="padding: 14px; border-radius: 12px; background: #1D1F23; border: 1px solid #292B30">
+<b>3 items low on stock · 1 out of stock</b>
+<p style="margin: 4px 0 10px; font-size: 13px; color: #D4D4D8">Bottled Water 500ml has 8 left</p>
+<a class="btn sm" href="StockMovement.dc.html" style="color: #FFFFFF">Add Stock</a>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1520}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      users: 'M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19M10 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM20 19v-1.5a3.5 3.5 0 0 0-2.5-3.35M15.5 4.2a3.5 3.5 0 0 1 0 6.6',
+      peso: 'M7 20V4h6a4 4 0 0 1 0 8H7M4 8h14M4 11h14',
+      in: 'M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3M10 16l4-4-4-4M14 12H4',
+      out: 'M9 20H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3M15 16l4-4-4-4M19 12H9',
+      walk: 'M13 4.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 20l3-7 3 3v4M7 11l3-4h4l2 3 3 1',
+      add: 'M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6',
+      cash: 'M3 7h18v10H3zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 10v4M18 10v4'
+    };
+    const up = 'color:#3DD598', dn = 'color:#F07070';
+    const R = [[392, 248], [401, 255], [418, 251], [430, 262], [445, 270], [452, 258], [438, 266], [461, 259], [470, 263], [449, 272], [472, 254], [486, 274]];
+    const M = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+    const tile = (bg, c) => 'width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:none;background:' + bg + ';color:' + c;
+    return {
+      stats: [
+        { label: 'Total Members', value: '642', delta: '418 active', deltaStyle: up, note: '· 37 expired', icon: I.users },
+        { label: 'Monthly Revenue', value: '₱486,300', delta: '▲ 8.4%', deltaStyle: up, note: 'vs October', icon: I.peso },
+        { label: "Today's Attendance", value: '124', delta: '▲ 11', deltaStyle: up, note: 'vs last Monday', icon: I.in },
+        { label: 'Walk-in Customers', value: '17', delta: '▼ 3', deltaStyle: dn, note: '₱1,620 collected today', icon: I.walk }
+      ],
+      rev: R.map((r, i) => ({ m: M[i], tip: M[i] + ': revenue ₱' + r[0] + 'k · expenses ₱' + r[1] + 'k', lbl: 'flex:1;text-align:center;' + (i === 11 ? 'color:#FF6A3D;font-weight:700' : ''),
+        a: 'width:42%;max-width:16px;border-radius:5px 5px 0 0;background:#FF3D0A;height:' + (r[0] / 600 * 100) + '%',
+        b: 'width:42%;max-width:16px;border-radius:5px 5px 0 0;background:#52525B;height:' + (r[1] / 600 * 100) + '%' })),
+      acts: [
+        { icon: I.add, iconStyle: tile('rgba(255,61,10,.14)', '#FF6A3D'), text: 'New member: Kyla Mae Dizon', sub: 'ICG-2026-0642 · Monthly plan · registered by Joy (Front desk)', time: '10:42 AM' },
+        { icon: I.in, iconStyle: tile('rgba(36,180,126,.14)', '#3DD598'), text: 'Check-in: Paolo Reyes', sub: 'ICG-2025-0318 · QR scan', time: '10:38 AM' },
+        { icon: I.cash, iconStyle: tile('rgba(36,180,126,.14)', '#3DD598'), text: 'Payment received: ₱1,200 from Andrea Lim', sub: 'Monthly renewal · GCash · TXN-2026-11-0391', time: '10:31 AM' },
+        { icon: I.walk, iconStyle: tile('#1D1F23', '#D4D4D8'), text: 'Walk-in registered: Carlo Tan', sub: 'Student rate ₱80 · Cash', time: '10:20 AM' },
+        { icon: I.out, iconStyle: tile('#1D1F23', '#D4D4D8'), text: 'Check-out: Bianca Santos', sub: 'Stayed 1h 48m', time: '10:05 AM' },
+        { icon: I.in, iconStyle: tile('rgba(36,180,126,.14)', '#3DD598'), text: 'Check-in: Miguel Ramos', sub: 'ICG-2024-0107 · Manual ID lookup', time: '9:58 AM' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

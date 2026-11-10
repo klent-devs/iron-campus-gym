@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Staff accounts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:36px;padding:0 12px;font-size:13px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 16px;border-top:1px solid #292B30;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}.or{background:rgba(255,61,10,.15);color:#FF7A50}
+.li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:15px}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="settings" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><nav aria-label="Breadcrumb" style="font-size: 14px; color: #A1A1AA"><a href="Settings.dc.html">Settings</a> / Staff Accounts</nav><h1 style="font-size: 26px; font-weight: 700; margin-top: 6px">Staff Accounts</h1></div>
+<button class="btn pri">+ Add Staff</button>
+</div>
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Last Login</th><th style="text-align: right">Actions</th></tr></thead>
+<tbody><sc-for list="{{staff}}" as="s" hint-placeholder-count="4"><tr>
+<td><div style="display: flex; gap: 12px; align-items: center"><span style="width: 38px; height: 38px; border-radius: 50%; background: #2A2C31; display: inline-flex; align-items: center; justify-content: center; font: 600 13px Poppins, sans-serif">{{s.ini}}</span><b style="font-weight: 600">{{s.name}}</b></div></td>
+<td style="font: 13px ui-monospace, Menlo, monospace; color: #D4D4D8">{{s.user}}</td><td><span class="pill {{s.rt}}">{{s.role}}</span></td><td><span class="pill {{s.tone}}">{{s.st}}</span></td><td style="color: #D4D4D8">{{s.last}}</td>
+<td style="text-align: right"><button class="btn sm">Edit</button> <button class="btn sm">Reset Password</button> <button class="btn sm">{{s.cta}}</button></td>
+</tr></sc-for></tbody></table>
+</div>
+</section>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 1 1 300px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Administrator / Owner</h2><span class="pill or">Full access</span></div>
+<div style="margin-top: 12px"><sc-for list="{{admin}}" as="a" hint-placeholder-count="6"><div class="li"><span style="color: #3DD598; font-weight: 700">✓</span>{{a}}</div></sc-for></div>
+</section>
+<section class="card" style="flex: 1 1 300px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 18px; font-weight: 600">Receptionist</h2><span class="pill mute">Front desk</span></div>
+<div style="margin-top: 12px"><sc-for list="{{recYes}}" as="a" hint-placeholder-count="6"><div class="li"><span style="color: #3DD598; font-weight: 700">✓</span>{{a}}</div></sc-for>
+<sc-for list="{{recNo}}" as="a" hint-placeholder-count="3"><div class="li" style="color: #A1A1AA"><span style="color: #F07070; font-weight: 700">✕</span>{{a}}</div></sc-for></div>
+</section>
+<section class="card" style="flex: 1.2 1 340px">
+<h2 style="font-size: 18px; font-weight: 600">Audit History</h2>
+<ul style="list-style: none; margin: 12px 0 0; padding: 0">
+<sc-for list="{{log}}" as="l" hint-placeholder-count="6"><li style="display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid #292B30"><span style="{{l.dot}}"></span><div><div style="font-size: 14px"><b>{{l.who}}</b> {{l.what}}</div><div style="font-size: 13px; color: #A1A1AA">{{l.when}}</div></div></li></sc-for>
+</ul>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [['Marco Villanueva', 'marco.owner', 'Owner', 'Active', 'Now'], ['Joy Mercado', 'joy.frontdesk', 'Receptionist', 'Active', 'Today, 5:52 AM'], ['Kevin Santos', 'kevin.s', 'Receptionist', 'Active', 'Yesterday, 2:01 PM'], ['Aira Dela Paz', 'aira.d', 'Receptionist', 'Disabled', '14 Sep 2026']];
+    const d = c => 'width:9px;height:9px;border-radius:50%;margin-top:6px;flex:none;background:' + c;
+    return {
+      staff: S.map(s => ({ name: s[0], ini: s[0].split(' ').map(w => w[0]).slice(0, 2).join(''), user: s[1], role: s[2], rt: s[2] === 'Owner' ? 'or' : 'mute', st: s[3], tone: s[3] === 'Active' ? 'ok' : 'mute', last: s[4], cta: s[2] === 'Owner' ? 'Change Password' : s[3] === 'Active' ? 'Disable' : 'Enable' })),
+      admin: ['Manage staff accounts', 'Manage membership plans and prices', 'View all payments and reports', 'Void or refund payments', 'Manage inventory and stock counts', 'Change system settings'],
+      recYes: ['Register members and renew memberships', 'Check members in and out', 'Register walk-in customers', 'Record payments and print receipts', 'View member records'],
+      recNo: ['Change prices, plans or settings', 'Void or refund payments', 'See monthly revenue and reports'],
+      log: [
+        { who: 'Joy Mercado', what: 'registered member Carlo Tan (from walk-in)', when: 'Today, 10:42 AM', dot: d('#3DD598') },
+        { who: 'Joy Mercado', what: 'fixed missed check-out for Jerome Castro', when: 'Today, 9:02 AM · reason: forgot to scan out', dot: d('#F2A93B') },
+        { who: 'Marco Villanueva', what: 'voided TXN-2026-11-0372 (₱1,200)', when: 'Yesterday, 6:20 PM · reason: entered twice', dot: d('#E34D4D') },
+        { who: 'Marco Villanueva', what: 'changed Quarterly price ₱3,000 → ₱3,300', when: '07 Nov, 8:12 PM', dot: d('#FF3D0A') },
+        { who: 'Kevin Santos', what: 'stock out · 12 × Bottled Water (Sold)', when: '08 Nov, 7:30 PM', dot: d('#A1A1AA') },
+        { who: 'Marco Villanueva', what: 'disabled account aira.d', when: '14 Sep 2026', dot: d('#A1A1AA') }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Register walk-in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.card{background:#151619;border:1px solid #292B30;border-radius:16px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 20px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:38px;padding:0 14px;font-size:13px}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.l i{font-style:normal;font-weight:500;color:#A1A1AA}
+.in{width:100%;height:52px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:16px Inter,sans-serif}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.sec{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec b{width:28px;height:28px;border-radius:50%;background:#1D1F23;color:#FF6A3D;display:inline-flex;align-items:center;justify-content:center;font:700 13px Poppins,sans-serif}
+.row{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding:10px 0;border-top:1px solid #292B30;color:#D4D4D8}
+.row b{color:#FFFFFF;text-align:right}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="walkin" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><nav aria-label="Breadcrumb" style="font-size: 14px; color: #A1A1AA"><a href="WalkInRecords.dc.html">Walk-in Customers</a> / Register Walk-in</nav><h1 style="font-size: 26px; font-weight: 700; margin-top: 6px">Register Walk-in</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">About 20 seconds. Time in is recorded the moment you confirm.</p></div>
+<a class="btn" href="WalkInRecords.dc.html" style="color: #FFFFFF">View Walk-in Records</a>
+</div>
+
+<sc-if value="{{form}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<div style="flex: 2 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<section class="card">
+<div class="sec"><b>1</b><h2 style="font-size: 18px; font-weight: 600">Who is visiting?</h2></div>
+<label class="l" for="rq">Been here before? Tap their name to fill in the details</label>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<sc-for list="{{recent}}" as="r" hint-placeholder-count="4"><button type="button" onClick="{{r.pick}}" aria-pressed="{{r.pressed}}" style="{{r.style}}"><b style="display: block; font-size: 15px">{{r.name}}</b><span style="font-size: 13px; color: #A1A1AA">{{r.meta}}</span></button></sc-for>
+<button type="button" onClick="{{clear}}" style="{{newStyle}}"><b style="display: block; font-size: 15px">+ New customer</b><span style="font-size: 13px; color: #A1A1AA">First visit</span></button>
+</div>
+<div class="g2" style="margin-top: 18px">
+<div><label class="l" for="wn">Customer Name</label><input class="in" id="wn" value="{{name}}" placeholder="Full name" style="{{nameStyle}}"></div>
+<div><label class="l" for="wp">Contact Number <i>(optional)</i></label><input class="in" id="wp" value="{{phone}}" placeholder="09XX XXX XXXX"></div>
+</div>
+<sc-if value="{{upsell}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 14px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 14px 16px; border-radius: 12px; background: rgba(255,61,10,.08); border: 1px solid rgba(255,61,10,.35)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6A3D" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6"/></svg>
+<span style="flex: 1; font-size: 14px">{{upsell}}</span>
+<a class="btn sm" href="AddMember.dc.html" style="color: #FFFFFF">Make Member Instead</a>
+</div>
+</sc-if>
+</section>
+
+<section class="card">
+<div class="sec"><b>2</b><h2 style="font-size: 18px; font-weight: 600">Visit &amp; fee</h2></div>
+<div class="g2">
+<div><label class="l" for="vd">Visit Date</label><input class="in" id="vd" value="Today · Mon, 09 Nov 2026" readonly style="color: #D4D4D8"></div>
+<div><label class="l" for="ti">Time In <i>(automatic)</i></label><input class="in" id="ti" value="10:44 AM — on confirm" readonly style="color: #A1A1AA"></div>
+</div>
+<span class="l" style="margin-top: 16px">Walk-in Fee</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<sc-for list="{{fees}}" as="f" hint-placeholder-count="2"><button type="button" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="{{f.style}}"><b style="display: block; font: 700 22px Poppins, sans-serif">{{f.price}}</b><span style="font-size: 14px; color: #D4D4D8">{{f.label}}</span><span style="display: block; font-size: 12px; color: #A1A1AA; margin-top: 2px">{{f.note}}</span></button></sc-for>
+</div>
+</section>
+
+<section class="card">
+<div class="sec"><b>3</b><h2 style="font-size: 18px; font-weight: 600">Payment</h2></div>
+<span class="l">Payment Method</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<sc-for list="{{methods}}" as="m" hint-placeholder-count="3"><button type="button" onClick="{{m.pick}}" aria-pressed="{{m.pressed}}" style="{{m.style}}">{{m.label}}</button></sc-for>
+</div>
+<sc-if value="{{isCash}}" hint-placeholder-val="{{ true }}">
+<div class="g2" style="margin-top: 16px">
+<div><span class="l">Amount Received</span><div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{cash}}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.label}}</button></sc-for></div></div>
+<div style="display: flex; flex-direction: column; justify-content: flex-end"><div style="padding: 14px 16px; border-radius: 12px; background: #1D1F23; display: flex; justify-content: space-between; align-items: center"><span style="color: #D4D4D8">Change to give</span><b style="font: 700 24px Poppins, sans-serif; color: #3DD598">{{change}}</b></div></div>
+</div>
+</sc-if>
+<sc-if value="{{isGcash}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 16px"><label class="l" for="gr">GCash Reference No.</label><input class="in" id="gr" placeholder="13-digit reference from the customer’s screen" style="max-width: 420px"></div>
+</sc-if>
+<sc-if value="{{isLater}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 16px 0 0; padding: 14px 16px; border-radius: 12px; background: rgba(242,169,59,.08); border: 1px solid rgba(242,169,59,.35); font-size: 14px; color: #F4F4F5">Saved as <b style="color: #F5B95A">Unpaid</b>. Collect before they leave using <b>Record Payment</b> in Walk-in Records.</p>
+</sc-if>
+</section>
+</div>
+
+<aside style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 20px">
+<section class="card" style="border-color: #FF3D0A">
+<h2 style="font-size: 18px; font-weight: 600">Summary</h2>
+<div style="margin-top: 10px">
+<div class="row" style="border-top: 0"><span>Customer</span><b>{{nameShow}}</b></div>
+<div class="row"><span>Visit</span><b>Today · in at 10:44 AM</b></div>
+<div class="row"><span>Fee</span><b>{{feeLabel}}</b></div>
+<div class="row"><span>Payment</span><b>{{methodLabel}}</b></div>
+<div class="row" style="align-items: baseline"><b style="text-align: left">Total</b><b style="font: 700 28px Poppins, sans-serif; color: #FF6A3D">{{total}}</b></div>
+</div>
+<button onClick="{{confirm}}" class="btn pri" style="width: 100%; height: 58px; margin-top: 10px; font: 700 17px Poppins, sans-serif">Confirm Visit</button>
+<sc-if value="{{missing}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 10px 0 0; font-size: 14px; color: #F07070">Enter the customer’s name first.</p></sc-if>
+<a class="btn" href="WalkInRecords.dc.html" style="width: 100%; margin-top: 10px; color: #FFFFFF">Cancel</a>
+</section>
+<section class="card">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="font-size: 16px; font-weight: 600">Walk-ins inside now · 5</h2><a href="WalkInRecords.dc.html" style="font-size: 14px; font-weight: 600">All</a></div>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0">
+<sc-for list="{{inside}}" as="p" hint-placeholder-count="4"><li style="display: flex; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #292B30">
+<div style="flex: 1"><b style="font-size: 14px">{{p.name}}</b><div style="font-size: 13px; color: #A1A1AA">In at {{p.t}} · {{p.pay}}</div></div>
+<button class="btn sm">Complete Visit</button>
+</li></sc-for>
+</ul>
+</section>
+</aside>
+</div>
+</sc-if>
+
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<section class="card" style="max-width: 720px; width: 100%; margin: 0 auto; text-align: center; padding: 36px">
+<span style="width: 68px; height: 68px; border-radius: 50%; background: #24B47E; display: inline-flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+<h2 style="font-size: 26px; margin-top: 16px">Walk-in registered</h2>
+<p style="margin: 6px 0 0; font-size: 16px; color: #D4D4D8"><b>{{nameShow}}</b> checked in at 10:44 AM.</p>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 24px 0; text-align: left">
+<div style="background: #1D1F23; border-radius: 12px; padding: 14px"><div style="font-size: 13px; color: #A1A1AA">Transaction No.</div><b style="font: 700 15px ui-monospace, Menlo, monospace">TXN-2026-11-0406</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 14px"><div style="font-size: 13px; color: #A1A1AA">Fee</div><b style="font-size: 17px">{{total}}</b></div>
+<div style="background: #1D1F23; border-radius: 12px; padding: 14px"><div style="font-size: 13px; color: #A1A1AA">Payment</div><b style="{{payStyle}}">{{payStatus}}</b></div>
+</div>
+<p style="margin: 0 0 20px; font-size: 14px; color: #A1A1AA">When they leave, tap <b style="color: #FFFFFF">Complete Visit</b> in Walk-in Records to save the time out.</p>
+<div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap"><button class="btn">Print Receipt</button><a class="btn" href="WalkInRecords.dc.html" style="color: #FFFFFF">View Walk-in Records</a><button class="btn pri" onClick="{{again}}">+ Register Another</button></div>
+</section>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const who = st.who ?? 1, fee = st.fee ?? 0, method = st.m ?? 'cash', recv = st.recv ?? 1;
+    const R = [['Rica Mendoza', '0995 120 3381', 'Last visit 02 Nov · 2 visits'], ['Ryan Pascual', '0919 004 2287', 'Last visit 06 Nov · 4 visits this month'], ['Joanna Flores', '0916 330 5590', 'Last visit 30 Oct · 1 visit'], ['Mae Dizon', '', 'Student · last visit 08 Nov']];
+    const F = [[100, 'Regular day pass', 'Full access until closing'], [80, 'Student day pass', 'Show a valid school ID']];
+    const M = [['cash', 'Cash'], ['gcash', 'GCash'], ['later', 'Pay later']];
+    const price = F[fee][0];
+    const C = [[price, 'Exact'], [200, '₱200'], [500, '₱500'], [1000, '₱1,000']];
+    const cur = who >= 0 ? R[who] : null;
+    const peso = n => '₱' + n.toLocaleString('en-PH') + '.00';
+    const pick = (on, extra) => 'text-align:left;padding:12px 16px;border-radius:12px;cursor:pointer;font-family:inherit;color:#FFFFFF;' + (extra || '') + (on ? 'border:2px solid #FF3D0A;background:rgba(255,61,10,.1)' : 'border:1px solid #292B30;background:#0D0E10');
+    const chip = on => 'height:52px;min-width:110px;padding:0 18px;border-radius:12px;cursor:pointer;font:600 15px Inter,sans-serif;' + (on ? 'border:2px solid #FF3D0A;background:rgba(255,61,10,.12);color:#FFFFFF' : 'border:1px solid #292B30;background:#0D0E10;color:#D4D4D8');
+    const name = cur ? cur[0] : (st.typed || '');
+    const visits = who === 1 ? 4 : 0;
+    return {
+      form: !st.done, done: !!st.done,
+      recent: R.map((r, i) => ({ name: r[0], meta: r[2], pressed: i === who ? 'true' : 'false', style: pick(i === who, 'min-width:200px;'),
+        pick: () => this.setState({ who: i, fee: r[2].startsWith('Student') ? 1 : 0, missing: false }) })),
+      newStyle: pick(who === -1, 'min-width:160px;'), clear: () => this.setState({ who: -1, missing: false }),
+      name, phone: cur ? cur[1] : '', nameStyle: st.missing ? 'border-color:#E34D4D' : '',
+      upsell: visits >= 4 ? 'Ryan has visited 4 times this month (₱400). A Monthly plan is ₱1,200 — suggest making him a member. His walk-in history moves with him.' : '',
+      fees: F.map((f, i) => ({ price: '₱' + f[0], label: f[1], note: f[2], pressed: i === fee ? 'true' : 'false', style: pick(i === fee, 'flex:1 1 200px;'), pick: () => this.setState({ fee: i }) })),
+      methods: M.map(m => ({ label: m[1], pressed: m[0] === method ? 'true' : 'false', style: chip(m[0] === method), pick: () => this.setState({ m: m[0] }) })),
+      isCash: method === 'cash', isGcash: method === 'gcash', isLater: method === 'later',
+      cash: C.map((c, i) => ({ label: c[1], pressed: i === recv ? 'true' : 'false', style: chip(i === recv).replace('min-width:110px', 'min-width:76px'), pick: () => this.setState({ recv: i }) })),
+      change: peso(C[recv][0] - price),
+      nameShow: name || '—', feeLabel: F[fee][1], total: peso(price),
+      methodLabel: method === 'cash' ? 'Cash · received ' + peso(C[recv][0]) : method === 'gcash' ? 'GCash' : 'Pay later (unpaid)',
+      payStatus: method === 'later' ? 'Unpaid' : 'Paid · ' + (method === 'cash' ? 'Cash' : 'GCash'),
+      payStyle: 'font-size:17px;color:' + (method === 'later' ? '#F5B95A' : '#3DD598'),
+      missing: !!st.missing,
+      confirm: () => name ? this.setState({ done: true, missing: false }) : this.setState({ missing: true }),
+      again: () => this.setState({ done: false, who: -1 }),
+      inside: [['Carlo Tan', '10:20 AM', 'Paid ₱80'], ['Trisha Gomez', '9:15 AM', 'Paid ₱100'], ['Nathan Lopez', '8:40 AM', 'Unpaid'], ['Ella Bautista', '10:44 AM', 'Paid ₱100']].map(p => ({ name: p[0], t: p[1], pay: p[2] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

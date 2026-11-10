@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM app · My attendance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#090A0C}</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #090A0C; font-family: Inter, system-ui, sans-serif; color: #FFFFFF">
+<div style="height: 756px; overflow-y: auto; padding: 56px 20px 24px; box-sizing: border-box">
+<h1 style="margin: 0; font: 700 26px Poppins, sans-serif">My Attendance</h1>
+<section style="margin-top: 18px; border-radius: 22px; background: #151619; border: 1px solid #292B30; padding: 18px 20px; display: flex; align-items: center; gap: 16px">
+<div style="flex: 1"><div style="font-size: 14px; color: #A1A1AA">Total visits this month</div><b style="font: 700 40px Poppins, sans-serif; color: #FF6A3D">8</b><div style="font-size: 13px; color: #A1A1AA">October: 14 visits</div></div>
+<div style="display: flex; align-items: flex-end; gap: 6px; height: 64px" aria-hidden="true"><sc-for list="{{bars}}" as="b" hint-placeholder-count="6"><i style="{{b}}"></i></sc-for></div>
+</section>
+<h2 style="margin: 24px 0 10px; font: 600 17px Poppins, sans-serif">Recent Gym Visits</h2>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="6"><article style="border-radius: 18px; background: #151619; border: 1px solid #292B30; padding: 14px 16px">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 16px">{{r.d}}</b><span style="{{r.ds}}">{{r.dur}}</span></div>
+<div style="display: flex; gap: 18px; margin-top: 8px; font-size: 14px; color: #D4D4D8"><span>Time In <b style="color: #3DD598">{{r.i}}</b></span><span>Time Out <b style="{{r.os}}">{{r.o}}</b></span></div>
+</article></sc-for>
+</div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0"><dc-import name="TabBar" active="attendance" hint-size="390px,88px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['Mon, 09 Nov', '10:38 AM', '', 'Inside now'], ['Sat, 07 Nov', '8:05 AM', '9:44 AM', '1h 39m'], ['Thu, 05 Nov', '6:48 PM', '8:20 PM', '1h 32m'], ['Wed, 04 Nov', '6:05 AM', '7:28 AM', '1h 23m'], ['Tue, 03 Nov', '6:52 PM', '8:41 PM', '1h 49m'], ['Mon, 02 Nov', '6:10 AM', '7:35 AM', '1h 25m']];
+    return {
+      bars: [9, 12, 11, 13, 14, 8].map((v, i) => 'width:14px;border-radius:4px 4px 0 0;height:' + (v / 14 * 100) + '%;background:' + (i === 5 ? '#FF3D0A' : '#3F3F46')),
+      rows: R.map(r => ({ d: r[0], i: r[1], o: r[2] || '—', os: 'color:' + (r[2] ? '#FFFFFF' : '#A1A1AA'), dur: r[3], ds: 'font-size:14px;font-weight:700;color:' + (r[2] ? '#FFFFFF' : '#FF6A3D') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "@icg/member-portal",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON CAMPUS GYM — React member web app (mobile-friendly PWA) (built in milestone 9)"
+}

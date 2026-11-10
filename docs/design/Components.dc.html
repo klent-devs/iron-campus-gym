@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Design system &amp; UI states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.cap{margin:0 0 14px;font:700 12px Inter,sans-serif;letter-spacing:.14em;color:#A1A1AA}
+.card{background:#151619;border:1px solid #292B30;border-radius:18px;padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 20px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}.btn.pri:hover{background:#E93408}
+.btn.hov{background:#E93408;border-color:#E93408;font-weight:700}
+.btn.dng{background:#E34D4D;border-color:#E34D4D;font-weight:700}
+.btn.out{background:transparent;border-color:#5C2526;color:#F07070}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:48px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:15px Inter,sans-serif}
+.pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.warn{background:rgba(242,169,59,.15);color:#F5B95A}.bad{background:rgba(227,77,77,.15);color:#F07070}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}.low{background:rgba(255,61,10,.15);color:#FF7A50}
+.tst{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:#0D0E10;border:1px solid #292B30;font-size:14px;color:#D4D4D8}
+.tst b{display:block;font-size:15px;color:#FFFFFF}
+.ic{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;color:#FFFFFF}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:12px 14px;background:#1D1F23}
+.tbl td{padding:12px 14px;border-top:1px solid #292B30}
+.sk{height:12px;border-radius:6px;background:#1D1F23}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 2000px; background: #090A0C; color: #FFFFFF; font-family: Inter, system-ui, sans-serif; padding: 52px 60px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 14px"><svg width="44" height="44" viewBox="0 0 48 48" aria-hidden="true"><path d="M36.7 11.3A18 18 0 1 0 36.7 36.7" fill="none" stroke="#FF3D0A" stroke-width="7" stroke-linecap="round"/><path d="M18 13h12M18 35h12M24 13v22" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/></svg><div><h2 style="font-size: 30px; font-weight: 800">Design System &amp; UI States</h2><p style="margin: 2px 0 0; font-size: 15px; color: #A1A1AA">Shared by the admin website and the member app. Corners 12–24 px · spacing on a 4 px grid · touch targets 44 px or more.</p></div></div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+<section class="card">
+<p class="cap">BUTTONS</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button class="btn pri">Add Member</button><button class="btn hov">Hover</button><button class="btn">Cancel</button>
+<button class="btn out">Suspend</button><button class="btn dng">Void Payment</button>
+<button class="btn pri" disabled style="opacity: .4; cursor: not-allowed">Disabled</button>
+<button class="btn pri" aria-busy="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>Saving…</button>
+<button class="btn sm">Small</button>
+</div>
+<p style="margin: 14px 0 0; font-size: 13px; color: #A1A1AA">One orange button per screen, for the main action.</p>
+</section>
+<section class="card">
+<p class="cap">INPUT FIELDS &amp; DROPDOWN</p>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div><label class="l" for="c1">Full Name</label><input class="in" id="c1" value="Andrea Lim"></div>
+<div><label class="l" for="c2">Contact Number · focused</label><input class="in" id="c2" value="0905 337" style="border-color: #FF3D0A; box-shadow: 0 0 0 3px rgba(255,61,10,.2)"></div>
+<div><label class="l" for="c3">Membership Plan</label><select class="in" id="c3"><option>Monthly — ₱1,200</option><option>Quarterly — ₱3,300</option></select></div>
+</div>
+</section>
+<section class="card">
+<p class="cap">FORM VALIDATION</p>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div><label class="l" for="v1">Contact Number</label><input class="in" id="v1" value="0917 48" aria-invalid="true" style="border-color: #E34D4D"><span style="font-size: 13px; color: #F07070">Enter 11 digits, like 0917 123 4567</span></div>
+<div><label class="l" for="v2">Amount Received</label><input class="in" id="v2" placeholder="₱0.00" aria-invalid="true" style="border-color: #E34D4D"><span style="font-size: 13px; color: #F07070">Amount is required</span></div>
+<div><label class="l" for="v3">Email (optional)</label><input class="in" id="v3" value="andrea.lim@gmail.com" style="border-color: #24B47E"><span style="font-size: 13px; color: #3DD598">Looks good</span></div>
+</div>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px">
+<section class="card">
+<p class="cap">SEARCH BAR</p>
+<label style="display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 16px; border-radius: 999px; border: 1px solid #FF3D0A; background: #0D0E10; color: #A1A1AA"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input aria-label="Search" value="lim" style="flex: 1; border: 0; outline: 0; background: transparent; color: #FFFFFF; font: 15px Inter, sans-serif"></label>
+<div style="margin-top: 8px; border: 1px solid #292B30; border-radius: 14px; background: #0D0E10; padding: 6px">
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; background: #1D1F23"><b style="flex: 1; font-size: 14px">Andrea <span style="color: #FF6A3D">Lim</span></b><span class="pill ok">Active</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px"><span style="flex: 1; font-size: 14px">Joshua <span style="color: #FF6A3D">Lim</span>bo</span><span class="pill bad">Expired</span></div>
+</div>
+</section>
+<section class="card">
+<p class="cap">STATUS BADGES</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><span class="pill ok">Active</span><span class="pill warn">Expiring Soon</span><span class="pill bad">Expired</span><span class="pill mute">Suspended</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px"><span class="pill ok">Paid</span><span class="pill warn">Pending</span><span class="pill bad">Voided</span><span class="pill mute">Refunded</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px"><span class="pill ok">In Stock</span><span class="pill low">Low Stock</span><span class="pill bad">Out of Stock</span></div>
+<p style="margin: 14px 0 0; font-size: 13px; color: #A1A1AA">Every badge has a word, not colour alone.</p>
+</section>
+<section class="card">
+<p class="cap">DASHBOARD CARD</p>
+<div style="background: #0D0E10; border: 1px solid #292B30; border-radius: 16px; padding: 18px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 36px; height: 36px; border-radius: 10px; background: #1D1F23; color: #FF6A3D; display: inline-flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3M10 16l4-4-4-4M14 12H4"/></svg></span><b style="flex: 1; font: 600 15px Poppins, sans-serif">Today’s Attendance</b><span style="color: #A1A1AA">⋮</span></div>
+<div style="font: 700 32px Poppins, sans-serif; margin-top: 10px">124</div>
+<div style="font-size: 13px; color: #A1A1AA"><b style="color: #3DD598">▲ 11</b> vs last Monday</div>
+</div>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px">
+<section class="card" style="padding: 0; overflow: hidden">
+<div style="padding: 22px 22px 0"><p class="cap">TABLE</p></div>
+<table class="tbl"><thead><tr><th>Member Name</th><th>Plan</th><th>Expiration Date</th><th>Status</th><th style="text-align: right">Actions</th></tr></thead>
+<tbody><tr><td><b style="font-weight: 600">Andrea Lim</b></td><td>Monthly</td><td>08 Dec 2026</td><td><span class="pill ok">Active</span></td><td style="text-align: right"><button class="btn sm">View</button></td></tr>
+<tr style="background: #1A1B1F"><td><b style="font-weight: 600">Paolo Reyes</b> <span style="font-size: 12px; color: #A1A1AA">· hover</span></td><td>Quarterly</td><td>12 Nov 2026</td><td><span class="pill warn">Expiring Soon</span></td><td style="text-align: right"><button class="btn sm">View</button></td></tr></tbody></table>
+<div style="padding: 18px 22px 22px">
+<p class="cap" style="margin-top: 6px">LOADING</p>
+<div style="display: flex; flex-direction: column; gap: 14px" aria-busy="true" aria-label="Loading members">
+<sc-for list="{{sk}}" as="s" hint-placeholder-count="3"><div style="display: flex; gap: 14px; align-items: center"><span style="width: 34px; height: 34px; border-radius: 50%; background: #1D1F23"></span><div class="sk" style="{{s}}"></div><div class="sk" style="flex: 1"></div><div class="sk" style="width: 80px; height: 26px; border-radius: 999px"></div></div></sc-for>
+</div>
+</div>
+</section>
+<section class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px">
+<p class="cap" style="align-self: flex-start">EMPTY RECORDS</p>
+<span style="width: 72px; height: 72px; border-radius: 20px; background: #1D1F23; display: inline-flex; align-items: center; justify-content: center; color: #FF6A3D"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M13 4.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 21l3-7 3 3v4M7 11l3-4h4l2 3 3 1"/></svg></span>
+<h3 style="font-size: 19px">No walk-ins yet today</h3>
+<p style="margin: 0; max-width: 280px; font-size: 14px; color: #A1A1AA">When someone pays for a day pass, they’ll show up here.</p>
+<button class="btn pri" style="margin-top: 6px">+ Register Walk-in</button>
+</section>
+</div>
+
+<section class="card">
+<p class="cap">NOTIFICATIONS · SUCCESS, WARNING &amp; ERROR MESSAGES</p>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{toasts}}" as="t" hint-placeholder-count="9"><div class="tst" role="status" style="{{t.border}}"><span class="ic" style="{{t.ic}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.icon}}"/></svg></span><div><b>{{t.title}}</b>{{t.body}}</div></div></sc-for>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+<section role="alertdialog" aria-labelledby="m1" style="background: #151619; border: 1px solid #292B30; border-radius: 20px; padding: 24px; box-shadow: 0 30px 60px rgba(0,0,0,.5)">
+<p class="cap">MODAL · CONFIRMATION</p>
+<h3 id="m1" style="font-size: 20px">Record ₱3,300 payment?</h3>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: #D4D4D8">Paolo Reyes · Quarterly renewal · Cash. A receipt will be printed.</p>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px"><button class="btn">Go Back</button><button class="btn pri">Record Payment</button></div>
+</section>
+<section role="alertdialog" aria-labelledby="m2" style="background: #151619; border: 1px solid #E34D4D; border-radius: 20px; padding: 24px">
+<p class="cap">MODAL · DESTRUCTIVE</p>
+<h3 id="m2" style="font-size: 20px">Void TXN-2026-11-0372?</h3>
+<p style="margin: 8px 0 12px; font-size: 15px; line-height: 1.55; color: #D4D4D8">₱1,200 · Jasmine Uy. It stays in history marked “Voided”. Owner only.</p>
+<select class="in" aria-label="Reason"><option>Entered twice</option><option>Wrong amount</option><option>Wrong member</option></select>
+<div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px"><button class="btn">Cancel</button><button class="btn dng">Void Payment</button></div>
+</section>
+<section class="card">
+<p class="cap">NAVIGATION</p>
+<div style="background: #0D0E10; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; border-radius: 12px; background: #FF3D0A; font-weight: 700">● Active item</div>
+<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; border-radius: 12px; background: #1D1F23; color: #FFFFFF">○ Hover</div>
+<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; border-radius: 12px; color: #D4D4D8">○ Default</div>
+</div>
+<p style="margin: 14px 0 0; font-size: 13px; color: #A1A1AA">Full components: Navigation Sidebar, Top Bar and Mobile Bottom Navigation sit beside this board.</p>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ok = 'M20 6 9 17l-5-5', x = 'M6 6l12 12M18 6 6 18', ex = 'M12 7v6M12 17v.5', out = 'M9 20H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3M15 16l4-4-4-4M19 12H9';
+    const T = [
+      ['Member registered', 'Carlo Tan · ICG-2026-0643 · QR code ready to print', ok, '#24B47E'],
+      ['Payment recorded', '₱1,200 · TXN-2026-11-0391 · receipt printed', ok, '#24B47E'],
+      ['Checked in · 10:38 AM', 'Andrea Lim · Monthly · Active', ok, '#24B47E'],
+      ['Checked out · 12:20 PM', 'Andrea Lim stayed 1h 42m', out, '#FF3D0A'],
+      ['Membership expired', 'Jerome Castro expired 28 Oct. Offer a renewal.', x, '#E34D4D'],
+      ['Invalid QR code', 'Code not recognized. Type the Member ID instead.', ex, '#F2A93B'],
+      ['Low stock', 'Bottled Water 500ml · 8 left (warn below 24)', ex, '#FF3D0A'],
+      ['Out of stock', 'Sports Drink 500ml · 0 left. Add stock to sell.', x, '#E34D4D'],
+      ['Couldn’t save', 'No internet connection. Your entries are kept — try again.', x, '#E34D4D']
+    ];
+    return {
+      sk: ['width:140px', 'width:180px', 'width:120px'],
+      toasts: T.map(t => ({ title: t[0], body: t[1], icon: t[2], ic: 'background:' + t[3], border: 'border-color:' + t[3] + '66' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

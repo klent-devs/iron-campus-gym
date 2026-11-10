@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Inventory</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:36px;padding:0 12px;font-size:13px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 16px;border-top:1px solid #292B30;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.low{background:rgba(255,61,10,.15);color:#FF7A50}.bad{background:rgba(227,77,77,.15);color:#F07070}
+.st{background:#151619;border:1px solid #292B30;border-radius:16px;padding:18px 20px}
+.st span{font-size:14px;color:#A1A1AA}.st b{display:block;font:700 30px Poppins,sans-serif;margin-top:4px}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="inventory" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Inventory</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Drinks, supplements and supplies. Gym machines and weights are not listed here.</p></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><a class="btn" href="StockMovement.dc.html" style="color: #FFFFFF">Stock Out</a><a class="btn" href="StockMovement.dc.html" style="color: #FFFFFF">Add Stock</a><a class="btn pri" href="StockMovement.dc.html" style="color: #FFFFFF">+ Add Item</a></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div class="st"><span>Total Items</span><b>38</b></div>
+<div class="st"><span>Available Stock</span><b>1,146 <span style="font: 500 15px Inter, sans-serif; color: #A1A1AA">pcs</span></b></div>
+<div class="st" style="border-color: rgba(255,61,10,.5)"><span>Low Stock</span><b style="color: #FF7A50">3</b></div>
+<div class="st" style="border-color: rgba(227,77,77,.5)"><span>Out of Stock</span><b style="color: #F07070">1</b></div>
+</div>
+
+<div role="alert" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 14px 18px; border-radius: 14px; background: rgba(227,77,77,.08); border: 1px solid rgba(227,77,77,.4)">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F07070" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17v.5M10.3 4.2 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/></svg>
+<span style="flex: 1; font-size: 15px"><b style="color: #F07070">Sports Drink 500ml is out of stock.</b> Bottled Water, Whey Sachet and Disinfectant are running low.</span>
+<a class="btn sm" href="StockMovement.dc.html" style="color: #FFFFFF">Add Stock</a>
+</div>
+
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 16px; border-bottom: 1px solid #292B30" role="group" aria-label="Category">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6"><button onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.label}}</button></sc-for>
+</div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Item Name</th><th>Category</th><th>Quantity</th><th style="text-align: right">Cost Price</th><th style="text-align: right">Selling Price</th><th>Stock Status</th><th style="text-align: right">Actions</th></tr></thead>
+<tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="9"><tr>
+<td style="font-weight: 600">{{r.name}}</td><td style="color: #D4D4D8">{{r.cat}}</td>
+<td><b style="{{r.qs}}">{{r.q}}</b> <span style="color: #A1A1AA">{{r.unit}}</span></td>
+<td style="text-align: right; color: #D4D4D8">{{r.cost}}</td><td style="text-align: right">{{r.price}}</td>
+<td><span class="pill {{r.tone}}">{{r.st}}</span></td>
+<td style="text-align: right"><a class="btn sm" href="StockMovement.dc.html" style="color: #FFFFFF">Stock In</a> <a class="btn sm" href="StockMovement.dc.html" style="color: #FFFFFF">Stock Out</a> <a class="btn sm" href="StockMovement.dc.html" style="color: #FFFFFF">Edit</a> <button class="btn sm">History</button></td>
+</tr></sc-for></tbody></table>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const f = (this.state && this.state.f) || 'All';
+    const I = [['Bottled Water 500ml', 'Drinks and Beverages', 8, 'pcs', '₱9.50', '₱20.00', 24], ['Sports Drink 500ml', 'Drinks and Beverages', 0, 'btl', '₱28.00', '₱50.00', 12], ['Protein Shake (ready-to-drink)', 'Protein Products', 26, 'btl', '₱65.00', '₱120.00', 10], ['Whey Sachet 30g', 'Protein Products', 6, 'sachet', '₱38.00', '₱70.00', 15], ['Chalk Block', 'Gym Supplies', 30, 'pcs', '₱45.00', '₱80.00', 10], ['Towel (rental)', 'Gym Supplies', 42, 'pcs', '₱90.00', '₱20 / use', 15], ['Disinfectant Spray 1L', 'Cleaning Materials', 2, 'btl', '₱160.00', '—', 4], ['Paper Towels', 'Cleaning Materials', 18, 'roll', '₱38.00', '—', 8], ['Padlock', 'Other Products', 14, 'pcs', '₱85.00', '₱150.00', 5]];
+    const C = ['All', 'Drinks and Beverages', 'Protein Products', 'Gym Supplies', 'Cleaning Materials', 'Other Products'];
+    return {
+      cats: C.map(k => ({ label: k, pressed: k === f ? 'true' : 'false', pick: () => this.setState({ f: k }),
+        style: 'height:40px;padding:0 14px;border-radius:999px;font:600 13px Inter,sans-serif;cursor:pointer;' + (k === f ? 'background:#FF3D0A;border:1px solid #FF3D0A;color:#FFFFFF' : 'background:transparent;border:1px solid #292B30;color:#D4D4D8') })),
+      rows: I.filter(i => f === 'All' || i[1] === f).map(i => { const q = i[2], s = q === 0 ? 'Out of Stock' : q <= i[6] ? 'Low Stock' : 'In Stock';
+        return { name: i[0], cat: i[1], q, unit: i[3], cost: i[4], price: i[5], st: s, tone: q === 0 ? 'bad' : q <= i[6] ? 'low' : 'ok', qs: 'font-size:15px;color:' + (q === 0 ? '#F07070' : q <= i[6] ? '#FF7A50' : '#FFFFFF') }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

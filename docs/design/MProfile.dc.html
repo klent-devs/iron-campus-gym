@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM app · My profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#090A0C}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:50px;border-top:1px solid #292B30;font-size:15px}
+.kv span{color:#A1A1AA}.kv b{font-weight:600}
+.row{display:flex;align-items:center;gap:14px;min-height:58px;padding:0 16px;border-top:1px solid #292B30;color:#FFFFFF;text-decoration:none;font-size:16px}
+.row i{width:38px;height:38px;border-radius:12px;background:#1D1F23;color:#FF6A3D;display:inline-flex;align-items:center;justify-content:center;flex:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #090A0C; font-family: Inter, system-ui, sans-serif; color: #FFFFFF">
+<div style="height: 756px; overflow-y: auto; padding: 56px 20px 24px; box-sizing: border-box">
+<h1 style="margin: 0; font: 700 26px Poppins, sans-serif">My Profile</h1>
+<section style="margin-top: 16px; display: flex; gap: 16px; align-items: center; padding: 18px; border-radius: 22px; background: #151619; border: 1px solid #292B30">
+<div style="position: relative; flex: none"><span style="width: 76px; height: 76px; border-radius: 50%; background: #2A2C31; border: 3px solid #FF3D0A; display: inline-flex; align-items: center; justify-content: center; font: 700 26px Poppins, sans-serif">AL</span>
+<button aria-label="Change profile picture" style="position: absolute; right: -6px; bottom: -4px; width: 32px; height: 32px; border-radius: 50%; border: 3px solid #151619; background: #FF3D0A; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3"/></svg></button></div>
+<div><h2 style="margin: 0; font: 700 20px Poppins, sans-serif">Andrea Lim</h2><div style="font: 14px ui-monospace, Menlo, monospace; color: #D4D4D8; margin-top: 4px">ICG-2025-0291</div></div>
+</section>
+<section style="margin-top: 14px; border-radius: 18px; background: #151619; border: 1px solid #292B30; padding: 0 16px">
+<div class="kv" style="border-top: 0"><span>Email</span><b>andrea.lim@gmail.com</b></div>
+<div class="kv"><span>Contact Number</span><b>0905 337 9021</b></div>
+</section>
+<p style="margin: 8px 4px 0; font-size: 13px; color: #A1A1AA">To change your name or Member ID, ask the front desk.</p>
+<nav style="margin-top: 16px; border-radius: 18px; background: #151619; border: 1px solid #292B30; overflow: hidden">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><a class="row" href="{{r.href}}" style="{{r.first}}"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"/></svg></i><span style="flex: 1">{{r.label}}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#71717A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></sc-for>
+</nav>
+<a href="MLogin.dc.html" style="margin-top: 16px; height: 56px; border-radius: 16px; border: 1px solid #5C2526; color: #F07070; font: 700 16px Inter, sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4M16 17l5-5-5-5M21 12H9"/></svg>Logout</a>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0"><dc-import name="TabBar" active="profile" hint-size="390px,88px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['Edit Profile', '#', 'M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4'], ['Change Password', '#', 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4'], ['Payment History', 'MPayments.dc.html', 'M6 3h12v18l-3-2-3 2-3-2-3 2V3zM9 8h6M9 12h6'], ['Notification Preferences', 'MNotifications.dc.html', 'M6 16V11a6 6 0 1 1 12 0v5l2 2H4l2-2zM10 20a2 2 0 0 0 4 0'], ['Contact Gym', '#', 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2']];
+    return { rows: R.map((r, i) => ({ label: r[0], href: r[1], icon: r[2], first: i ? '' : 'border-top:0' })) };
+  }
+}
+</script>
+</body>
+</html>
