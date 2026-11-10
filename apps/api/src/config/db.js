@@ -1,5 +1,6 @@
 import knex from 'knex';
 import config from '../../knexfile.js';
+import './pgTypes.js';
 
 /**
  * Shared Knex instance. `null` when DATABASE_URL is not set yet, so the API can still

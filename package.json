@@ -12,7 +12,10 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "npm run dev --workspace @icg/api",
+    "dev": "concurrently --kill-others-on-fail --names api,admin --prefix-colors yellow,magenta \"npm:dev:api\" \"npm:dev:admin\"",
+    "dev:api": "npm run dev --workspace @icg/api",
+    "dev:admin": "npm run dev --workspace @icg/admin",
+    "build:admin": "npm run build --workspace @icg/admin",
     "db:migrate": "npm run db:migrate --workspace @icg/api",
     "db:rollback": "npm run db:rollback --workspace @icg/api",
     "db:seed": "npm run db:seed --workspace @icg/api",
@@ -24,7 +27,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "concurrently": "^10.0.7",
     "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
     "vitest": "^2.1.8"

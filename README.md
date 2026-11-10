@@ -29,20 +29,23 @@ cp .env.example .env          # then set DATABASE_URL to your local Postgres
 createdb -U postgres iron_campus_gym
 npm run db:migrate
 npm run db:seed
-npm run dev                   # API on http://localhost:4000
+npm run dev                   # API on :4000 + admin website on http://localhost:5173
 ```
 
-Check it works: open http://localhost:4000/api/health — it reports the API and database status.
+Open the admin website at **http://localhost:5173** (the Dashboard). The API health check is at
+http://localhost:4000/api/health — it reports the API and database status.
 
 ## Scripts
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Start the local API with auto-reload |
+| `npm run dev` | Start the local API and the admin website together, with auto-reload |
+| `npm run dev:api` / `npm run dev:admin` | Start just one of them |
+| `npm run build:admin` | Build the admin website for production (`apps/admin/dist`) |
 | `npm run db:migrate` | Create / update the database tables |
 | `npm run db:seed` | Load plans, payment methods, settings and demo data |
 | `npm run db:reset` | Drop everything and rebuild with demo data (development only) |
-| `npm test` | Run all tests |
+| `npm test` | Run all tests (database tests run only when `TEST_DATABASE_URL` is set) |
 | `npm run lint` / `npm run format` | Check / format code |
 
 ## Build milestones

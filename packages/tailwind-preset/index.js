@@ -21,6 +21,7 @@ const icgPreset = {
           DEFAULT: '#FFFFFF',
           muted: '#A1A1AA', // secondary text
           soft: '#D4D4D8',
+          faint: '#52525B', // expenses bars, quiet chart marks
         },
         success: { DEFAULT: '#24B47E', text: '#3DD598' },
         warning: { DEFAULT: '#F2A93B', text: '#F5B95A' },

@@ -14,7 +14,9 @@ demo.
 - Tests: Vitest (+ Supertest for the API). Lint: ESLint. Format: Prettier.
 
 ## Commands (run from the repo root)
-- `npm run dev` — start the API (http://localhost:4000, health at `/api/health`)
+- `npm run dev` — start the API (http://localhost:4000, health at `/api/health`) and the admin
+  website (http://localhost:5173, proxies `/api` to the API). `dev:api` / `dev:admin` start one.
+- DB tests (`apps/api/tests/*.db.test.js`) run only with `TEST_DATABASE_URL` set to a separate test DB.
 - `npm run db:migrate` / `npm run db:seed` / `npm run db:reset`
 - `npm test` — all tests; `npm run lint`; `npm run format`
 - Always run `npm test` and `npm run lint` before saying a task is done.

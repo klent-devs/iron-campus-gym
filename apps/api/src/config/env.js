@@ -10,6 +10,8 @@ dotenv.config({ path: path.resolve(here, '../../../../.env') });
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   API_PORT: z.coerce.number().int().positive().default(4000),
+  // 127.0.0.1 = only this PC can reach the API. Change only when other devices need it.
+  API_HOST: z.string().default('127.0.0.1'),
   DATABASE_URL: z.string().url().optional(),
   ADMIN_ORIGIN: z.string().default('http://localhost:5173'),
   GYM_TIMEZONE: z.string().default('Asia/Manila'),

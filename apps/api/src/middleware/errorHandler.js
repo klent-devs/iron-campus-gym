@@ -23,14 +23,23 @@ export function errorHandler(err, _req, res, _next) {
   }
 
   // PostgreSQL constraint errors → friendly messages
-  if (err.code === '23505') return res.status(409).json({ error: 'This record already exists.', detail: err.detail });
-  if (err.code === '23503') return res.status(409).json({ error: 'This record is linked to other records.', detail: err.detail });
-  if (err.code === '23514') return res.status(422).json({ error: 'That change breaks a gym rule.', detail: err.constraint });
+  if (err.code === '23505')
+    return res.status(409).json({ error: 'This record already exists.', detail: err.detail });
+  if (err.code === '23503')
+    return res
+      .status(409)
+      .json({ error: 'This record is linked to other records.', detail: err.detail });
+  if (err.code === '23514')
+    return res
+      .status(422)
+      .json({ error: 'That change breaks a gym rule.', detail: err.constraint });
 
   const status = err.status ?? 500;
-  if (status >= 500) console.error(err);
+  // HttpError messages are written for staff; anything else that crashes stays hidden.
+  const safeToShow = err instanceof HttpError || status < 500;
+  if (status >= 500 && !(err instanceof HttpError)) console.error(err);
   return res.status(status).json({
-    error: status >= 500 ? 'Something went wrong. Please try again.' : err.message,
+    error: safeToShow ? err.message : 'Something went wrong. Please try again.',
     ...(err.details ? { details: err.details } : {}),
   });
 }

@@ -3,3 +3,5 @@ export * from './membershipStatus.js';
 export * from './paymentStatus.js';
 export * from './paymentMethods.js';
 export * from './inventory.js';
+export * from './capacity.js';
+export * from './reports.js';

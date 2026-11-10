@@ -24,3 +24,9 @@ export const STOCK_STATUS = Object.freeze({
   LOW_STOCK: 'low_stock',
   OUT_OF_STOCK: 'out_of_stock',
 });
+
+export const STOCK_STATUS_LABELS = Object.freeze({
+  in_stock: 'In Stock',
+  low_stock: 'Low Stock',
+  out_of_stock: 'Out of Stock',
+});
