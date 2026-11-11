@@ -11,6 +11,12 @@ const VARIANTS = {
   secondary: 'border-line bg-card-2 text-ink hover:bg-line',
   danger: 'border-danger bg-danger font-bold text-ink hover:opacity-90',
   outline: 'border-danger/40 bg-transparent text-danger-text hover:bg-danger/10',
+  // Page-header actions (owner's choice, 11 Nov 2026): no fill until the pointer is on them.
+  // plainPrimary fills orange (the main action), plain fills grey. Keyboard focus shows the same.
+  plainPrimary:
+    'border-line bg-transparent font-bold text-ink hover:border-brand hover:bg-brand ' +
+    'focus-visible:border-brand focus-visible:bg-brand active:border-brand-hover active:bg-brand-hover',
+  plain: 'border-line bg-transparent text-ink hover:bg-line focus-visible:bg-line active:bg-card-2',
 };
 
 const SIZES = {

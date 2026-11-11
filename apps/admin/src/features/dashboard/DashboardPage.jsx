@@ -23,8 +23,10 @@ function PageHeader() {
         </p>
       </div>
       <div className="flex flex-wrap gap-2.5">
-        <Button to="/attendance">Check In Member</Button>
-        <Button to="/members/new" variant="primary">
+        <Button to="/attendance" variant="plain">
+          Check In Member
+        </Button>
+        <Button to="/members/new" variant="plainPrimary">
           + Add Member
         </Button>
       </div>
