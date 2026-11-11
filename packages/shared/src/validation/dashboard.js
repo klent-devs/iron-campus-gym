@@ -4,6 +4,6 @@ import { DEFAULT_REVENUE_RANGE, REVENUE_RANGE_LIST } from '../constants/reports.
 /** Query string for GET /api/dashboard */
 export const dashboardQuerySchema = z.object({
   range: z
-    .enum(REVENUE_RANGE_LIST, { errorMap: () => ({ message: 'Choose a valid date range' }) })
+    .enum(REVENUE_RANGE_LIST, { error: 'Choose a valid date range' })
     .default(DEFAULT_REVENUE_RANGE),
 });

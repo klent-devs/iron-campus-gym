@@ -12,7 +12,10 @@ export const paymentInput = z.object({
 export const memberCreateSchema = z.object({
   fullName: z.string().trim().min(2, 'Full name is required').max(120),
   contactNumber: phMobile,
-  email: z.union([z.literal(''), z.string().trim().email('Enter a valid email')]).optional().transform((v) => v || null),
+  email: z
+    .union([z.literal(''), z.string().trim().email('Enter a valid email')])
+    .optional()
+    .transform((v) => v || null),
   address: optionalText(255),
   planId: uuid,
   startDate: isoDate,
