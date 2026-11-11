@@ -15,12 +15,23 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
 
 ### 11 Nov 2026 — live clock and spacing (committed and pushed to `main`)
 
-- **Clock under the logo in the sidebar, on every page** (owner's final choice, after trying a card
-  and then plain text in the Overview header): one small line, "Wed Nov 11 2:26PM", updated each
-  minute. Always Manila time, even if the PC's own time zone is wrong (it trusts the PC's clock).
-  Code: `components/layout/SidebarClock.jsx`, `lib/useNow.js`, and `formatSidebarClock` in
-  `packages/shared/src/utils/gymClock.js` (tests: `packages/shared/tests/gym-clock.test.js`).
+- **Clock in the top bar, on every page** (moved there on 11 Nov from under the sidebar logo, which
+  hid it on tablets and used a different date style). Same icon-circle + two-line layout as the staff
+  block: "2:48 PM" with "Wed, 11 Nov 2026" underneath, updated each minute. Icon and date show at
+  every width (owner's choice); the icon is grey like the staff icon, since orange means "click
+  this". Added to the spec in `docs/design/Topbar.dc.html` (note in `docs/design/README.md`). To keep the top bar on one row from 1024 px up, the search box may
+  shrink to 180 px (its placeholder is cut to "Search member" at 1024 px); on tablets the staff block
+  moves to a second row. Always Manila time, even if the PC's own time zone is wrong (it trusts the PC's
+  clock). Code: `components/layout/TopbarClock.jsx`, `lib/useNow.js`, and `formatClock` /
+  `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
+  `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Dashboard consistency pass (11 Nov):** card title rows are always 44 px
+  (`CardHeader` `min-h-11`), so titles side by side line up even when one has a button or dropdown;
+  empty messages are centred in their card (`EmptyState className="flex-1"` in a `flex-col` card);
+  good-news empty states use `tone="success"` (green "All clear"); the page title starts at the same
+  edge as the cards (no 4 px indent); empty-state text uses balanced line breaks, with non-breaking
+  hyphens in "check-ins"/"walk-ins" so they never split.
 - **Opening hours are calculated but not shown.** The owner removed the "Open now · Closes at
   10:00 PM" badge for a cleaner look. `GET /api/dashboard` still returns `gymHours` and the shared
   `gymOpenStatus()` helper is still tested, so it can come back (for example on the Attendance page)

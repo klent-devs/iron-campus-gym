@@ -136,7 +136,8 @@ export function RevenueChart({ chart, range, onRangeChange, refreshing }) {
             compact
             icon="reports"
             title="No payments in this period yet"
-            message="Paid memberships, walk-ins and product sales will show here by month."
+            // The hyphens in "walk-ins"/"check-ins" below are non-breaking (U+2011), so the word never splits over two lines.
+            message="Paid memberships, walk‑ins and product sales will show here by month."
           />
         )}
       </div>

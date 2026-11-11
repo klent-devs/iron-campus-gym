@@ -11,7 +11,7 @@ const TILE_TONES = {
 /** Latest registrations, check-ins/outs, walk-ins and payments. */
 export function RecentActivities({ activities, today }) {
   return (
-    <Card className="min-w-0 flex-[2_1_480px]" aria-labelledby="activities-title">
+    <Card className="flex min-w-0 flex-[2_1_480px] flex-col" aria-labelledby="activities-title">
       <CardHeader
         id="activities-title"
         title="Recent Activities"
@@ -28,9 +28,11 @@ export function RecentActivities({ activities, today }) {
       {activities.length === 0 ? (
         <EmptyState
           compact
+          className="flex-1"
           icon="checkIn"
           title="No activity yet"
-          message="New members, check-ins, walk-ins and payments will show up here."
+          // The hyphens in "walk-ins"/"check-ins" below are non-breaking (U+2011), so the word never splits over two lines.
+          message="New members, check‑ins, walk‑ins and payments will show up here."
         />
       ) : (
         <ul className="mt-3 list-none p-0">

@@ -1,9 +1,17 @@
 import { Icon } from './Icon.jsx';
 
+const ICON_TONES = {
+  brand: 'text-brand-text',
+  success: 'text-success-text',
+  danger: 'text-danger-text',
+};
+
 /**
  * Friendly message when there is nothing to show (or something went wrong).
  * @param {{ icon?: string, title: string, message?: React.ReactNode, action?: React.ReactNode,
- *           tone?: 'brand'|'danger', compact?: boolean }} props
+ *           tone?: 'brand'|'success'|'danger', compact?: boolean, className?: string }} props
+ * Use tone 'success' for good news ("All clear"). Pass className="flex-1" inside a flex-column
+ * card to centre the message in the space under the card title.
  */
 export function EmptyState({
   icon = 'overview',
@@ -12,11 +20,12 @@ export function EmptyState({
   action,
   tone = 'brand',
   compact = false,
+  className = '',
 }) {
-  const iconTone = tone === 'danger' ? 'text-danger-text' : 'text-brand-text';
+  const iconTone = ICON_TONES[tone] ?? ICON_TONES.brand;
   return (
     <div
-      className={`flex flex-col items-center justify-center gap-2.5 text-center ${compact ? 'py-6' : 'py-10'}`}
+      className={`flex flex-col items-center justify-center gap-2.5 text-center ${compact ? 'py-6' : 'py-10'} ${className}`}
       role={tone === 'danger' ? 'alert' : undefined}
     >
       <span
@@ -28,7 +37,7 @@ export function EmptyState({
       <h3 className={`text-ink ${compact ? 'text-[16px]' : 'text-[19px]'} font-semibold`}>
         {title}
       </h3>
-      {message && <p className="m-0 max-w-xs text-sm text-ink-muted">{message}</p>}
+      {message && <p className="m-0 max-w-xs text-balance text-sm text-ink-muted">{message}</p>}
       {action && <div className="mt-1.5">{action}</div>}
     </div>
   );

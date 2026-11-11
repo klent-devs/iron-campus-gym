@@ -15,7 +15,7 @@ const REFRESH_SECONDS = 30;
 function PageHeader() {
   const now = useNow(60_000); // the greeting only needs to change once a minute
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 px-1">
+    <div className="flex flex-wrap items-center justify-between gap-4">
       <div className="flex-[1_1_280px]">
         <h1 className="text-[26px] font-bold">Manage Your Gym Business</h1>
         <p className="mt-1.5 text-[15px] text-ink-muted">

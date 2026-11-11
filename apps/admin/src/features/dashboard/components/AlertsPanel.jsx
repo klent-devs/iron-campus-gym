@@ -24,11 +24,13 @@ export function AlertsPanel({ alerts }) {
   const nothing = !view.expiring && !view.expired && !view.stock;
 
   return (
-    <Card className="flex-[1_1_340px]" aria-labelledby="alerts-title">
+    <Card className="flex flex-[1_1_340px] flex-col" aria-labelledby="alerts-title">
       <CardHeader id="alerts-title" title="Alerts" />
       {nothing ? (
         <EmptyState
           compact
+          className="flex-1"
+          tone="success"
           icon="check"
           title="All clear"
           message="No memberships or stock need attention right now."
