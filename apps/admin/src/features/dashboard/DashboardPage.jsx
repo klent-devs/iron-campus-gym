@@ -1,8 +1,7 @@
-import { DEFAULT_REVENUE_RANGE, formatTime, greetingFor } from '@icg/shared';
+import { DEFAULT_REVENUE_RANGE, formatTime } from '@icg/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, EmptyState, Icon, STAT_GRID, Skeleton } from '../../components/ui/index.js';
 import { useApi } from '../../lib/useApi.js';
-import { useNow } from '../../lib/useNow.js';
 import { getDashboard } from './api.js';
 import { AlertsPanel } from './components/AlertsPanel.jsx';
 import { CapacityGauge } from './components/CapacityGauge.jsx';
@@ -12,14 +11,17 @@ import { StatCards } from './components/StatCards.jsx';
 
 const REFRESH_SECONDS = 30;
 
+/** Gym name with the motto underneath (owner's choice, 12 Nov 2026; replaces the greeting). */
 function PageHeader() {
-  const now = useNow(60_000); // the greeting only needs to change once a minute
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
       <div className="flex-[1_1_280px]">
-        <h1 className="text-[26px] font-bold">Manage Your Gym Business</h1>
-        <p className="mt-1.5 text-[15px] text-ink-muted">
-          {greetingFor(now)}! Here’s your gym overview.
+        <h1 className="text-[30px] font-extrabold leading-tight tracking-[0.03em]">
+          IRON CAMPUS <span className="text-brand-text">GYM</span>
+        </h1>
+        <p className="mt-2 flex items-center gap-2 font-heading text-[13px] font-extrabold tracking-[0.22em] text-brand-text">
+          <Icon name="dumbbell" size={22} strokeWidth={1.8} />
+          STRONGER EVERY DAY.
         </p>
       </div>
       <div className="flex flex-wrap gap-2.5">

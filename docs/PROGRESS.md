@@ -26,6 +26,10 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Dashboard title is the gym name and motto (12 Nov):** "IRON CAMPUS GYM"
+  with "STRONGER EVERY DAY." and a dumbbell icon, replacing "Manage Your Gym Business" and the
+  Good morning/afternoon/evening greeting (`greetingFor` in `@icg/shared` is now unused but kept,
+  with its tests). Rule noted in `docs/design/README.md`.
 - **Sidebar stays still (12 Nov):** the sidebar never scrolls and shows no
   scrollbar (`overflow-hidden` on the `<aside>` in `AppLayout.jsx`), and with the pointer over it
   the mouse wheel doesn't scroll the page either (`data-scroll-lock`, handled in

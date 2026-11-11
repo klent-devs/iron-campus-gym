@@ -45,6 +45,10 @@ date ("Wed, 11 Nov 2026") underneath, always Philippine time. Built in
 `components/layout/TopbarClock.jsx`. Keep the icon grey: orange is only for actions and the active
 page. There is no clock in the sidebar.
 
+**Dashboard title (owner's choice, 12 Nov 2026):** the Dashboard header shows **IRON CAMPUS GYM**
+("GYM" in orange) with **STRONGER EVERY DAY.** underneath and a dumbbell icon beside it, instead of
+"Manage Your Gym Business" and the greeting in `Main.dc.html`. Other pages keep their own titles.
+
 **Page-header action buttons (owner's choice, 11 Nov 2026):** buttons in a page's header (like
 "Check In Member" and "+ Add Member" on the Dashboard, "+ Record Payment" on Payments) have **no
 fill** until the pointer is on them: the main action fills **orange** on hover (`Button
