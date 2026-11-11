@@ -66,13 +66,13 @@ before building a screen.
 **Read `docs/PROGRESS.md` first** — it says what is done, what is waiting on the user, and what is next.
 Update it at the end of every work session.
 
-1. ✅ Setup: workspaces, shared package, Tailwind preset, schema, seeds (database not yet migrated on this PC)
-2. Admin app shell: Vite + Tailwind, Supabase Auth login, staff roles, Sidebar/Topbar, UI components
+1. ✅ Setup: workspaces, shared package, Tailwind preset, schema, seeds
+2. 🟡 Admin app shell: Vite + Tailwind, Sidebar/Topbar, UI components done — Supabase Auth login and staff roles still to do
 3. Members & memberships (list, add, profile, plans, monitoring, renewal)
 4. Attendance (QR scanner, check-in/out, records, fix missed check-out)
 5. Walk-ins & payments (register, records, convert to member, receipts, void/refund)
 6. Inventory (items, stock in/out, low/out-of-stock alerts)
-7. Dashboard, reports (PDF/Excel/print), settings, staff accounts
+7. 🟡 Dashboard done — reports (PDF/Excel/print), settings, staff accounts still to do
 8. Supabase schema + RLS, sync service
 9. Member portal (PWA)
 10. Hardening: tests, backups, deployment to the front-desk PC

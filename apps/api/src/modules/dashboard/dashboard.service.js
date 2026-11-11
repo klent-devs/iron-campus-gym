@@ -1,4 +1,5 @@
 import {
+  DEFAULT_GYM_HOURS,
   DEFAULT_REVENUE_RANGE,
   EXPIRING_SOON_DAYS,
   GYM_TIMEZONE,
@@ -22,6 +23,8 @@ const DEFAULT_SETTINGS = {
   maxCapacity: null,
   warningPct: 90,
   expiringSoonDays: EXPIRING_SOON_DAYS,
+  opensAt: DEFAULT_GYM_HOURS.opensAt,
+  closesAt: DEFAULT_GYM_HOURS.closesAt,
 };
 
 const monthStartOf = (isoDate) => `${isoDate.slice(0, 7)}-01`;
@@ -146,6 +149,8 @@ export function createDashboardService({ repo, timeZone = GYM_TIMEZONE, now = ()
     ]);
 
     const settings = { ...DEFAULT_SETTINGS, ...(settingsRow ?? {}) };
+    settings.opensAt ??= DEFAULT_GYM_HOURS.opensAt;
+    settings.closesAt ??= DEFAULT_GYM_HOURS.closesAt;
     const { by, members } = summarizeMembers(statusRows);
     const insideNow = inside.members + inside.walkIns;
 
@@ -185,6 +190,7 @@ export function createDashboardService({ repo, timeZone = GYM_TIMEZONE, now = ()
       today,
       timeZone,
       includesRevenue: includeRevenue,
+      gymHours: { opensAt: settings.opensAt, closesAt: settings.closesAt },
       members,
       revenue,
       attendance: {

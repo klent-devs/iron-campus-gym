@@ -1,4 +1,4 @@
-import { GYM_TIMEZONE, addDays } from '@icg/shared';
+import { GYM_TIMEZONE, addDays, normalizeTime } from '@icg/shared';
 
 /** Start of a gym calendar day ('YYYY-MM-DD') as a timestamptz, so indexes on timestamps work. */
 const DAY_START = '((?::date)::timestamp AT TIME ZONE ?)';
@@ -17,12 +17,16 @@ export function createDashboardRepo(db, { timeZone = GYM_TIMEZONE } = {}) {
         'max_capacity',
         'capacity_warning_pct',
         'expiring_soon_days',
+        'opening_time',
+        'closing_time',
       );
       if (!row) return null;
       return {
         maxCapacity: row.max_capacity,
         warningPct: row.capacity_warning_pct,
         expiringSoonDays: row.expiring_soon_days,
+        opensAt: normalizeTime(row.opening_time),
+        closesAt: normalizeTime(row.closing_time),
       };
     },
 

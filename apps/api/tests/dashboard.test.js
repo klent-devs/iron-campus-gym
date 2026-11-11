@@ -14,7 +14,13 @@ const NOW = new Date('2026-11-10T02:30:00Z');
 
 function fakeRepo(overrides = {}) {
   return {
-    getSettings: vi.fn(async () => ({ maxCapacity: 60, warningPct: 90, expiringSoonDays: 7 })),
+    getSettings: vi.fn(async () => ({
+      maxCapacity: 60,
+      warningPct: 90,
+      expiringSoonDays: 7,
+      opensAt: '05:30',
+      closesAt: '23:00',
+    })),
     memberStatusCounts: vi.fn(async () => [
       { status: 'active', count: 397, ending_today: 0, ending_tomorrow: 0, ended_recently: 0 },
       {
@@ -90,6 +96,7 @@ describe('dashboard service', () => {
     const d = await serviceWith(repo).getDashboard({ range: '12m', includeRevenue: true });
 
     expect(d.today).toBe('2026-11-10');
+    expect(d.gymHours).toEqual({ opensAt: '05:30', closesAt: '23:00' });
     expect(d.members).toEqual({
       total: 460,
       active: 418, // active + expiring soon (both may enter)
@@ -205,6 +212,7 @@ describe('dashboard service', () => {
     expect(d.members).toEqual({ total: 0, active: 0, expiringSoon: 0, expired: 0, suspended: 0 });
     expect(d.revenue.changePct).toBeNull();
     expect(d.capacity).toMatchObject({ insideNow: 0, maxCapacity: null, level: 'not_set' });
+    expect(d.gymHours).toEqual({ opensAt: '06:00', closesAt: '22:00' });
     expect(d.alerts.stock).toEqual({ lowCount: 0, outCount: 0, lowestItem: null, outItem: null });
     expect(d.alerts.expiringSoon.withinDays).toBe(7);
     expect(d.activities).toEqual([]);

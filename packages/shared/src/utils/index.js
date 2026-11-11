@@ -4,3 +4,4 @@ export * from './membership.js';
 export * from './ids.js';
 export * from './capacity.js';
 export * from './inventory.js';
+export * from './gymClock.js';

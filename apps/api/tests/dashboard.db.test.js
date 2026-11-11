@@ -169,6 +169,15 @@ describe.skipIf(!url)('dashboard SQL (real database)', () => {
     });
   });
 
+  it('reads opening hours as HH:MM (Postgres sends 06:00:00)', async () => {
+    await inRollback(async (trx) => {
+      await trx('gym_settings').insert({ max_capacity: 60 }).onConflict('singleton').ignore();
+      await trx('gym_settings').update({ opening_time: '05:30', closing_time: '23:00' });
+      const settings = await createDashboardRepo(trx, { timeZone: TZ }).getSettings();
+      expect(settings).toMatchObject({ opensAt: '05:30', closesAt: '23:00' });
+    });
+  });
+
   it('counts members, revenue, attendance, walk-ins and people inside', async () => {
     await inRollback(async (trx) => {
       const repo = createDashboardRepo(trx, { timeZone: TZ });

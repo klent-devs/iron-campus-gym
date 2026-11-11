@@ -28,7 +28,7 @@ export function StatCard({ label, value, icon, delta, deltaTone = 'neutral', not
         </span>
         <h2 className="flex-1 text-[15px] font-semibold">{label}</h2>
       </div>
-      <div className="whitespace-nowrap font-heading text-[length:clamp(20px,11cqi,32px)] font-bold leading-tight tracking-tight">
+      <div className="whitespace-nowrap font-heading text-[length:clamp(16px,14cqi,32px)] font-bold leading-tight tracking-tight">
         {value}
       </div>
       <div className="flex flex-wrap items-center gap-2 text-[13px] text-ink-muted">

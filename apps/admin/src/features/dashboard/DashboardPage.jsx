@@ -1,7 +1,8 @@
-import { DEFAULT_REVENUE_RANGE, formatTime } from '@icg/shared';
+import { DEFAULT_REVENUE_RANGE, formatTime, greetingFor } from '@icg/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, EmptyState, Icon, STAT_GRID, Skeleton } from '../../components/ui/index.js';
 import { useApi } from '../../lib/useApi.js';
+import { useNow } from '../../lib/useNow.js';
 import { getDashboard } from './api.js';
 import { AlertsPanel } from './components/AlertsPanel.jsx';
 import { CapacityGauge } from './components/CapacityGauge.jsx';
@@ -12,11 +13,14 @@ import { StatCards } from './components/StatCards.jsx';
 const REFRESH_SECONDS = 30;
 
 function PageHeader() {
+  const now = useNow(60_000); // the greeting only needs to change once a minute
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 px-1 pt-1">
-      <div>
+    <div className="flex flex-wrap items-center justify-between gap-4 px-1">
+      <div className="flex-[1_1_280px]">
         <h1 className="text-[26px] font-bold">Manage Your Gym Business</h1>
-        <p className="mt-1.5 text-[15px] text-ink-muted">Welcome back! Here’s your gym overview.</p>
+        <p className="mt-1.5 text-[15px] text-ink-muted">
+          {greetingFor(now)}! Here’s your gym overview.
+        </p>
       </div>
       <div className="flex flex-wrap gap-2.5">
         <Button to="/attendance">Check In Member</Button>
@@ -30,7 +34,7 @@ function PageHeader() {
 
 function DashboardSkeleton() {
   return (
-    <div className="flex flex-col gap-5" aria-busy="true" aria-label="Loading the dashboard">
+    <div className="flex flex-col gap-4" aria-busy="true" aria-label="Loading the dashboard">
       <div className={STAT_GRID}>
         {[0, 1, 2, 3].map((i) => (
           <Card key={i} className="flex flex-col gap-4">

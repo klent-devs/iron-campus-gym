@@ -2,16 +2,70 @@
 
 Update this file at the end of every work session: what was finished, what is waiting, what is next.
 
-## Current status (10 Nov 2026, session 2)
+## Current status (10 Nov 2026, end of session 2)
 
-**Milestone 1 — Setup: ✅ done (code), ⏳ database not yet created on this PC**
+**Milestone 1 — Setup: ✅ done** (local database created, migrated and working on this PC)
 **Milestone 2 — Admin app shell: 🟡 in progress** (app, layout and UI components done; login not started)
 **Dashboard (from milestone 7): ✅ built early** — real data from the local database
 
-Next up: finish the setup steps under "Waiting on you", then **staff login (Supabase Auth)** to
-complete milestone 2.
+Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Supabase project first
+(see "Waiting on you").
 
 ## Done
+
+### 11 Nov 2026 — live clock and spacing (not committed yet)
+
+- **Clock under the logo in the sidebar, on every page** (owner's final choice, after trying a card
+  and then plain text in the Overview header): one small line, "Wed Nov 11 2:26PM", updated each
+  minute. Always Manila time, even if the PC's own time zone is wrong (it trusts the PC's clock).
+  Code: `components/layout/SidebarClock.jsx`, `lib/useNow.js`, and `formatSidebarClock` in
+  `packages/shared/src/utils/gymClock.js` (tests: `packages/shared/tests/gym-clock.test.js`).
+- The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Opening hours are calculated but not shown.** The owner removed the "Open now · Closes at
+  10:00 PM" badge for a cleaner look. `GET /api/dashboard` still returns `gymHours` and the shared
+  `gymOpenStatus()` helper is still tested, so it can come back (for example on the Attendance page)
+  without new work.
+- **Fixed: September showed as "Sept".** Newer Node/browser versions write "Sept" in en-GB, older
+  ones "Sep", so dates differed between PCs. `formatDate` now uses fixed 3-letter month names, and the
+  clock dates reuse it.
+- **Spacing is now one size everywhere: 16 px** around the page and between every block (`gap-4` /
+  `p-4` in `AppLayout.jsx` and the dashboard rows). Before, rows were 20 px apart, cards 16 px, and
+  the page edges 20 / 16 / 40 px. Keep new pages on `gap-4`.
+
+### Session 2, later the same day — polish, database, co-developer guide
+
+- Local database set up on this PC (see "Waiting on you" for its current contents). The code is on
+  GitHub: `klent-devs/iron-campus-gym`, branch `main`.
+- Dashboard summary cards now always fill the row: 4 across from 900 px, 2×2 below, 1 on phones
+  (`STAT_GRID` in `components/ui/StatCard.jsx`); big numbers shrink to fit narrow cards. Gym Capacity
+  and Revenue Analytics share a row on laptop widths.
+- Fixed near-invisible headings in empty states: the class `text-base` picks up the preset colour
+  named `base`. **Don't use `text-base` in the admin app**; use `text-[16px]`.
+- Page no longer "bounces" past the top or bottom (`overscroll-behavior: none` in `index.css`).
+  **Not yet confirmed by the owner on their touchpad, and not committed.**
+- **Bug scan (11 Nov):** tests, lint, production build, live API, browser console on every page type,
+  the 5 database tests on a throwaway PostgreSQL, a secrets scan and a code read-through. Fixed:
+  - the "Couldn't refresh" banner flickered on every 30-second retry (`useApi.js` cleared the error
+    too early);
+  - amounts of ₱1,000,000.00 or more could overflow a summary card near 1024 px (`StatCard.jsx`);
+  - the admin dev proxy ignored `API_PORT` from `.env` (`apps/admin/vite.config.js`);
+  - `docs/design` is now in `.prettierignore`, so `npm run format` can't rewrite the approved designs.
+    Checked on real SQL: Manila-midnight month boundaries, day-old open sessions are not counted as
+    "inside now", payments can't be deleted, one open check-in per member. No secrets in Git.
+- **zod upgraded 3.25 → 4.6.7 (11 Nov, branch `upgrade-zod`, not committed yet)** to clear the
+  high-severity advisory; `npm audit --omit=dev` now reports 0 vulnerabilities.
+  - Added `packages/shared/tests/validation-schemas.test.js` (33 tests) first, to pin down every
+    schema's behaviour and messages; they pass on both versions.
+  - Code changes: `error:` replaces `invalid_type_error` / `errorMap`; `optionalPhMobile` is now
+    explicitly `.optional()` (zod 4 rejects a left-out field unless it is optional, which broke
+    walk-ins without a contact number); `z.flattenError` in `config/env.js`; new
+    `validation/messages.js` keeps the plain "Required" wording for blank fields.
+  - **After pulling this, run `npm install` and restart `npm run dev`.** A dev server that was
+    already running keeps a cached zod 3 and the Dashboard fails with "z.config is not a function".
+  - Cost: the admin bundle grew from about 720 kB to about 1 MB.
+- Wrote a 10-page "Tech Stack & Developer Setup Guide" PDF for a co-developer (install list, 7 setup
+  steps, troubleshooting, workflow, rules). A copy is in the owner's Windows Downloads folder; it is
+  not in the repository.
 
 ### Session 2 (10 Nov 2026) — Admin website + Dashboard
 
@@ -94,8 +148,11 @@ complete milestone 2.
 - [x] `npm run dev` → http://localhost:5173 works; `/api/health` shows `"database": "up"`.
 - [ ] Optional: create a second database `iron_campus_gym_test` and set
       `TEST_DATABASE_URL` to run the database tests (`npm test`)
-- [ ] Create the GitHub repository and push (the initial commit already exists on `main`;
-      session 2's work is **not committed yet**)
+- [x] GitHub repository created and pushed (`klent-devs/iron-campus-gym`). Still uncommitted: the
+      scroll-bounce fix in `apps/admin/src/index.css` and this progress update.
+- [ ] Confirm the page no longer bounces at the bottom when scrolling with the touchpad
+- [ ] If the repository is private, add the co-developer as a collaborator and send them the setup
+      guide PDF
 - [ ] Before login: create a free Supabase project and put its URL and keys in `.env`
 
 ## Next: finish Milestone 2 — staff login
@@ -117,6 +174,23 @@ add a sign-in guard around the admin routes, fill in the Topbar user and Logout.
 - `packages/shared` `membershipStatus()` uses the fixed `EXPIRING_SOON_DAYS = 7`, while the database
   view uses the Settings value. They'll disagree if the owner changes it. Align them when Settings is
   built.
+- **Test-tool advisories (found 11 Nov):** `npm audit` still lists issues in `vitest` 2 and its
+  helpers (`tinypool`, `esbuild`, an older `vite` it bundles). They are development tools only and
+  never run on the front-desk PC in production. The fix is vitest 5, a breaking upgrade; do it as its
+  own task.
+- zod 4's default wording for other problems is technical ("Too big: expected string to have <=120
+  characters", "Invalid option: expected one of …"). Add friendly messages to each schema, or extend
+  `validation/messages.js`, when the forms are built.
+- An empty amount (`''` or `null`) is read as ₱0 by the shared `money` rule, because of number
+  conversion. `paymentCreateSchema` rejects ₱0, but member and walk-in payments would accept it.
+  Decide when the payment forms are built.
+- `errorHandler.js` returns PostgreSQL's `detail` text on duplicate/linked-record errors, which can
+  include column values. Replace with friendly wording when the first write endpoints are built.
+- **Attendance (milestone 4) must handle missed check-outs:** a check-in left open from a previous day
+  still blocks the "one open check-in" rule, so the next scan would check the member _out_ instead of
+  in. Decide the rule (auto-close at closing time, or ask staff) when building the scanner.
+- About 12 older files (README, CLAUDE.md, seeds, the migration) are not Prettier-formatted. Harmless.
+  Don't reformat the migration file.
 - The demo seed creates everything in one transaction, so all demo activities share the same time.
 - The admin JS bundle is about 720 kB (Recharts + zod). That's fine on the local PC; split it later if
   needed.

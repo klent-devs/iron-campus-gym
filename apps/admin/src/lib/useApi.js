@@ -17,7 +17,8 @@ export function useApi(load, { refreshMs } = {}) {
     controllerRef.current?.abort();
     const controller = new AbortController();
     controllerRef.current = controller;
-    setState((s) => ({ ...s, refreshing: s.data !== null, loading: s.data === null, error: null }));
+    // Keep any earlier error on screen until this attempt finishes, so the banner doesn't flicker.
+    setState((s) => ({ ...s, refreshing: s.data !== null, loading: s.data === null }));
     try {
       const data = await load(controller.signal);
       if (!controller.signal.aborted)

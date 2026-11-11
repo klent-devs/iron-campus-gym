@@ -12,7 +12,7 @@ export function ComingSoonPage({ title, icon, milestone }) {
 
   return (
     <>
-      <div className="px-1 pt-1">
+      <div className="px-1">
         <h1 className="text-[26px] font-bold">{title}</h1>
       </div>
       <Card>

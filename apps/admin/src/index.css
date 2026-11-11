@@ -15,6 +15,11 @@
   html {
     color-scheme: dark;
   }
+  /* Stop the page "bouncing" past the top or bottom when scrolling with a touchpad or touchscreen. */
+  html,
+  body {
+    overscroll-behavior: none;
+  }
   body {
     @apply bg-base font-sans text-ink antialiased;
   }

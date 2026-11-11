@@ -14,7 +14,9 @@ function toUtc(isoDate) {
   const [y, m, d] = isoDate.split('-').map(Number);
   const t = Date.UTC(y, m - 1, d);
   const back = new Date(t);
-  return back.getUTCFullYear() === y && back.getUTCMonth() === m - 1 && back.getUTCDate() === d ? t : NaN;
+  return back.getUTCFullYear() === y && back.getUTCMonth() === m - 1 && back.getUTCDate() === d
+    ? t
+    : NaN;
 }
 
 function fromUtc(ms) {
@@ -23,7 +25,12 @@ function fromUtc(ms) {
 
 /** Today's date in the gym's timezone, e.g. '2026-11-09'. */
 export function todayInGym(now = new Date(), timeZone = GYM_TIMEZONE) {
-  return new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
 }
 
 export function addDays(isoDate, days) {
@@ -47,23 +54,45 @@ export function addMonths(isoDate, months) {
   return fromUtc(Date.UTC(ty, tm, Math.min(d, lastDay)));
 }
 
-/** '2026-11-09' → '09 Nov 2026' */
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+/**
+ * '2026-11-09' → '09 Nov 2026'. Month names are fixed here rather than taken from Intl, because
+ * newer Node/browser versions write September as "Sept" in en-GB and older ones as "Sep".
+ */
 export function formatDate(isoDate) {
   if (!isIsoDate(isoDate)) return '—';
-  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(
-    new Date(toUtc(isoDate)),
-  );
+  const [year, month, day] = isoDate.split('-');
+  return `${day} ${MONTHS_SHORT[Number(month) - 1]} ${year}`;
 }
 
 /** ISO timestamp → '10:38 AM' in gym time. */
 export function formatTime(timestamp, timeZone = GYM_TIMEZONE) {
   if (!timestamp) return '—';
-  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone }).format(new Date(timestamp));
+  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone }).format(
+    new Date(timestamp),
+  );
 }
 
 /** Two timestamps → '1h 42m'. */
 export function formatDuration(startTimestamp, endTimestamp) {
   if (!startTimestamp || !endTimestamp) return '—';
-  const minutes = Math.max(0, Math.round((new Date(endTimestamp) - new Date(startTimestamp)) / 60_000));
+  const minutes = Math.max(
+    0,
+    Math.round((new Date(endTimestamp) - new Date(startTimestamp)) / 60_000),
+  );
   return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m`;
 }

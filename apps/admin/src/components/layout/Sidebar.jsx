@@ -2,9 +2,10 @@ import { Link, NavLink } from 'react-router-dom';
 import { LogoFull } from '../../assets/Logo.jsx';
 import { Icon } from '../ui/Icon.jsx';
 import { NAV_ITEMS } from './navItems.js';
+import { SidebarClock } from './SidebarClock.jsx';
 
 const ITEM =
-  'mx-4 my-0.5 flex h-12 items-center gap-3.5 rounded-btn px-4 text-[15px] transition-colors';
+  'mx-4 my-0.5 flex h-12 shrink-0 items-center gap-3.5 rounded-btn px-4 text-[15px] transition-colors';
 const IDLE = 'font-medium text-ink-soft hover:bg-card-2 hover:text-ink';
 const ACTIVE = 'bg-brand font-bold text-ink';
 
@@ -15,9 +16,15 @@ export function Sidebar({ onNavigate }) {
       aria-label="Main"
       className="flex h-full min-h-full flex-col border-r border-card-2 bg-sidebar pb-5 pt-6"
     >
-      <Link to="/" onClick={onNavigate} aria-label="IRON CAMPUS GYM home" className="px-6 pb-7">
-        <LogoFull />
-      </Link>
+      {/* Logo with the clock centred underneath it (the box is only as wide as the logo). */}
+      <div className="px-6 pb-6">
+        <div className="inline-flex flex-col items-center">
+          <Link to="/" onClick={onNavigate} aria-label="IRON CAMPUS GYM home" className="block">
+            <LogoFull />
+          </Link>
+          <SidebarClock />
+        </div>
+      </div>
 
       {NAV_ITEMS.map((item) => (
         <NavLink

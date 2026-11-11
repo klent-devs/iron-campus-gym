@@ -41,6 +41,9 @@ describe('ids and QR', () => {
 describe('dates', () => {
   it('formats dates for display', () => {
     expect(formatDate('2026-11-09')).toBe('09 Nov 2026');
+    // Always 3 letters: some Node/browser versions would write 'Sept'.
+    expect(formatDate('2026-09-09')).toBe('09 Sep 2026');
+    expect(formatDate('2026-02-30')).toBe('—');
   });
   it('uses Manila time for "today"', () => {
     // 2026-11-09 17:30 UTC is already 10 Nov in Manila (UTC+8)

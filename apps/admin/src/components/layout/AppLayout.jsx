@@ -53,7 +53,8 @@ export function AppLayout() {
         </div>
       )}
 
-      <main className="flex min-w-0 flex-1 flex-col gap-5 px-5 pb-10 pt-4">
+      {/* One spacing size everywhere: 16 px around the page and between every block (gap-4). */}
+      <main className="flex min-w-0 flex-1 flex-col gap-4 p-4">
         <Topbar onOpenMenu={() => setMenuOpen(true)} />
         <Outlet />
       </main>
