@@ -32,3 +32,13 @@
     @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-base;
   }
 }
+
+@layer utilities {
+  /* Scrolls with the mouse wheel / touchpad but shows no scrollbar (used for the phone menu). */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

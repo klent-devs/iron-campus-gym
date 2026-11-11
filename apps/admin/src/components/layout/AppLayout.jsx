@@ -24,12 +24,18 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-base lg:flex">
-      <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 overflow-y-auto lg:block">
+      {/* The menu never moves (overflow-hidden), and data-scroll-lock stops the wheel over it from
+          scrolling the page (lib/smoothScroll.js). */}
+      <aside
+        data-scroll-lock
+        className="sticky top-0 hidden h-screen w-[260px] shrink-0 overflow-hidden lg:block"
+      >
         <Sidebar />
       </aside>
 
       {menuOpen && (
         <div
+          data-scroll-lock
           className="fixed inset-0 z-40 lg:hidden"
           role="dialog"
           aria-modal="true"
@@ -41,7 +47,7 @@ export function AppLayout() {
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] overflow-y-auto">
+          <div className="scrollbar-none absolute inset-y-0 left-0 w-[280px] max-w-[85vw] overflow-y-auto overscroll-contain">
             <Sidebar onNavigate={() => setMenuOpen(false)} />
             <button
               type="button"

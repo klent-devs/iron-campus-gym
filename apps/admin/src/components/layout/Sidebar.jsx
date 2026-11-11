@@ -13,7 +13,7 @@ export function Sidebar({ onNavigate }) {
   return (
     <nav
       aria-label="Main"
-      className="flex h-full min-h-full flex-col border-r border-card-2 bg-sidebar pb-5 pt-6"
+      className="flex h-full min-h-full flex-col border-r border-card-2 bg-sidebar pb-8 pt-6"
     >
       <Link to="/" onClick={onNavigate} aria-label="IRON CAMPUS GYM home" className="px-6 pb-7">
         <LogoFull />
@@ -32,7 +32,8 @@ export function Sidebar({ onNavigate }) {
         </NavLink>
       ))}
 
-      <div className="min-h-6 flex-1" />
+      {/* Empty space above Help/Logout; it shrinks first on short windows so they stay on screen. */}
+      <div className="min-h-0 flex-1" />
       <div className="mx-4 mb-3 border-t border-card-2" />
 
       <NavLink

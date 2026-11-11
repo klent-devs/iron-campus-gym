@@ -11,6 +11,9 @@ import { useEffect } from 'react';
  * - Ctrl + wheel (zoom), sideways scrolling, and Shift + wheel
  * - anything inside a box that scrolls on its own (sidebar, tables, pop-ups) while it can still scroll
  * - people who turned on "reduce motion" / "show animations: off" in Windows
+ *
+ * Inside an area marked `data-scroll-lock` (the sidebar menu) the page behind never moves: the area
+ * scrolls itself if it is taller than the window, otherwise the wheel does nothing.
  * - keyboard, scrollbar dragging and touch screens (already smooth in the browser)
  */
 
@@ -95,9 +98,13 @@ export function useSmoothWheelScroll() {
     };
 
     const onWheel = (event) => {
+      if (event.defaultPrevented || event.ctrlKey) return;
+      const el = event.target instanceof Element ? event.target : null;
+      if (el?.closest('[data-scroll-lock]')) {
+        if (!insideOwnScroller(el, event.deltaY)) event.preventDefault();
+        return;
+      }
       if (
-        event.defaultPrevented ||
-        event.ctrlKey ||
         event.shiftKey ||
         reduceMotion.matches ||
         Math.abs(event.deltaX) > Math.abs(event.deltaY) ||

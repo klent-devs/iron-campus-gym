@@ -26,6 +26,13 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Sidebar stays still (12 Nov):** the sidebar never scrolls and shows no
+  scrollbar (`overflow-hidden` on the `<aside>` in `AppLayout.jsx`), and with the pointer over it
+  the mouse wheel doesn't scroll the page either (`data-scroll-lock`, handled in
+  `lib/smoothScroll.js`). Help and Logout sit higher (`pb-8`), and the empty space above them
+  shrinks first on short windows, so they stay fully visible down to about 650 px tall. Item sizes
+  and spacing are unchanged. The phone menu (drawer) still scrolls itself if needed, without a
+  visible bar. Checked in Chrome at 900, 768, 720, 680 and 650 px tall.
 - **Dashboard header buttons have no fill until hovered (11 Nov):** "+ Add
   Member" turns orange and "Check In Member" grey when the pointer is on them (new `Button` variants
   `plainPrimary` and `plain`). Rule for all page-header buttons is in `docs/design/README.md`.
