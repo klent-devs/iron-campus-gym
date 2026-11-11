@@ -15,7 +15,7 @@ const REFRESH_SECONDS = 30;
 function PageHeader() {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex-[1_1_280px]">
+      <div className="flex-[1_1_280px] pl-1.5">
         <h1 className="text-[30px] font-extrabold leading-tight tracking-[0.03em]">
           IRON CAMPUS <span className="text-brand-text">GYM</span>
         </h1>
