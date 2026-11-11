@@ -26,6 +26,13 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Smoother, slower page scrolling (11 Nov, not committed yet):** the mouse wheel / touchpad now
+  moves the page 60% as far per step and glides there (about half a second) instead of jumping.
+  `apps/admin/src/lib/smoothScroll.js` (`useSmoothWheelScroll`, used in `AppLayout`), tests in
+  `apps/admin/tests/smooth-scroll.test.js`. Tune with `SCROLL_SPEED` (lower = slower) and
+  `SCROLL_EASE` (lower = longer glide). Left to the browser: Ctrl+wheel zoom, sideways scrolling,
+  boxes that scroll on their own (they'll scroll normally while they can), keyboard, scrollbar,
+  touch screens, and Windows "reduce motion". Owner confirmed it feels good (11 Nov).
 - **Developer setup guide in the repository:** `docs/SETUP.md` (install list, 7 setup steps with
   checks, troubleshooting, daily git workflow with branches and pull requests, common pitfalls),
   linked from `README.md` and `CLAUDE.md`. Update it when setup steps change.

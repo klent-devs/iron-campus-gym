@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useSmoothWheelScroll } from '../../lib/smoothScroll.js';
 import { Icon } from '../ui/Icon.jsx';
 import { Sidebar } from './Sidebar.jsx';
 import { Topbar } from './Topbar.jsx';
@@ -8,6 +9,7 @@ import { Topbar } from './Topbar.jsx';
 export function AppLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  useSmoothWheelScroll(); // gentler mouse-wheel / touchpad scrolling (lib/smoothScroll.js)
 
   useEffect(() => {
     window.scrollTo(0, 0);
