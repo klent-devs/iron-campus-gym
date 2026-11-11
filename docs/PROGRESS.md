@@ -13,7 +13,7 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
 
 ## Done
 
-### 11 Nov 2026 — live clock and spacing (not committed yet)
+### 11 Nov 2026 — live clock and spacing (committed and pushed to `main`)
 
 - **Clock under the logo in the sidebar, on every page** (owner's final choice, after trying a card
   and then plain text in the Overview header): one small line, "Wed Nov 11 2:26PM", updated each
@@ -42,7 +42,7 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
 - Fixed near-invisible headings in empty states: the class `text-base` picks up the preset colour
   named `base`. **Don't use `text-base` in the admin app**; use `text-[16px]`.
 - Page no longer "bounces" past the top or bottom (`overscroll-behavior: none` in `index.css`).
-  **Not yet confirmed by the owner on their touchpad, and not committed.**
+  **Committed; not yet confirmed by the owner on their touchpad.**
 - **Bug scan (11 Nov):** tests, lint, production build, live API, browser console on every page type,
   the 5 database tests on a throwaway PostgreSQL, a secrets scan and a code read-through. Fixed:
   - the "Couldn't refresh" banner flickered on every 30-second retry (`useApi.js` cleared the error
@@ -52,7 +52,7 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   - `docs/design` is now in `.prettierignore`, so `npm run format` can't rewrite the approved designs.
     Checked on real SQL: Manila-midnight month boundaries, day-old open sessions are not counted as
     "inside now", payments can't be deleted, one open check-in per member. No secrets in Git.
-- **zod upgraded 3.25 → 4.6.7 (11 Nov, branch `upgrade-zod`, not committed yet)** to clear the
+- **zod upgraded 3.25 → 4.6.7 (11 Nov, merged into `main` and pushed)** to clear the
   high-severity advisory; `npm audit --omit=dev` now reports 0 vulnerabilities.
   - Added `packages/shared/tests/validation-schemas.test.js` (33 tests) first, to pin down every
     schema's behaviour and messages; they pass on both versions.
@@ -148,8 +148,8 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
 - [x] `npm run dev` → http://localhost:5173 works; `/api/health` shows `"database": "up"`.
 - [ ] Optional: create a second database `iron_campus_gym_test` and set
       `TEST_DATABASE_URL` to run the database tests (`npm test`)
-- [x] GitHub repository created and pushed (`klent-devs/iron-campus-gym`). Still uncommitted: the
-      scroll-bounce fix in `apps/admin/src/index.css` and this progress update.
+- [x] GitHub repository created and pushed (`klent-devs/iron-campus-gym`). Everything up to the
+      sidebar clock is on `main` (11 Nov).
 - [ ] Confirm the page no longer bounces at the bottom when scrolling with the touchpad
 - [ ] If the repository is private, add the co-developer as a collaborator and send them the setup
       guide PDF
