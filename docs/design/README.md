@@ -35,6 +35,12 @@ Shared: `Sidebar.dc.html`, `Topbar.dc.html` → `components/layout/`; `Component
 inputs, badges, tables, modals, toasts, loading/empty states) → `components/ui/`;
 `Brand.dc.html` → logo SVGs in `src/assets/`.
 
+**Top bar clock (added 11 Nov 2026, owner-approved):** `Topbar.dc.html` shows a clock between the
+search box and the notification bell: grey clock icon in a round frame, time ("2:43 PM") with the
+date ("Wed, 11 Nov 2026") underneath, always Philippine time. Built in
+`components/layout/TopbarClock.jsx`. Keep the icon grey: orange is only for actions and the active
+page. There is no clock in the sidebar.
+
 ## Member portal
 
 `MLogin`, `MHome`, `MMembership`, `MQR`, `MAttendance`, `MPayments`, `MProfile`, `MNotifications`

@@ -3,7 +3,7 @@ import {
   GYM_OPEN_STATE,
   formatClock,
   formatLongDate,
-  formatSidebarClock,
+  formatShortDate,
   formatTimeOfDay,
   greetingFor,
   gymOpenStatus,
@@ -35,11 +35,15 @@ describe('gym clock text', () => {
     expect(formatLongDate(manila('2026-11-12T00:30:00'))).toBe('Thursday, 12 Nov 2026');
   });
 
-  it('shows the one-line sidebar clock', () => {
-    expect(formatSidebarClock(manila('2026-11-11T14:26:59'))).toBe('Wed Nov 11 2:26PM');
-    expect(formatSidebarClock(manila('2026-11-12T00:05:00'))).toBe('Thu Nov 12 12:05AM');
-    expect(formatSidebarClock(manila('2026-09-09T09:00:00'))).toBe('Wed Sep 9 9:00AM');
-    expect(formatSidebarClock(manila('2026-11-11T12:00:00'))).toBe('Wed Nov 11 12:00PM');
+  it('shows the short date under the top-bar clock', () => {
+    expect(formatShortDate(manila('2026-11-11T14:26:59'))).toBe('Wed, 11 Nov 2026');
+    expect(formatShortDate(manila('2026-11-12T00:05:00'))).toBe('Thu, 12 Nov 2026');
+    expect(formatShortDate(manila('2026-09-09T09:00:00'))).toBe('Wed, 09 Sep 2026');
+  });
+
+  it('always uses a plain space before AM/PM', () => {
+    expect(formatClock(manila('2026-11-11T14:26:59'), { seconds: false })).toBe('2:26 PM');
+    expect(formatClock(manila('2026-11-11T12:00:00'), { seconds: false })).toBe('12:00 PM');
   });
 
   it('greets by time of day', () => {

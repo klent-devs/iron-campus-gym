@@ -60,7 +60,9 @@ export function formatClock(now = new Date(), { seconds = true, timeZone = GYM_T
     hour: 'numeric',
     minute: '2-digit',
     second: seconds ? '2-digit' : undefined,
-  }).format(now);
+  })
+    .format(now)
+    .replace(/\s+(?=[AP]M$)/, ' '); // some browsers put a narrow no-break space before AM/PM
 }
 
 const weekdayIn = (now, timeZone, weekday) =>
@@ -71,12 +73,9 @@ export function formatLongDate(now = new Date(), timeZone = GYM_TIMEZONE) {
   return `${weekdayIn(now, timeZone, 'long')}, ${formatDate(todayInGym(now, timeZone))}`;
 }
 
-/** 'Wed Nov 11 2:26PM' in gym time: the one-line clock under the sidebar logo. */
-export function formatSidebarClock(now = new Date(), timeZone = GYM_TIMEZONE) {
-  const [day, month] = formatDate(todayInGym(now, timeZone)).split(' '); // '09', 'Sep'
-  // Drop the space before AM/PM (some versions use a special narrow space, so remove any space).
-  const time = formatClock(now, { seconds: false, timeZone }).replace(/\s/g, '');
-  return `${weekdayIn(now, timeZone, 'short')} ${month} ${Number(day)} ${time}`;
+/** 'Wed, 11 Nov 2026' in gym time: the date line under the top-bar clock. */
+export function formatShortDate(now = new Date(), timeZone = GYM_TIMEZONE) {
+  return `${weekdayIn(now, timeZone, 'short')}, ${formatDate(todayInGym(now, timeZone))}`;
 }
 
 /** 'Good morning' before noon, 'Good afternoon' until 6 PM, then 'Good evening'. */
