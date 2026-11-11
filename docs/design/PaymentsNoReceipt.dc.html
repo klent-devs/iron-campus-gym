@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Payments · No receipt open</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.btn.sm{height:36px;padding:0 12px;font-size:13px}
+.in{height:44px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:14px Inter,sans-serif}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:600;color:#A1A1AA;font-size:13px;padding:14px 16px;background:#1D1F23;white-space:nowrap}
+.tbl td{padding:12px 16px;border-top:1px solid #292B30;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:rgba(36,180,126,.15);color:#3DD598}.warn{background:rgba(242,169,59,.15);color:#F5B95A}.bad{background:rgba(227,77,77,.15);color:#F07070}.mute{background:rgba(161,161,170,.15);color:#C4C4CC}
+.st{background:#151619;border:1px solid #292B30;border-radius:16px;padding:18px 20px}
+.st span{font-size:14px;color:#A1A1AA}.st b{display:block;font:700 28px Poppins,sans-serif;margin-top:4px}.st i{font-style:normal;font-size:13px;color:#A1A1AA}
+.rl{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0}
+.rl span:first-child{color:#52525B}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="payments" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Payments</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Every peso received, linked to a member or walk-in.</p></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><a class="btn" href="Reports.dc.html" style="color: #FFFFFF">Export Report</a><button class="btn pri">+ Record Payment</button></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px">
+<div class="st"><span>Today’s Collections</span><b style="color: #FF6A3D">₱14,820</b><i>23 payments</i></div>
+<div class="st"><span>Monthly Collections</span><b>₱486,300</b><i>▲ 8.4% vs October</i></div>
+<div class="st"><span>Membership Payments</span><b>₱452,700</b><i>This month</i></div>
+<div class="st"><span>Walk-in Payments</span><b>₱18,940</b><i>This month · 207 visits</i></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 2.2 1 600px; min-width: 0; background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 16px">
+<h2 style="font-size: 18px; font-weight: 600">Transaction History</h2>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><input class="in" aria-label="Search transactions" placeholder="Transaction no. or name" style="width: 220px"><select class="in" aria-label="Type"><option>All types</option><option>Membership</option><option>Walk-in</option><option>Product</option></select><select class="in" aria-label="Method"><option>All methods</option><option>Cash</option><option>GCash</option><option>Bank Transfer</option></select></div>
+</div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th>Transaction No.</th><th>Customer Name</th><th>Type</th><th style="text-align: right">Amount</th><th>Method</th><th>Date</th><th>Status</th><th style="text-align: right">Actions</th></tr></thead>
+<tbody><sc-for list="{{tx}}" as="t" hint-placeholder-count="9"><tr style="{{t.row}}">
+<td style="font: 13px ui-monospace, Menlo, monospace; color: #D4D4D8">{{t.no}}</td><td style="font-weight: 600">{{t.c}}<div style="font-size: 12px; font-weight: 400; color: #A1A1AA">{{t.note}}</div></td><td style="color: #D4D4D8">{{t.type}}</td>
+<td style="{{t.as}}">{{t.amt}}</td><td style="color: #D4D4D8">{{t.m}}</td><td style="color: #D4D4D8">{{t.d}}</td><td><span class="pill {{t.tone}}">{{t.st}}</span></td>
+<td style="text-align: right"><button class="btn sm" onClick="{{t.view}}">View</button> <button class="btn sm" onClick="{{t.view}}">Print Receipt</button></td>
+</tr></sc-for></tbody></table>
+</div>
+<div style="padding: 14px 16px; border-top: 1px solid #292B30; font-size: 13px; color: #A1A1AA">Voided and refunded payments stay in the list with who changed them and why. Only the Owner can void or refund.</div>
+<sc-if value="{{closed}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 12px 16px; border-top: 1px solid #292B30; font-size: 14px; color: #D4D4D8; background: #1D1F23">Click <b>View</b> or <b>Print Receipt</b> on a payment to open its receipt.</div>
+</sc-if>
+</section>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{ false }}">
+<section aria-label="Receipt preview" style="position: relative; flex: 1 1 320px; max-width: 420px; background: #FFFFFF; color: #090A0C; border-radius: 16px; padding: 24px; font-family: Inter, sans-serif">
+<button onClick="{{close}}" aria-label="Close receipt" style="position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; border: 0; border-radius: 12px; background: #F4F4F5; color: #090A0C; cursor: pointer; font-size: 16px">✕</button>
+<div style="display: flex; align-items: center; gap: 10px; padding-right: 48px">
+<svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><path d="M36.7 11.3A18 18 0 1 0 36.7 36.7" fill="none" stroke="#FF3D0A" stroke-width="7" stroke-linecap="round"></path><path d="M18 13h12M18 35h12M24 13v22" stroke="#090A0C" stroke-width="5" stroke-linecap="round"></path></svg>
+<div style="line-height: 1.1"><b style="display: block; font: 800 16px Poppins, sans-serif; letter-spacing: 0.03em">IRON CAMPUS GYM</b><span style="font-size: 11px; color: #52525B">[GYM ADDRESS] · [CONTACT NO.]</span></div>
+</div>
+<div style="text-align: center; margin: 16px 0 10px; font: 700 13px Inter, sans-serif; letter-spacing: 0.18em; color: #52525B">OFFICIAL RECEIPT</div>
+<sc-if value="{{r.hasNote}}" hint-placeholder-val="{{ false }}">
+<div style="{{r.noteStyle}}">{{r.noteText}}</div>
+</sc-if>
+<div style="border-top: 1px dashed #A1A1AA; padding-top: 10px">
+<div class="rl"><span>Transaction No.</span><b>{{r.no}}</b></div>
+<div class="rl"><span>Date &amp; Time</span><span>{{r.when}}</span></div>
+<div class="rl"><span>Customer</span><span>{{r.customer}}</span></div>
+<div class="rl"><span>Processed By</span><span>Joy Mercado</span></div>
+</div>
+<div style="border-top: 1px dashed #A1A1AA; margin-top: 10px; padding-top: 10px">
+<div class="rl"><span style="color: #090A0C">{{r.item}}<span style="display: block; color: #52525B">{{r.period}}</span></span><b>{{r.price}}</b></div>
+</div>
+<div style="border-top: 2px solid #090A0C; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; align-items: baseline"><b>{{r.amtLabel}}</b><b style="{{r.amtStyle}}">{{r.amt}}</b></div>
+<div class="rl"><span>Payment Method</span><span>{{r.method}}</span></div>
+<p style="margin: 14px 0 0; text-align: center; font: 800 12px Poppins, sans-serif; letter-spacing: 0.14em; color: #D93208">STRONGER EVERY DAY.</p>
+<div style="{{r.btnRow}}"><a class="btn" href="ReceiptPrint.dc.html" style="flex: 1; background: #090A0C; border-color: #090A0C; color: #FFFFFF">Print Receipt</a><a class="btn" href="ReceiptSms.dc.html" style="flex: 1; background: #F4F4F5; border-color: #E4E4E7; color: #090A0C">Send by SMS</a></div>
+</section>
+</sc-if>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = this.state && this.state.sel !== undefined ? this.state.sel : null;
+    const tone = { Paid: 'ok', Pending: 'warn', Voided: 'bad', Refunded: 'mute' };
+    const T = [
+      ['TXN-2026-11-0405', 'Paolo Reyes', '', 'Membership renewal', '₱3,300.00', 'Cash', '09 Nov, 10:46 AM', 'Paid', 'ICG-2024-0118', 'Quarterly membership', '09 Nov 2026 – 08 Feb 2027'],
+      ['TXN-2026-11-0404', 'Ella Bautista', 'Walk-in', 'Walk-in', '₱100.00', 'Cash', '09 Nov, 10:44 AM', 'Paid', 'Walk-in', 'Walk-in day pass', 'Regular rate'],
+      ['TXN-2026-11-0402', 'Carlo Tan', 'Converted from walk-in', 'New membership', '₱1,200.00', 'Cash', '09 Nov, 10:42 AM', 'Paid', 'ICG-2026-0643', 'Monthly membership', '09 Nov – 08 Dec 2026'],
+      ['TXN-2026-11-0391', 'Andrea Lim', '', 'Membership renewal', '₱1,200.00', 'GCash', '09 Nov, 10:31 AM', 'Paid', 'ICG-2025-0291', 'Monthly membership', '09 Nov – 08 Dec 2026'],
+      ['TXN-2026-11-0388', 'Trisha Navarro', '', 'Product · Protein shake', '₱120.00', 'Cash', '09 Nov, 10:15 AM', 'Paid', 'ICG-2025-0402', 'Protein shake × 1', ''],
+      ['TXN-2026-11-0384', 'Nathan Lopez', 'Walk-in', 'Walk-in', '₱100.00', '—', '09 Nov, 8:40 AM', 'Pending', 'Walk-in', 'Walk-in day pass', 'Regular rate'],
+      ['TXN-2026-11-0377', 'Miguel Ramos', 'Bank ref awaiting check', 'Membership renewal', '₱12,000.00', 'Bank Transfer', '08 Nov, 6:30 PM', 'Pending', 'ICG-2023-0057', 'Annual membership', '09 Nov 2026 – 08 Nov 2027'],
+      ['TXN-2026-11-0372', 'Jasmine Uy', 'Voided by Marco V. · entered twice', 'Membership renewal', '₱1,200.00', 'Cash', '08 Nov, 5:12 PM', 'Voided', 'ICG-2025-0333', 'Monthly membership', '08 Nov – 07 Dec 2026'],
+      ['TXN-2026-11-0369', 'Mae Dizon', 'Refunded by Marco V. · left early', 'Walk-in', '−₱80.00', 'Cash', '08 Nov, 7:41 AM', 'Refunded', 'Walk-in', 'Walk-in day pass', 'Student rate']
+    ];
+    const notes = {
+      Pending: ['NOT PAID YET · receipt can be printed once paid', 'background:#FFF4E0;color:#7A4F0A'],
+      Voided: ['VOIDED · not valid as proof of payment', 'background:#FCEBEB;color:#8A2424'],
+      Refunded: ['REFUNDED · money given back to the customer', 'background:#F1F1F3;color:#3F3F46']
+    };
+    const tx = T.map((t, i) => ({ no: t[0], c: t[1], note: t[2], type: t[3], amt: t[4], m: t[5], d: t[6], st: t[7], tone: tone[t[7]],
+      row: (t[7] === 'Voided' ? 'opacity:.6;' : '') + (sel === i ? 'background:rgba(255,61,10,.10)' : ''),
+      as: 'text-align:right;font-weight:700;' + (t[7] === 'Voided' ? 'text-decoration:line-through;color:#A1A1AA' : t[4].startsWith('−') ? 'color:#F07070' : ''),
+      view: () => this.setState({ sel: i }) }));
+    let r = {};
+    if (sel !== null) {
+      const t = T[sel];
+      const paid = t[7] === 'Paid';
+      const note = notes[t[7]];
+      r = {
+        no: t[0], when: t[6].replace(',', ' 2026 ·'), customer: t[1] + ' · ' + t[8], item: t[9], period: t[10],
+        price: t[4].replace('−', ''), amt: t[4],
+        amtLabel: paid ? 'AMOUNT PAID' : t[7] === 'Pending' ? 'AMOUNT DUE' : t[7] === 'Refunded' ? 'AMOUNT REFUNDED' : 'AMOUNT (VOIDED)',
+        amtStyle: 'font:800 24px Poppins,sans-serif;' + (t[7] === 'Voided' ? 'text-decoration:line-through;color:#71717A' : t[7] === 'Refunded' ? 'color:#B42318' : ''),
+        method: t[5] === 'GCash' ? 'GCash · Ref 7012 448 9031' : t[5] === 'Bank Transfer' ? 'Bank Transfer · Ref awaiting check' : t[5] === '—' ? 'Not paid yet' : t[5],
+        hasNote: !!note, noteText: note ? note[0] : '',
+        noteStyle: 'text-align:center;font-weight:700;font-size:12px;padding:8px;border-radius:8px;margin-bottom:10px;' + (note ? note[1] : ''),
+        btnRow: 'display:flex;gap:8px;margin-top:16px;' + (paid ? '' : 'opacity:.4;pointer-events:none')
+      };
+    }
+    return { tx, r, open: sel !== null, closed: sel === null, close: () => this.setState({ sel: null }) };
+  }
+}
+</script>
+</body>
+</html>

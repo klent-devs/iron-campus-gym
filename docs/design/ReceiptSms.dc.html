@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Send receipt by SMS</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 15px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.l{display:block;font-size:14px;font-weight:600;color:#D4D4D8;margin-bottom:8px}
+.in{width:100%;height:50px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:16px Inter,sans-serif}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; background: #090A0C">
+<dc-import name="Payments" hint-size="100%,1700px"></dc-import>
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.72); display: flex; align-items: flex-start; justify-content: center; padding: 120px 16px">
+<div role="dialog" aria-modal="true" aria-labelledby="smst" style="width: 100%; max-width: 540px; background: #151619; border: 1px solid #292B30; border-radius: 20px; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #292B30">
+<div><h2 id="smst" style="font-size: 21px">Send Receipt by SMS</h2><div style="font-size: 13px; color: #A1A1AA; margin-top: 4px">TXN-2026-11-0391 · Andrea Lim · ₱1,200.00</div></div>
+<a href="Payments.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 12px; background: #1D1F23; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 18px">✕</a>
+</div>
+
+<div style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+<div>
+<label class="l" for="smsnum">Mobile Number</label>
+<input class="in" id="smsnum" inputmode="numeric" value="{{num}}" onChange="{{onNum}}" disabled="{{busy}}" style="{{numStyle}}">
+<sc-if value="{{hasErr}}" hint-placeholder-val="{{ false }}"><div role="alert" style="font-size: 13px; color: #F07070; margin-top: 6px">Enter 11 digits, like 0917 123 4567</div></sc-if>
+<sc-if value="{{noErr}}" hint-placeholder-val="{{ true }}"><div style="font-size: 13px; color: #A1A1AA; margin-top: 6px">Filled in from Andrea’s member profile. You can change it.</div></sc-if>
+</div>
+
+<div>
+<span class="l">Message Preview</span>
+<div style="background: #1D1F23; border-radius: 16px 16px 16px 4px; padding: 14px; font-size: 14px; line-height: 1.5; color: #D4D4D8">{{msg}}</div>
+<div style="font-size: 12px; color: #A1A1AA; margin-top: 6px">{{count}}</div>
+</div>
+
+<sc-if value="{{isSent}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; background: rgba(36,180,126,.12); border: 1px solid rgba(36,180,126,.4)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3DD598" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.5 2.5L16 9.5"></path></svg>
+<div><b style="color: #3DD598">Receipt sent</b><div style="font-size: 14px; color: #D4D4D8; margin-top: 2px">Sent to {{num}} at 10:32 AM. This is noted on the payment.</div></div>
+</div>
+</sc-if>
+<sc-if value="{{isOffline}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; background: rgba(227,77,77,.10); border: 1px solid rgba(227,77,77,.4)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F07070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5.2-2.8M19 13a10 10 0 0 0-2-1.5M2 9a15 15 0 0 1 4.5-2.7M22 9a15 15 0 0 0-8.4-3.9M12 20h.01"></path></svg>
+<div><b style="color: #F07070">No internet. SMS not sent.</b><div style="font-size: 14px; color: #D4D4D8; margin-top: 2px">The payment is saved. Print the receipt instead, or try again when the internet is back.</div></div>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{showReady}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 10px; padding: 16px 24px 22px">
+<a class="btn" href="Payments.dc.html" style="flex: 1">Cancel</a>
+<button class="btn pri" onClick="{{send}}" style="flex: 2; font-size: 16px">Send SMS</button>
+</div>
+</sc-if>
+<sc-if value="{{busy}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 10px; padding: 16px 24px 22px">
+<button class="btn" disabled style="flex: 1; opacity: .5">Cancel</button>
+<button class="btn pri" disabled style="flex: 2; font-size: 16px; opacity: .75">Sending…</button>
+</div>
+</sc-if>
+<sc-if value="{{isSent}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 10px; padding: 16px 24px 22px">
+<a class="btn pri" href="Payments.dc.html" style="flex: 1; font-size: 16px">Done</a>
+</div>
+</sc-if>
+<sc-if value="{{isOffline}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 10px; padding: 16px 24px 22px">
+<a class="btn" href="ReceiptPrint.dc.html" style="flex: 1">Print Receipt Instead</a>
+<button class="btn pri" onClick="{{send}}" style="flex: 1; font-size: 16px">Try Again</button>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["Ready","Sending","Sent","No internet"],"default":"Ready"},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  componentDidUpdate(prev) {
+    if (prev.state !== this.props.state) this.setState({ s: undefined, err: false });
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  renderVals() {
+    const st = this.state || {};
+    const fromTweak = { Ready: 'ready', Sending: 'sending', Sent: 'sent', 'No internet': 'offline' }[this.props.state ?? 'Ready'] || 'ready';
+    const s = st.s || fromTweak;
+    const num = st.num !== undefined ? st.num : '0917 123 4567';
+    const msg = 'IRON CAMPUS GYM receipt TXN-2026-11-0391: PHP 1,200.00 via GCash for Monthly membership, 09 Nov-08 Dec 2026. Thank you!';
+    const err = !!st.err;
+    return {
+      num, msg, count: '1 SMS · ' + msg.length + ' of 160 characters',
+      hasErr: err, noErr: !err,
+      numStyle: err ? 'border-color:#E34D4D' : '',
+      showReady: s === 'ready', busy: s === 'sending', isSent: s === 'sent', isOffline: s === 'offline',
+      onNum: (e) => this.setState({ num: e.target.value, err: false }),
+      send: () => {
+        if (!/^09\d{9}$/.test(String(num).replace(/\D/g, ''))) { this.setState({ err: true }); return; }
+        this.setState({ s: 'sending', err: false });
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.setState({ s: 'sent' }), 1400);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

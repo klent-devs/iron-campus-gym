@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IRON CAMPUS GYM · Payments · No payments yet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#090A0C;color:#FFFFFF;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#FF6A3D;text-decoration:none}a:hover{color:#FF8A65}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;color:#FFFFFF}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid #292B30;background:#1D1F23;color:#FFFFFF;font:600 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.btn.pri{background:#FF3D0A;border-color:#FF3D0A;font-weight:700}
+.in{height:44px;padding:0 14px;border-radius:12px;border:1px solid #292B30;background:#0D0E10;color:#FFFFFF;font:14px Inter,sans-serif}
+.st{background:#151619;border:1px solid #292B30;border-radius:16px;padding:18px 20px}
+.st span{font-size:14px;color:#A1A1AA}.st b{display:block;font:700 28px Poppins,sans-serif;margin-top:4px}.st i{font-style:normal;font-size:13px;color:#A1A1AA}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; background: #090A0C">
+<div style="flex: 1 1 260px; background: #0D0E10"><dc-import name="Sidebar" active="payments" hint-size="100%,960px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px 40px; gap: 20px">
+<dc-import name="Topbar" hint-size="100%,80px"></dc-import>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 4px 4px 0">
+<div><h1 style="font-size: 26px; font-weight: 700">Payments</h1><p style="margin: 6px 0 0; font-size: 15px; color: #A1A1AA">Every peso received, linked to a member or walk-in.</p></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><a class="btn" href="Reports.dc.html" style="color: #FFFFFF">Export Report</a><button class="btn pri">+ Record Payment</button></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px">
+<div class="st"><span>Today’s Collections</span><b style="color: #FF6A3D">₱0</b><i>0 payments</i></div>
+<div class="st"><span>Monthly Collections</span><b>₱0</b><i>Nothing to compare yet</i></div>
+<div class="st"><span>Membership Payments</span><b>₱0</b><i>This month</i></div>
+<div class="st"><span>Walk-in Payments</span><b>₱0</b><i>This month · 0 visits</i></div>
+</div>
+
+<section style="background: #151619; border: 1px solid #292B30; border-radius: 16px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 16px">
+<h2 style="font-size: 18px; font-weight: 600">Transaction History</h2>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><input class="in" aria-label="Search transactions" placeholder="Transaction no. or name" style="width: 220px"><select class="in" aria-label="Type"><option>All types</option><option>Membership</option><option>Walk-in</option><option>Product</option></select><select class="in" aria-label="Method"><option>All methods</option><option>Cash</option><option>GCash</option><option>Bank Transfer</option></select></div>
+</div>
+<div style="border-top: 1px solid #292B30; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 72px 16px 80px">
+<span style="width: 72px; height: 72px; border-radius: 20px; background: #1D1F23; color: #FF6A3D; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h15a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7zm0 0 2-3h11v3M16 13.5h2"></path></svg></span>
+<h3 style="font-size: 19px; font-weight: 600">No payments yet</h3>
+<p style="margin: 0; max-width: 340px; font-size: 14px; color: #A1A1AA">Payments you record will show up here, with a receipt you can print or send by SMS.</p>
+<button class="btn pri" style="margin-top: 6px">+ Record Payment</button>
+</div>
+<div style="padding: 14px 16px; border-top: 1px solid #292B30; font-size: 13px; color: #A1A1AA">Voided and refunded payments stay in the list with who changed them and why. Only the Owner can void or refund.</div>
+</section>
+<p style="margin: 0; font-size: 13px; color: #A1A1AA">No receipt panel on this page until a payment is recorded or picked from the list.</p>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

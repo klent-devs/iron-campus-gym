@@ -25,6 +25,10 @@ Tailwind classes and the `@icg/tailwind-preset` tokens, not inline styles.
 | Walk-in records | `WalkInRecords.dc.html` | `features/walkins/WalkInRecordsPage.jsx` |
 | Walk-in quick pop-up | `WalkIn.dc.html` | `features/walkins/QuickWalkInModal.jsx` |
 | Payments + receipt | `Payments.dc.html` | `features/payments/PaymentsPage.jsx`, `Receipt.jsx` |
+| Payments: no payments yet | `PaymentsEmpty.dc.html` | empty state of `PaymentsPage.jsx` (no receipt panel) |
+| Payments: no receipt open | `PaymentsNoReceipt.dc.html` | `PaymentsPage.jsx`: table full width; View / Print Receipt opens the receipt, ✕ closes it |
+| Print Receipt | `ReceiptPrint.dc.html` | `Receipt.jsx` print layout (browser print window; 80 mm and A4 versions via the `paper` tweak) |
+| Send receipt by SMS | `ReceiptSms.dc.html` | `features/payments/SendReceiptSmsModal.jsx` (states: Ready, Sending, Sent, No internet) |
 | Inventory | `Inventory.dc.html` | `features/inventory/InventoryPage.jsx` |
 | Add/edit item + stock in/out | `StockMovement.dc.html` | `features/inventory/ItemFormPage.jsx`, `StockMovementPage.jsx` |
 | Reports | `Reports.dc.html` | `features/reports/ReportsPage.jsx` |
@@ -40,6 +44,20 @@ search box and the notification bell: grey clock icon in a round frame, time ("2
 date ("Wed, 11 Nov 2026") underneath, always Philippine time. Built in
 `components/layout/TopbarClock.jsx`. Keep the icon grey: orange is only for actions and the active
 page. There is no clock in the sidebar.
+
+**Page-header action buttons (owner's choice, 11 Nov 2026):** buttons in a page's header (like
+"Check In Member" and "+ Add Member" on the Dashboard, "+ Record Payment" on Payments) have **no
+fill** until the pointer is on them: the main action fills **orange** on hover (`Button
+variant="plainPrimary"`), the others fill **grey** (`variant="plain"`). This replaces the filled
+orange/grey header buttons in the designs. Buttons inside cards, forms and pop-ups keep the
+designs' filled styles.
+
+**Payments receipt rules (designs added 11 Nov 2026 at the owner's request):** the receipt panel shows only
+when there is a payment to show: right after Record Payment, or after View / Print Receipt on a row.
+With no payments, Transaction History shows an empty state and the table uses the full width.
+Pending, voided and refunded payments show a status note on the receipt, and Print / Send by SMS are
+disabled until a payment is Paid. The SMS text uses "PHP" instead of "₱" so it fits in one 160-character
+SMS. "OFFICIAL RECEIPT" wording is pending the gym accountant's advice (BIR rules).
 
 ## Member portal
 

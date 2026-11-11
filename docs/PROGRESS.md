@@ -26,7 +26,13 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
-- **Smoother, slower page scrolling (11 Nov, not committed yet):** the mouse wheel / touchpad now
+- **Dashboard header buttons have no fill until hovered (11 Nov):** "+ Add
+  Member" turns orange and "Check In Member" grey when the pointer is on them (new `Button` variants
+  `plainPrimary` and `plain`). Rule for all page-header buttons is in `docs/design/README.md`.
+- **New Payments designs on the canvas and in `docs/design` (11 Nov):**
+  `PaymentsEmpty`, `PaymentsNoReceipt`, `ReceiptPrint`, `ReceiptSms`; the canvas Top bar now has
+  the clock too.
+- **Smoother, slower page scrolling (11 Nov):** the mouse wheel / touchpad now
   moves the page 60% as far per step and glides there (about half a second) instead of jumping.
   `apps/admin/src/lib/smoothScroll.js` (`useSmoothWheelScroll`, used in `AppLayout`), tests in
   `apps/admin/tests/smooth-scroll.test.js`. Tune with `SCROLL_SPEED` (lower = slower) and
