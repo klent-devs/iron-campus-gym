@@ -26,6 +26,10 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Dropdown polish (12 Nov):** the "Last 12 months" arrow sits 16 px in from
+  the edge (own chevron icon, `appearance-none`), and dropdowns no longer keep the orange focus ring
+  after a mouse click. `lib/inputModality.js` sets `<html data-input="mouse|keyboard">`; `index.css`
+  hides the ring on `<select>` in mouse mode, so keyboard (Tab) users still see it.
 - **Dashboard title is the gym name and motto (12 Nov):** "IRON CAMPUS GYM"
   with "STRONGER EVERY DAY." and a dumbbell icon, replacing "Manage Your Gym Business" and the
   Good morning/afternoon/evening greeting (`greetingFor` in `@icg/shared` is now unused but kept,

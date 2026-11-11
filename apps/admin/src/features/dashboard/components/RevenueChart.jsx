@@ -1,6 +1,6 @@
 import { REVENUE_RANGES, formatPeso, formatPesoCompact } from '@icg/shared';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Card, CardHeader, EmptyState } from '../../../components/ui/index.js';
+import { Card, CardHeader, EmptyState, Icon } from '../../../components/ui/index.js';
 import { colors } from '../../../lib/theme.js';
 import { monthLabels } from '../format.js';
 
@@ -65,18 +65,26 @@ export function RevenueChart({ chart, range, onRangeChange, refreshing }) {
           <>
             <Legend colorClass="bg-brand">Revenue</Legend>
             <Legend colorClass="bg-ink-faint">Expenses</Legend>
-            <select
-              aria-label="Date range"
-              value={range}
-              onChange={(e) => onRangeChange(e.target.value)}
-              className="h-11 rounded-[10px] border border-line bg-sidebar px-3 text-[13px] font-semibold text-ink"
-            >
-              {Object.entries(REVENUE_RANGES).map(([value, { label }]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            {/* Own arrow instead of the browser's, so it sits a little in from the right edge. */}
+            <span className="relative inline-flex">
+              <select
+                aria-label="Date range"
+                value={range}
+                onChange={(e) => onRangeChange(e.target.value)}
+                className="h-11 appearance-none rounded-[10px] border border-line bg-sidebar pl-3 pr-10 text-[13px] font-semibold text-ink"
+              >
+                {Object.entries(REVENUE_RANGES).map(([value, { label }]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <Icon
+                name="chevronDown"
+                size={16}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-soft"
+              />
+            </span>
           </>
         }
       />

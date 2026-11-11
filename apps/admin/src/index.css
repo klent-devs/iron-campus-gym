@@ -31,6 +31,11 @@
   :focus-visible {
     @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-base;
   }
+  /* After a mouse click a dropdown keeps focus; don't leave the orange ring on it. Keyboard users
+     still see the ring (lib/inputModality.js sets data-input). */
+  html[data-input='mouse'] select:focus-visible {
+    box-shadow: none;
+  }
 }
 
 @layer utilities {
