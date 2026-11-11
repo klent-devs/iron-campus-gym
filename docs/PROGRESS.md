@@ -26,6 +26,9 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
   `formatShortDate` in `packages/shared/src/utils/gymClock.js` (tests:
   `packages/shared/tests/gym-clock.test.js`).
 - The Overview subtitle greets by time of day: Good morning / afternoon / evening.
+- **Developer setup guide in the repository:** `docs/SETUP.md` (install list, 7 setup steps with
+  checks, troubleshooting, daily git workflow with branches and pull requests, common pitfalls),
+  linked from `README.md` and `CLAUDE.md`. Update it when setup steps change.
 - **Dashboard consistency pass (11 Nov):** card title rows are always 44 px
   (`CardHeader` `min-h-11`), so titles side by side line up even when one has a button or dropdown;
   empty messages are centred in their card (`EmptyState className="flex-1"` in a `flex-col` card);
@@ -75,8 +78,8 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
     already running keeps a cached zod 3 and the Dashboard fails with "z.config is not a function".
   - Cost: the admin bundle grew from about 720 kB to about 1 MB.
 - Wrote a 10-page "Tech Stack & Developer Setup Guide" PDF for a co-developer (install list, 7 setup
-  steps, troubleshooting, workflow, rules). A copy is in the owner's Windows Downloads folder; it is
-  not in the repository.
+  steps, troubleshooting, workflow, rules). A copy is in the owner's Windows Downloads folder. Superseded
+  on 11 Nov by `docs/SETUP.md` in the repository, which is kept up to date.
 
 ### Session 2 (10 Nov 2026) — Admin website + Dashboard
 
@@ -162,8 +165,8 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
 - [x] GitHub repository created and pushed (`klent-devs/iron-campus-gym`). Everything up to the
       sidebar clock is on `main` (11 Nov).
 - [ ] Confirm the page no longer bounces at the bottom when scrolling with the touchpad
-- [ ] If the repository is private, add the co-developer as a collaborator and send them the setup
-      guide PDF
+- [x] Co-developers added as collaborators (11 Nov). Their setup steps are in `docs/SETUP.md`
+      (linked from the README): each needs their own PostgreSQL database and `.env`.
 - [ ] Before login: create a free Supabase project and put its URL and keys in `.env`
 
 ## Next: finish Milestone 2 — staff login

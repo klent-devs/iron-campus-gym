@@ -21,7 +21,11 @@ docs/                      Architecture, database, API, deployment
 
 ## First-time setup
 
-Requirements: Node.js 20+, PostgreSQL 14+ running locally.
+**New to the project? Follow the step-by-step [developer setup guide](docs/SETUP.md)** (what to
+install, creating your own local database, troubleshooting, and how we work with branches).
+
+Requirements: Node.js 20+, PostgreSQL 14+ running locally. Every developer needs their own local
+database and their own `.env` (never share or commit it).
 
 ```bash
 npm install
@@ -37,16 +41,16 @@ http://localhost:4000/api/health — it reports the API and database status.
 
 ## Scripts
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Start the local API and the admin website together, with auto-reload |
-| `npm run dev:api` / `npm run dev:admin` | Start just one of them |
-| `npm run build:admin` | Build the admin website for production (`apps/admin/dist`) |
-| `npm run db:migrate` | Create / update the database tables |
-| `npm run db:seed` | Load plans, payment methods, settings and demo data |
-| `npm run db:reset` | Drop everything and rebuild with demo data (development only) |
-| `npm test` | Run all tests (database tests run only when `TEST_DATABASE_URL` is set) |
-| `npm run lint` / `npm run format` | Check / format code |
+| Command                                 | What it does                                                            |
+| --------------------------------------- | ----------------------------------------------------------------------- |
+| `npm run dev`                           | Start the local API and the admin website together, with auto-reload    |
+| `npm run dev:api` / `npm run dev:admin` | Start just one of them                                                  |
+| `npm run build:admin`                   | Build the admin website for production (`apps/admin/dist`)              |
+| `npm run db:migrate`                    | Create / update the database tables                                     |
+| `npm run db:seed`                       | Load plans, payment methods, settings and demo data                     |
+| `npm run db:reset`                      | Drop everything and rebuild with demo data (development only)           |
+| `npm test`                              | Run all tests (database tests run only when `TEST_DATABASE_URL` is set) |
+| `npm run lint` / `npm run format`       | Check / format code                                                     |
 
 ## Build milestones
 

@@ -77,4 +77,5 @@ Update it at the end of every work session.
 9. Member portal (PWA)
 10. Hardening: tests, backups, deployment to the front-desk PC
 
-More detail: `README.md`, `docs/architecture.md`, `docs/database.md`, `docs/api.md`.
+More detail: `README.md`, `docs/SETUP.md` (developer setup), `docs/architecture.md`, `docs/database.md`,
+`docs/api.md`.
