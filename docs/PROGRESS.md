@@ -2,16 +2,80 @@
 
 Update this file at the end of every work session: what was finished, what is waiting, what is next.
 
-## Current status (10 Nov 2026, end of session 2)
+## Current status (12 Nov 2026)
 
 **Milestone 1 — Setup: ✅ done** (local database created, migrated and working on this PC)
-**Milestone 2 — Admin app shell: 🟡 in progress** (app, layout and UI components done; login not started)
+**Milestone 2 — Admin app shell: 🟡 in progress** (app, layout, UI components and the **login
+screen (demo)** done; real Supabase sign-in, sign-in guard and staff roles still to do)
 **Dashboard (from milestone 7): ✅ built early** — real data from the local database
+**Walk-ins (from milestone 5): 🟡 screens built on sample data** — Walk-in Records page and the
+Register Walk-in pop-up; not connected to the database yet
 
-Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Supabase project first
-(see "Waiting on you").
+Next up: **connect the login screen to Supabase Auth** (a teammate is doing this) to complete
+milestone 2. It needs a Supabase project first (see "Waiting on you").
 
 ## Done
+
+### 12 Nov 2026 — Walk-in Records + Register Walk-in pop-up (UI + sample data, no database)
+
+- **`/walk-ins`** (`features/walkins/WalkInRecordsPage.jsx`) from `WalkInRecords.dc.html`: summary
+  boxes (Walk-ins Today, Still Inside, Collected Today, Unpaid with a red border when > 0), search by
+  name or number, date filter (Today · Thu, 12 Nov / Yesterday / This week / This month; weeks start
+  Monday), All / Inside / Completed / Unpaid chips with counts, the table, footer totals, and the
+  "Nothing here" empty state. Row buttons: **Record Payment** (unpaid), **Complete Visit** (still
+  inside), **View History** (side panel with visits, spent this month, first visit, the Monthly-plan
+  hint from the 4th visit in a month, and **Make Member**, which opens the Members placeholder).
+- **Register Walk-in pop-up** (`QuickWalkInModal.jsx`) from `WalkIn.dc.html`, opened by "+ REGISTER
+  WALK-IN": Customer Name, Contact Number (optional), Visit Date (today, read-only), Walk-in Fee
+  (Regular ₱100.00 / Student ₱80.00), Payment Method (Cash / GCash / Pay later), the live "Time in
+  is recorded automatically…" note, Cancel / "Confirm Visit · ₱100.00" ("· Pay Later" when paying
+  later). Checked by the shared `walkinVisitCreateSchema` (blank name, bad number → message under
+  the field). A returning customer (same number, or same name with no number) is reused, never
+  duplicated.
+- Success messages after each action (new `Toast` / `useToast` in `components/ui`), and a reusable
+  `Modal` (pop-up and side panel; Esc, ✕ and backdrop close it, Tab stays inside, the cursor goes to
+  the first field). Use these for the other pages' pop-ups.
+- **Sample data only.** `demoData.js` has the 8 visits from the design (times set back from "now" by
+  the design's gaps) plus 3 earlier visits for Ryan; `demoStore.js` keeps changes while moving between
+  pages and loses them on reload. The page title shows a "Sample data · not saved yet" badge; remove
+  it when the API is connected. `TODO(api)` marks what to replace (fees and the Monthly price come
+  from settings/plans later).
+- Differences from the designs: header buttons follow the owner's "no fill until hovered" rule;
+  amounts use `formatPeso` (₱100.00, not ₱100); "Pick dates…" is left out of the date filter for
+  now; GCash has no reference-number box yet (the shared method list says GCash needs one; decide when
+  connecting payments); the table padding is tighter (12 px) so all three row buttons fit at 1440 px
+  (in the design the last column is cut off).
+- Checked in Chrome at 1440 px and 390 px: register (empty → errors → filled → saved), Record
+  Payment, Complete Visit, View History, the Unpaid filter, no console errors, no sideways scroll on
+  phones. Tests: `apps/admin/tests/walkins-demo.test.js`.
+
+### 12 Nov 2026 — Login screen (UI + demo only, no authentication)
+
+- **`/login` page built from `AdminLogin.dc.html`** (`apps/admin/src/features/auth/LoginPage.jsx`),
+  shown without the sidebar/top bar. Same layout, wording and sizes as the design: brand panel with
+  the logo, "STRONGER EVERY DAY." and the faded weight plate; "Welcome Back" form with Username or
+  email, Password with Show/Hide, Remember Me, Forgot Password?, Sign In. Stacks (brand panel on top)
+  below about 1000 px; the motto shrinks to 44 px on phones. Checked at 1440, 820 and 390 px.
+- Additions the design implies but doesn't draw: plain error under a blank field ("Enter your
+  username or email", "Enter your password") with a red border and the cursor moved there; orange
+  border on the field being typed in; "Signing In…" with a spinner; a "Couldn't sign in" message box
+  (style from the notifications in `Components.dc.html`). **Forgot Password?** shows a note: "Ask the
+  gym owner to set a new one for you in Settings → Staff Accounts" (staff accounts are made by the
+  owner). **Remember Me** keeps only the username/email on this PC (`rememberedLogin.js`), never
+  the password, and puts the cursor straight in Password next time.
+- **Demo sign-in, no authentication:** `features/auth/api.js` `signIn()` accepts anything after
+  0.6 s and opens the Dashboard. **Logout** in the sidebar now just goes to `/login`. The rest of the
+  app is still open without signing in.
+- **For the teammate connecting Supabase:** replace the body of `signIn()` in
+  `features/auth/api.js` (keep its shape: resolve with the staff member, or throw an `ApiError` whose
+  message is shown to staff as-is; the page needs no other change), make Logout really sign out
+  (`Sidebar.jsx`), and add the sign-in guard in `App.jsx`. Search for `TODO(auth)`. The form is
+  checked by the shared `staffLoginSchema` (`packages/shared/src/validation/auth.js`), which the API
+  should reuse.
+- New: icons `account` and `lock`; preset colour `ink-dim` (#71717A, used for the field placeholders).
+  **Footnote is white** ("Staff accounts are created by the gym owner."), not the design's grey: owner's choice, 12 Nov.
+  **Restart `npm run dev`** after pulling (Tailwind reads the preset only at start-up).
+- Tests: `packages/shared/tests/auth-validation.test.js`, `apps/admin/tests/remembered-login.test.js`.
 
 ### 11 Nov 2026 — live clock and spacing (committed and pushed to `main`)
 
@@ -197,7 +261,7 @@ Next up: **staff login (Supabase Auth)** to complete milestone 2. It needs a Sup
       (linked from the README): each needs their own PostgreSQL database and `.env`.
 - [ ] Before login: create a free Supabase project and put its URL and keys in `.env`
 
-## Next: finish Milestone 2 — staff login
+## Next: finish Milestone 2 — connect staff login (login screen already built, demo only)
 
 Supabase Auth login (`AdminLogin.dc.html`), offline staff login (`docs/architecture.md`), staff
 roles. Replace the placeholder `apps/api/src/middleware/staffContext.js` with real token checks,

@@ -5,3 +5,4 @@ export * from './walkin.js';
 export * from './payment.js';
 export * from './inventory.js';
 export * from './dashboard.js';
+export * from './auth.js';

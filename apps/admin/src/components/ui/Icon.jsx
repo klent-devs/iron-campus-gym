@@ -28,6 +28,9 @@ export const ICONS = {
   alert: 'M12 7v6M12 17v.5M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z',
   refresh: 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7',
   clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+  // Sign-in fields (docs/design/AdminLogin.dc.html)
+  account: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c1.5-4 4.5-6 8-6s6.5 2 8 6',
+  lock: 'M6 10h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM8 10V7a4 4 0 0 1 8 0v3',
   dumbbell: 'M5 7h2.5v10H5zM16.5 7H19v10h-2.5zM2.5 9.5H5v5H2.5zM19 9.5h2.5v5H19zM7.5 12h9',
   wrench:
     'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5 2.5-2.5z',

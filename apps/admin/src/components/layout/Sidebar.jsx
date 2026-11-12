@@ -44,16 +44,11 @@ export function Sidebar({ onNavigate }) {
         <Icon name="help" strokeWidth={1.9} />
         <span>Help</span>
       </NavLink>
-      {/* TODO(auth): sign out of Supabase once staff login is built. */}
-      <button
-        type="button"
-        disabled
-        title="Staff login comes in the next step"
-        className={`${ITEM} ${IDLE} cursor-not-allowed text-left opacity-50 hover:bg-transparent hover:text-ink-soft`}
-      >
+      {/* Demo: goes back to the sign-in page. TODO(auth): sign out of Supabase first. */}
+      <Link to="/login" onClick={onNavigate} className={`${ITEM} ${IDLE}`}>
         <Icon name="logout" strokeWidth={1.9} />
         <span>Logout</span>
-      </button>
+      </Link>
     </nav>
   );
 }
