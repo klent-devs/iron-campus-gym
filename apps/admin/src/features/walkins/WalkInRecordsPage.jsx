@@ -10,11 +10,14 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Icon,
+  Presence,
   STAT_GRID,
+  StatCard,
   StatusBadge,
   Toast,
   useToast,
 } from '../../components/ui/index.js';
+import { prefersReducedMotion } from '../../lib/motion.js';
 import { useNow } from '../../lib/useNow.js';
 import {
   CompleteVisitModal,
@@ -37,6 +40,11 @@ import {
 import { completeVisit, recordPayment, useWalkinDemo } from './demoStore.js';
 import { QuickWalkInModal } from './QuickWalkInModal.jsx';
 
+/** Page blocks come in one after another; `rise(n)` is the n-th block's delay. */
+const RISE = 'motion-safe:animate-rise';
+const rise = (n) => ({ animationDelay: `${n * 50}ms` });
+const FLASH_MS = 1600;
+
 const EMPTY_WHEN = {
   today: 'today',
   yesterday: 'yesterday',
@@ -58,6 +66,24 @@ export function WalkInRecordsPage() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [dialog, setDialog] = useState(null); // { kind: 'pay'|'out'|'history', visitId }
   const [toast, showToast, hideToast] = useToast();
+  // The row that just changed glows orange for a moment so staff see where it went.
+  const [flash, setFlash] = useState(null); // { id, n }
+  const flashRow = (id) => setFlash((f) => ({ id, n: (f?.n ?? 0) + 1 }));
+
+  useEffect(() => {
+    if (!flash) return undefined;
+    const raf = requestAnimationFrame(() => {
+      document.querySelector(`[data-visit="${flash.id}"]`)?.scrollIntoView({
+        block: 'nearest',
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
+    });
+    const timer = setTimeout(() => setFlash(null), FLASH_MS);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
+  }, [flash]);
 
   useEffect(() => {
     document.title = 'Walk-in Records · IRON CAMPUS GYM';
@@ -83,7 +109,7 @@ export function WalkInRecordsPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-4 px-1 pt-1">
+      <div className={`flex flex-wrap items-end justify-between gap-4 px-1 pt-1 ${RISE}`}>
         <div>
           <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
             Walk-in Records
@@ -99,34 +125,61 @@ export function WalkInRecordsPage() {
           <Button to="/reports" variant="plain">
             Export Report
           </Button>
-          <Button
-            variant="plainPrimary"
-            onClick={() => setRegisterOpen(true)}
-            className="h-[52px] px-6 font-heading text-[15px] tracking-[0.03em]"
-          >
+          {/* Same size as Export Report and the Dashboard's header buttons. */}
+          <Button variant="plainPrimary" onClick={() => setRegisterOpen(true)}>
             + REGISTER WALK-IN
           </Button>
         </div>
       </div>
 
+      {/* Same cards as the Dashboard, so the numbers are the same size on both pages. */}
       <div className={STAT_GRID}>
-        <StatBox label="Walk-ins Today">{stats.total}</StatBox>
-        <StatBox label="Still Inside" valueClassName="text-brand-text">
-          {stats.inside}
-        </StatBox>
-        <StatBox label="Collected Today">{formatPeso(stats.collected)}</StatBox>
-        <StatBox
+        <StatCard
+          label="Walk-ins Today"
+          icon="walk"
+          className={RISE}
+          style={rise(1)}
+          value={<Pop>{stats.total}</Pop>}
+          note={`${stats.total - stats.inside} completed`}
+        />
+        <StatCard
+          label="Still Inside"
+          icon="checkIn"
+          tone="brand"
+          className={RISE}
+          style={rise(2)}
+          value={<Pop>{stats.inside}</Pop>}
+          note={stats.inside ? 'Complete their visit when they leave' : 'Nobody inside'}
+        />
+        <StatCard
+          label="Collected Today"
+          icon="peso"
+          className={RISE}
+          style={rise(3)}
+          value={<Pop>{formatPeso(stats.collected)}</Pop>}
+          note="Paid walk-in fees"
+        />
+        <StatCard
           label="Unpaid"
-          valueClassName="text-danger-text"
-          className={stats.unpaidCount ? 'border-danger/50' : ''}
-        >
-          {stats.unpaidCount ? `${stats.unpaidCount} · ${formatPeso(stats.unpaidAmount)}` : '0'}
-        </StatBox>
+          icon="alert"
+          tone={stats.unpaidCount ? 'danger' : 'default'}
+          className={RISE}
+          style={rise(4)}
+          value={<Pop>{formatPeso(stats.unpaidAmount)}</Pop>}
+          delta={
+            stats.unpaidCount
+              ? `${stats.unpaidCount} ${stats.unpaidCount === 1 ? 'visit' : 'visits'}`
+              : undefined
+          }
+          deltaTone="down"
+          note={stats.unpaidCount ? 'to collect' : 'Everyone has paid'}
+        />
       </div>
 
       <section
         aria-label="Walk-in records"
-        className="overflow-hidden rounded-card border border-line bg-card"
+        className={`overflow-hidden rounded-card border border-line bg-card ${RISE}`}
+        style={rise(5)}
       >
         <div className="flex flex-wrap items-center gap-3 border-b border-line p-4">
           <label className="flex h-[46px] max-w-[320px] flex-[1_1_240px] items-center gap-2.5 rounded-btn border border-line bg-sidebar px-3.5 text-ink-muted focus-within:border-brand">
@@ -170,7 +223,7 @@ export function WalkInRecordsPage() {
                   aria-pressed={on}
                   onClick={() => setStatus(key)}
                   className={
-                    'h-10 rounded-full border px-3.5 text-[13px] font-semibold transition-colors ' +
+                    'h-10 rounded-full border px-3.5 text-[13px] font-semibold transition duration-150 motion-safe:active:scale-95 ' +
                     (on
                       ? 'border-brand bg-brand text-ink'
                       : 'border-line bg-transparent text-ink-soft hover:bg-card-2 hover:text-ink')
@@ -197,12 +250,20 @@ export function WalkInRecordsPage() {
                 <th className="px-3 py-3.5 text-right font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            {/* A new date or status filter fades the rows in (typing a search does not). */}
+            <tbody key={`${range}|${status}`} className="motion-safe:animate-fade-in">
               {shown.map((v) => {
                 const customer = customerById.get(v.customerId);
                 const pay = paymentLabel(v);
+                const flashing = flash?.id === v.id;
                 return (
-                  <tr key={v.id} className="whitespace-nowrap hover:bg-card-2/50">
+                  <tr
+                    key={flashing ? `${v.id}-${flash.n}` : v.id}
+                    data-visit={v.id}
+                    className={`whitespace-nowrap transition-colors hover:bg-card-2/50 ${
+                      flashing ? 'motion-safe:animate-row-flash' : ''
+                    }`}
+                  >
                     <td className="border-t border-line px-3 py-3">
                       <b className="font-semibold">{customer?.name}</b>
                       <div className="max-w-[150px] whitespace-normal text-xs text-ink-muted">
@@ -272,7 +333,7 @@ export function WalkInRecordsPage() {
             </tbody>
           </table>
           {shown.length === 0 && (
-            <div className="px-5 py-12 text-center">
+            <div className="px-5 py-12 text-center motion-safe:animate-fade-in">
               <b className="font-heading text-[17px] font-semibold">Nothing here</b>
               <p className="mt-1.5 text-ink-muted">
                 {search.trim()
@@ -296,13 +357,14 @@ export function WalkInRecordsPage() {
         </div>
       </section>
 
-      {registerOpen && (
+      <Presence show={registerOpen}>
         <QuickWalkInModal
           onClose={() => setRegisterOpen(false)}
           onRegistered={({ visit, customer, returning }) => {
             setRange('today');
             setStatus('All');
             setSearch('');
+            flashRow(visit.id);
             showToast({
               title: `Walk-in registered · ${formatTime(visit.timeIn)}`,
               body:
@@ -314,9 +376,10 @@ export function WalkInRecordsPage() {
             });
           }}
         />
-      )}
+      </Presence>
 
-      {selected && dialog.kind === 'pay' && (
+      {/* Presence keeps each pop-up on screen for a moment after it closes, so it can fade out. */}
+      <Presence show={selected && dialog.kind === 'pay'}>
         <RecordPaymentModal
           visit={selected}
           customer={selectedCustomer}
@@ -324,15 +387,16 @@ export function WalkInRecordsPage() {
           onConfirm={(method) => {
             recordPayment(selected.id, method);
             close();
+            flashRow(selected.id);
             showToast({
               title: 'Payment recorded',
               body: `${formatPeso(selected.fee)} · ${methodName(method)} · ${selectedCustomer.name}`,
             });
           }}
         />
-      )}
+      </Presence>
 
-      {selected && dialog.kind === 'out' && (
+      <Presence show={selected && dialog.kind === 'out'}>
         <CompleteVisitModal
           visit={selected}
           customer={selectedCustomer}
@@ -340,6 +404,7 @@ export function WalkInRecordsPage() {
           onConfirm={(at) => {
             completeVisit(selected.id, at);
             close();
+            flashRow(selected.id);
             showToast({
               tone: 'brand',
               title: `Visit completed · ${formatTime(at)}`,
@@ -347,25 +412,22 @@ export function WalkInRecordsPage() {
             });
           }}
         />
-      )}
+      </Presence>
 
-      {selected && dialog.kind === 'history' && (
+      <Presence show={selected && dialog.kind === 'history'}>
         <WalkInHistoryDrawer customer={selectedCustomer} visits={visits} onClose={close} />
-      )}
+      </Presence>
 
       <Toast toast={toast} onClose={hideToast} />
     </>
   );
 }
 
-/** Plain summary box from the design (no icon, unlike the Dashboard's StatCard). */
-function StatBox({ label, valueClassName = '', className = '', children }) {
+/** A summary number that slides up softly whenever it changes (keyed on the value). */
+function Pop({ children }) {
   return (
-    <div className={`min-w-0 rounded-card border border-line bg-card px-5 py-[18px] ${className}`}>
-      <span className="text-sm text-ink-muted">{label}</span>
-      <b className={`mt-1 block truncate font-heading text-[28px] font-bold ${valueClassName}`}>
-        {children}
-      </b>
-    </div>
+    <span key={String(children)} className="inline-block motion-safe:animate-value-pop">
+      {children}
+    </span>
   );
 }

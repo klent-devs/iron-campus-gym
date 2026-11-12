@@ -279,9 +279,7 @@ function BrandPanel() {
       </div>
 
       {/* White, not the design's grey: owner's choice (12 Nov 2026). */}
-      <p className="relative text-[13px] text-ink">
-        Staff accounts are created by the gym owner.
-      </p>
+      <p className="relative text-[13px] text-ink">Staff accounts are created by the gym owner.</p>
     </section>
   );
 }

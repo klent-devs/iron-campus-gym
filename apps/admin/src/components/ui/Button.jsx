@@ -3,7 +3,8 @@ import { Icon } from './Icon.jsx';
 
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-btn border font-semibold ' +
-  'transition-colors disabled:cursor-not-allowed disabled:opacity-40';
+  'transition duration-150 motion-safe:active:scale-[0.98] ' +
+  'disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100';
 
 const VARIANTS = {
   // One orange button per screen, for the main action.

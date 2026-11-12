@@ -6,4 +6,5 @@ export { Skeleton } from './Skeleton.jsx';
 export { STAT_GRID, StatCard } from './StatCard.jsx';
 export { StatusBadge } from './StatusBadge.jsx';
 export { Modal } from './Modal.jsx';
+export { EXIT_MS, Presence, useLeaving } from './Presence.jsx';
 export { Toast, useToast } from './Toast.jsx';

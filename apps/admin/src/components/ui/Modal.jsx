@@ -1,6 +1,12 @@
 import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './Icon.jsx';
+import { useLeaving } from './Presence.jsx';
+
+const PANEL_MOTION = {
+  dialog: { in: 'motion-safe:animate-dialog-in', out: 'motion-safe:animate-dialog-out' },
+  drawer: { in: 'motion-safe:animate-drawer-in', out: 'motion-safe:animate-drawer-out' },
+};
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -10,6 +16,7 @@ const FOCUSABLE =
  * - `variant="dialog"`: centred box near the top. `variant="drawer"`: panel on the right.
  * - Esc, the ✕ button and a click on the backdrop call `onClose`. Tab stays inside the pop-up.
  * - The first field (or `initialFocusRef`) gets the cursor; focus returns to the opener on close.
+ * - Fades/slides in. Wrap it in <Presence show={…}> to also play a short exit animation.
  * @param {{ open: boolean, onClose: () => void, title: React.ReactNode, subtitle?: React.ReactNode,
  *           variant?: 'dialog'|'drawer', size?: 'md'|'lg', showClose?: boolean,
  *           headerDivider?: boolean, footer?: React.ReactNode, initialFocusRef?: React.RefObject,
@@ -30,9 +37,12 @@ export function Modal({
 }) {
   const titleId = useId();
   const panelRef = useRef(null);
+  const leaving = useLeaving();
   const onCloseRef = useRef(onClose);
+  const leavingRef = useRef(leaving);
   useLayoutEffect(() => {
     onCloseRef.current = onClose;
+    leavingRef.current = leaving;
   });
 
   useEffect(() => {
@@ -46,6 +56,7 @@ export function Modal({
     first?.focus();
 
     const onKey = (e) => {
+      if (leavingRef.current) return; // already closing
       if (e.key === 'Escape') {
         e.stopPropagation();
         onCloseRef.current();
@@ -80,11 +91,13 @@ export function Modal({
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-50 flex overflow-y-auto ${
+      className={`fixed inset-0 z-50 flex overflow-y-auto overflow-x-hidden ${
         drawer ? 'justify-end bg-black/60' : 'items-start justify-center bg-black/70 px-4 py-[10vh]'
+      } ${
+        leaving ? 'pointer-events-none motion-safe:animate-fade-out' : 'motion-safe:animate-fade-in'
       }`}
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget && !leaving) onClose();
       }}
     >
       <div
@@ -92,11 +105,12 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        inert={leaving || undefined}
         className={`w-full ${width} border-line bg-card ${
           drawer
-            ? 'flex min-h-full flex-col border-l'
+            ? 'flex min-h-full flex-col border-l shadow-[-30px_0_60px_rgba(0,0,0,0.45)]'
             : 'overflow-hidden rounded-[20px] border shadow-[0_30px_60px_rgba(0,0,0,0.5)]'
-        }`}
+        } ${PANEL_MOTION[drawer ? 'drawer' : 'dialog'][leaving ? 'out' : 'in']}`}
       >
         <div
           className={`flex items-start justify-between gap-4 px-6 ${
@@ -117,7 +131,7 @@ export function Modal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-btn bg-card-2 text-ink transition-colors hover:bg-line"
+              className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-btn bg-card-2 text-ink transition hover:bg-line motion-safe:active:scale-95"
             >
               <Icon name="close" size={18} />
             </button>

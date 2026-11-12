@@ -1,10 +1,15 @@
 /** Small form pieces shared by the walk-in pop-ups (styles from docs/design/WalkIn.dc.html). */
+import { Icon } from '../../../components/ui/Icon.jsx';
 
 export const INPUT =
   'h-[50px] w-full rounded-btn border bg-sidebar px-3.5 text-[16px] text-ink outline-none ' +
-  'transition-colors placeholder:text-ink-dim focus-visible:ring-0 focus-visible:ring-offset-0';
+  'transition placeholder:text-ink-dim focus-visible:ring-0 focus-visible:ring-offset-0';
 
-export const inputBorder = (error) => (error ? 'border-danger' : 'border-line focus:border-brand');
+// Orange border plus a soft orange glow while typing; red when there is a mistake.
+export const inputBorder = (error) =>
+  error
+    ? 'border-danger shadow-[0_0_0_4px_rgb(227_77_77/0.14)]'
+    : 'border-line hover:border-ink-faint focus:border-brand focus:shadow-[0_0_0_4px_rgb(255_61_10/0.14)]';
 
 /** Label with an optional grey hint, e.g. "Contact Number (optional)". */
 export function Label({ htmlFor, id, hint, children }) {
@@ -17,10 +22,30 @@ export function Label({ htmlFor, id, hint, children }) {
   );
 }
 
+/** Text box with an icon on the left, e.g. a person next to Customer Name. */
+export function IconInput({ icon, error, className = '', ...props }) {
+  return (
+    <div className="group relative">
+      <Icon
+        name={icon}
+        size={18}
+        className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
+          error ? 'text-danger-text' : 'text-ink-dim group-focus-within:text-brand-text'
+        }`}
+      />
+      <input {...props} className={`${INPUT} ${inputBorder(error)} pl-11 ${className}`} />
+    </div>
+  );
+}
+
 export function FieldError({ id, children }) {
   if (!children) return null;
   return (
-    <p id={id} className="mt-1.5 text-[13px] text-danger-text">
+    <p
+      id={id}
+      className="mt-1.5 flex items-center gap-1.5 text-[13px] text-danger-text motion-safe:animate-drop-in"
+    >
+      <Icon name="alert" size={14} />
       {children}
     </p>
   );
@@ -28,9 +53,11 @@ export function FieldError({ id, children }) {
 
 /**
  * Row of large choice buttons where exactly one is picked (Walk-in Fee, Payment Method).
- * Arrow keys move between them, like radio buttons.
- * @param {{ label: string, labelId: string, value: string, onChange: (v: string) => void,
- *           options: { value: string, label: React.ReactNode }[] }} props
+ * Arrow keys move between them, like radio buttons. The picked one is orange with a tick.
+ * Each option can have an `icon` on the left, or a `detail` (e.g. the price) on a second line.
+ * @param {{ labelId: string, value: string, onChange: (v: string) => void,
+ *           options: { value: string, label: React.ReactNode, detail?: React.ReactNode,
+ *                      icon?: string }[] }} props
  */
 export function OptionGroup({ labelId, value, onChange, options }) {
   const move = (e, index) => {
@@ -56,13 +83,41 @@ export function OptionGroup({ labelId, value, onChange, options }) {
             onClick={() => onChange(option.value)}
             onKeyDown={(e) => move(e, index)}
             className={
-              'h-[50px] min-w-0 flex-1 rounded-btn border px-2 text-[15px] font-semibold transition-colors ' +
+              'relative flex min-w-0 flex-1 items-center justify-center gap-2 rounded-btn border px-2 ' +
+              'font-semibold transition duration-150 motion-safe:active:scale-[0.97] ' +
+              (option.detail ? 'h-[68px] flex-col gap-0.5 ' : 'h-[50px] text-[15px] ') +
               (on
-                ? 'border-brand bg-brand/[0.12] text-ink'
-                : 'border-line bg-sidebar text-ink-soft hover:bg-card-2 hover:text-ink')
+                ? 'border-brand bg-brand/[0.12] text-ink shadow-[inset_0_0_0_1px_rgb(255_61_10)]'
+                : 'border-line bg-sidebar text-ink-soft hover:border-ink-faint hover:bg-card-2 hover:text-ink')
             }
           >
-            {option.label}
+            {option.icon && (
+              <Icon
+                name={option.icon}
+                size={18}
+                className={`flex-none transition-colors ${on ? 'text-brand-text' : 'text-ink-muted'}`}
+              />
+            )}
+            {option.detail ? (
+              <>
+                <span className={`text-[13px] ${on ? 'text-ink-soft' : 'text-ink-muted'}`}>
+                  {option.label}
+                </span>
+                <span className="font-heading text-[19px] font-bold leading-tight">
+                  {option.detail}
+                </span>
+              </>
+            ) : (
+              <span className="truncate">{option.label}</span>
+            )}
+            <span
+              aria-hidden="true"
+              className={`absolute right-2 top-2 inline-flex h-[18px] w-[18px] items-center justify-center rounded-full bg-brand text-ink transition duration-200 ${
+                on ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+              }`}
+            >
+              <Icon name="check" size={11} strokeWidth={3.5} />
+            </span>
           </button>
         );
       })}

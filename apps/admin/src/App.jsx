@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout.jsx';
 import { LoginPage } from './features/auth/LoginPage.jsx';
+import { AttendanceRecordsPage } from './features/attendance/AttendanceRecordsPage.jsx';
+import { ScannerPage } from './features/attendance/ScannerPage.jsx';
 import { DashboardPage } from './features/dashboard/DashboardPage.jsx';
 import { WalkInRecordsPage } from './features/walkins/WalkInRecordsPage.jsx';
 import { ComingSoonPage } from './features/placeholders/ComingSoonPage.jsx';
@@ -9,7 +11,6 @@ import { NotFoundPage } from './features/placeholders/NotFoundPage.jsx';
 /** Pages not built yet, with the milestone that builds them (see docs/PROGRESS.md). */
 const COMING_SOON = [
   { path: 'members/*', title: 'Members', icon: 'users', milestone: 'milestone 3' },
-  { path: 'attendance/*', title: 'Attendance', icon: 'qr', milestone: 'milestone 4' },
   { path: 'payments/*', title: 'Payments', icon: 'wallet', milestone: 'milestone 5' },
   { path: 'inventory/*', title: 'Inventory', icon: 'box', milestone: 'milestone 6' },
   { path: 'reports/*', title: 'Reports', icon: 'reports', milestone: 'milestone 7' },
@@ -25,6 +26,8 @@ export function App() {
       <Route path="login" element={<LoginPage />} />
       <Route element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
+        <Route path="attendance" element={<ScannerPage />} />
+        <Route path="attendance/records" element={<AttendanceRecordsPage />} />
         <Route path="walk-ins" element={<WalkInRecordsPage />} />
         {COMING_SOON.map(({ path, ...page }) => (
           <Route key={path} path={path} element={<ComingSoonPage {...page} />} />

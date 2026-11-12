@@ -38,6 +38,16 @@
   }
 }
 
+/* Countdown bar under a message (Toast.jsx); its length is set inline from the toast's time. */
+@keyframes shrink-x {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
 @layer utilities {
   /* Scrolls with the mouse wheel / touchpad but shows no scrollbar (used for the phone menu). */
   .scrollbar-none {

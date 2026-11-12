@@ -27,6 +27,8 @@ export const WALKIN_PAYMENT_METHODS = DEFAULT_PAYMENT_METHODS.filter((m) =>
 
 const METHOD_NAMES = Object.fromEntries(DEFAULT_PAYMENT_METHODS.map((m) => [m.code, m.name]));
 export const methodName = (code) => METHOD_NAMES[code] ?? code;
+/** Icon shown next to each payment method on the choice buttons. */
+export const METHOD_ICONS = Object.freeze({ cash: 'cash', gcash: 'phone' });
 
 export const DATE_RANGES = Object.freeze({
   today: 'Today',

@@ -3,7 +3,13 @@ import { useId, useState } from 'react';
 import { Button } from '../../../components/ui/Button.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
 import { useNow } from '../../../lib/useNow.js';
-import { WALKIN_PAYMENT_METHODS, customerHistory, formatPhone, methodName } from '../demoData.js';
+import {
+  METHOD_ICONS,
+  WALKIN_PAYMENT_METHODS,
+  customerHistory,
+  formatPhone,
+  methodName,
+} from '../demoData.js';
 import { InfoBox, Label, OptionGroup } from './formParts.jsx';
 
 function Actions({ children }) {
@@ -38,6 +44,7 @@ export function RecordPaymentModal({ visit, customer, onClose, onConfirm }) {
             options={WALKIN_PAYMENT_METHODS.map((m) => ({
               value: m.code,
               label: methodName(m.code),
+              icon: METHOD_ICONS[m.code] ?? 'wallet',
             }))}
           />
         </div>
@@ -131,7 +138,7 @@ export function WalkInHistoryDrawer({ customer, visits, onClose }) {
       )}
 
       <ul>
-        {h.visits.map((v) => {
+        {h.visits.map((v, i) => {
           const day = todayInGym(new Date(v.timeIn));
           const paid =
             v.paymentStatus === 'paid'
@@ -142,7 +149,9 @@ export function WalkInHistoryDrawer({ customer, visits, onClose }) {
           return (
             <li
               key={v.id}
-              className="flex justify-between gap-2.5 border-t border-line py-3 text-sm"
+              className="flex justify-between gap-2.5 border-t border-line py-3 text-sm motion-safe:animate-rise"
+              // Visits come in one after another once the panel has slid in (first 8 only).
+              style={{ animationDelay: `${120 + Math.min(i, 8) * 35}ms` }}
             >
               <span>
                 <b>

@@ -69,7 +69,7 @@ Update it at the end of every work session.
 1. ✅ Setup: workspaces, shared package, Tailwind preset, schema, seeds
 2. 🟡 Admin app shell: Vite + Tailwind, Sidebar/Topbar, UI components and login screen (demo) done — Supabase Auth sign-in, guard and staff roles still to do
 3. Members & memberships (list, add, profile, plans, monitoring, renewal)
-4. Attendance (QR scanner, check-in/out, records, fix missed check-out)
+4. 🟡 Attendance (QR scanner, check-in/out, records, fix missed check-out) — scanner + records built on sample data, not connected yet
 5. 🟡 Walk-ins & payments (register, records, convert to member, receipts, void/refund) — walk-in records + register pop-up built on sample data, not connected yet
 6. Inventory (items, stock in/out, low/out-of-stock alerts)
 7. 🟡 Dashboard done — reports (PDF/Excel/print), settings, staff accounts still to do

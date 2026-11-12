@@ -10,11 +10,75 @@ screen (demo)** done; real Supabase sign-in, sign-in guard and staff roles still
 **Dashboard (from milestone 7): ✅ built early** — real data from the local database
 **Walk-ins (from milestone 5): 🟡 screens built on sample data** — Walk-in Records page and the
 Register Walk-in pop-up; not connected to the database yet
+**Attendance (milestone 4): 🟡 screens built on sample data** — QR scanner page and Attendance
+Records with Fix missed check-out; not connected to the database yet
 
 Next up: **connect the login screen to Supabase Auth** (a teammate is doing this) to complete
 milestone 2. It needs a Supabase project first (see "Waiting on you").
 
 ## Done
+
+### 12 Nov 2026 — Attendance: scanner + records (UI + sample data, no database)
+
+- **`/attendance`** (`features/attendance/ScannerPage.jsx`) from `Attendance.dc.html`: summary
+  cards (Today's Attendance, Currently Inside x / 60 incl. walk-ins, Checked Out with average stay,
+  Rejected Today), QR Code Scanner card, big result panel, Currently Inside list with Check Out.
+  - Three ways to scan: **camera** (live picture; reads codes where the browser has a built-in QR
+    reader, `BarcodeDetector`, otherwise it says so), **USB QR scanner** (it types `ICG:…` + Enter;
+    caught anywhere on the page), or **typing** a Member ID / name (matching members are listed
+    with their status and a Check In / Check Out button).
+  - Result panel states from the design's `result` tweak: Access Granted (amber "Expires" when
+    expiring soon), Checked Out, Membership Expired (Renew Membership → /members for now,
+    Register Walk-in opens the walk-in pop-up with the name filled in), Membership Suspended,
+    Invalid QR Code, plus a "Ready to scan" state. Check In on someone inside / Check Out on someone
+    not inside shows a message under the box instead.
+  - "Try a sample scan" buttons (demo only) to see every state without a phone.
+  - Walk-ins in Currently Inside open the walk-in Complete Visit pop-up.
+- **`/attendance/records`** (`AttendanceRecordsPage.jsx`) from `AttendanceRecords.dc.html`: amber
+  banner for missed check-outs, search, date filter (Today, Yesterday, This week, Pick a date…),
+  table, footer totals. Missed check-outs stay at the top in any date until fixed.
+  **Fix missed check-out** pop-up (`components/FixTimeOutModal.jsx`): time out on the check-in day
+  (suggested: time in + 1h 30m, max 10 PM), reason required, must be after time in and not in the
+  future; the row then shows a "Fixed" badge (reason on hover).
+- Rules and helpers in `features/attendance/demoData.js` (uses the shared `membershipStatus` /
+  `canEnter` / `parseQrPayload`), store in `demoStore.js`, tests in
+  `apps/admin/tests/attendance-demo.test.js`.
+- **Missed check-out rule used in the demo:** a check-in left open from an earlier day does **not**
+  turn the next scan into a check-out. The member is checked in for today and the old visit shows as
+  "No time out" until staff fix it. The database rule "one open check-in per member" will need to
+  allow this (or auto-close old ones) when the API is built — confirm with the owner.
+- Not done yet: the signed-in staff name in the fix pop-up, the 48-hour limit for receptionists, the
+  audit log entry, and sound on scan (all need the API / sign-in).
+
+### 12 Nov 2026 — Walk-in summary cards match the Dashboard
+
+- Walk-in Records' four summary boxes now use the shared `StatCard` (same size, icon and note line as
+  the Dashboard). `StatCard` gained `tone` (`brand` / `danger`), `className` and `style`.
+- Fixed: the Unpaid red border never showed (`border-line` beat `border-danger/50`). Unpaid now shows
+  the amount (₱100.00) with "1 visit to collect" underneath, instead of "1 · ₱100.00".
+
+### 12 Nov 2026 — Register Walk-in pop-up redesign (owner asked for a better design)
+
+- Icons inside Customer Name / Contact Number, soft orange glow on the field being typed in.
+- **"Been here before?"**: typing 2+ letters of a name lists up to 3 past walk-in customers (number,
+  visits, last visit); picking one fills the name and number so no duplicate person is made.
+- Visit Date and Time In are shown as two read-only boxes (no fake text box); the old grey "Time in
+  is recorded…" note is folded into the Time In box.
+- Fee buttons show the type and a large price; payment buttons have icons; the picked button has a
+  tick. "Pay later" shows an amber "Saved as Unpaid" warning. Same buttons in Record Payment.
+- Differs from `docs/design/WalkIn.dc.html` in these points; labels and button wording unchanged.
+
+### 12 Nov 2026 — Walk-in page transitions
+
+- Pop-ups fade and scale in and out; the View History panel slides in and out from the right
+  (`components/ui/Presence.jsx` keeps a pop-up on screen for 200 ms after closing so it can leave).
+  Messages (`Toast`) slide in, show a countdown bar, and slide out.
+- Walk-in Records: the page blocks rise in one after another; rows fade in when the date/status filter
+  changes; the row that was just registered, paid or completed glows orange and scrolls into view;
+  summary numbers slide up when they change.
+- Register Walk-in: fields with a mistake give a small shake and the error message slides in.
+- All buttons shrink slightly when pressed. Everything is off when "reduce motion" is turned on
+  (`motion-safe:`, `lib/motion.js`). Animations live in `apps/admin/tailwind.config.js`.
 
 ### 12 Nov 2026 — Walk-in Records + Register Walk-in pop-up (UI + sample data, no database)
 
