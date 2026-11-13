@@ -2,6 +2,7 @@ import { ROLE_LABELS, addDays } from '@icg/shared';
 import { STATUS_TONE, dayOf, memberMatches, membersView } from '@icg/demo-data';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from '../../features/auth/api.js';
 import { isOwner, useDemoData, useStaff } from '../../lib/demo.js';
 import { useToday } from '../../lib/useToday.js';
 import { Avatar } from '../ui/Avatar.jsx';
@@ -32,16 +33,81 @@ export function Topbar({ onOpenMenu }) {
       <AlertsBell />
 
       {/* TODO(auth): the signed-in staff member comes from Supabase Auth. */}
-      <div className="flex h-[52px] items-center gap-3 pl-1 pr-2">
+      <StaffMenu staff={staff} />
+    </header>
+  );
+}
+
+/**
+ * The signed-in staff member, as a menu: Change Password and Log Out. This is where the
+ * Receptionist changes her password, since Settings is not in her sidebar.
+ */
+function StaffMenu({ staff }) {
+  const navigate = useNavigate();
+  const menuId = useId();
+  const wrapRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (e) => !wrapRef.current?.contains(e.target) && setOpen(false);
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const role = staff ? (isOwner(staff) ? 'Owner' : ROLE_LABELS[staff.role]) : '';
+  const go = (to) => {
+    setOpen(false);
+    navigate(to);
+  };
+  const item =
+    'flex min-h-touch w-full items-center gap-3 rounded-[10px] px-3 text-left text-[15px] text-ink-soft transition-colors hover:bg-card-2 hover:text-ink';
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={menuId}
+        aria-label={staff ? `${staff.name}, ${role}. Account menu` : 'Account menu'}
+        className="flex h-[52px] items-center gap-3 rounded-btn pl-1 pr-2 transition-colors hover:bg-card-2"
+      >
         <Avatar name={staff?.name ?? '?'} size="lg" className="!border-line" />
         <span className="text-left leading-tight">
           <b className="block text-[15px]">{staff?.name ?? 'Not signed in'}</b>
-          <span className="text-[13px] text-ink-muted">
-            {staff ? (isOwner(staff) ? 'Owner' : ROLE_LABELS[staff.role]) : ''}
-          </span>
+          <span className="text-[13px] text-ink-muted">{role}</span>
         </span>
-      </div>
-    </header>
+        <Icon name="chevronDown" size={18} className="text-ink-muted" />
+      </button>
+      {open && (
+        <div
+          id={menuId}
+          className="absolute right-0 top-full z-40 mt-2 w-56 rounded-btn border border-line bg-sidebar p-1.5 shadow-[0_20px_40px_rgba(0,0,0,0.45)] motion-safe:animate-drop-in"
+        >
+          <button type="button" className={item} onClick={() => go('/settings')}>
+            <Icon name="lock" size={18} />
+            Change Password
+          </button>
+          <button
+            type="button"
+            className={item}
+            onClick={() => {
+              signOut();
+              go('/login');
+            }}
+          >
+            <Icon name="logout" size={18} />
+            Log Out
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -41,7 +41,11 @@ export function StatCard({
     <section
       // The card is a size container so the big number can shrink with the card (cqi units).
       className={`flex min-w-0 flex-col gap-3 rounded-card border bg-card px-5 py-[18px] transition-colors duration-500 [container-type:inline-size] ${
-        tone === 'danger' ? 'border-danger/50' : 'border-line'
+        tone === 'danger'
+          ? 'border-danger/50'
+          : tone === 'brand'
+            ? 'border-brand/45'
+            : 'border-line'
       } ${className}`}
       title={title}
       style={style}

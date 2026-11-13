@@ -7,6 +7,7 @@ import {
   todayInGym,
 } from '@icg/shared';
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Button,
   Icon,
@@ -64,7 +65,12 @@ export function WalkInRecordsPage() {
   const [range, setRange] = useState('today');
   const [status, setStatus] = useState('All');
   const [search, setSearch] = useState('');
-  const [registerOpen, setRegisterOpen] = useState(false);
+  // /walk-ins?register=1 (the Receptionist's "Register Walk-in" button) opens the pop-up straight away.
+  const [params, setParams] = useSearchParams();
+  const [registerOpen, setRegisterOpen] = useState(() => params.get('register') === '1');
+  useEffect(() => {
+    if (params.has('register')) setParams({}, { replace: true });
+  }, [params, setParams]);
   const [dialog, setDialog] = useState(null); // { kind: 'pay'|'out'|'history', visitId }
   const [toast, showToast, hideToast] = useToast();
   // The row that just changed glows orange for a moment so staff see where it went.
@@ -110,8 +116,9 @@ export function WalkInRecordsPage() {
 
   return (
     <>
-      <div className={`flex flex-wrap items-end justify-between gap-4 px-1 pt-1 ${RISE}`}>
-        <div>
+      {/* Same header spacing and alignment as every other page (components/ui/PageHeader.jsx). */}
+      <div className={`flex flex-wrap items-center justify-between gap-4 pb-2 pt-3 ${RISE}`}>
+        <div className="min-w-0 pl-1.5">
           <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
             Walk-in Records
             <SampleDataBadge />
@@ -126,7 +133,7 @@ export function WalkInRecordsPage() {
           </Button>
           {/* Same size as Export Report and the Dashboard's header buttons. */}
           <Button variant="plainPrimary" onClick={() => setRegisterOpen(true)}>
-            + REGISTER WALK-IN
+            + Register Walk-in
           </Button>
         </div>
       </div>

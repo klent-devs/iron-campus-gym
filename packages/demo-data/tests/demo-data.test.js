@@ -323,6 +323,25 @@ describe('dashboard and notifications', () => {
     ).toHaveLength(12);
   });
 
+  it('lists the front desk: who is inside, unpaid walk-ins, missed check-outs', () => {
+    const d = buildDashboard(seed, { now: NOW, includeRevenue: false });
+    const { inside, unpaidWalkIns, missedCheckOuts } = d.frontDesk;
+    expect(inside).toHaveLength(d.capacity.insideNow);
+    expect(inside.filter((p) => p.kind === 'walkin')).toHaveLength(d.capacity.walkInsInside);
+    for (let i = 1; i < inside.length; i += 1) {
+      expect(inside[i - 1].timeIn >= inside[i].timeIn).toBe(true); // newest first
+    }
+    expect(unpaidWalkIns.amount).toBeGreaterThanOrEqual(0);
+    expect(unpaidWalkIns.count === 0 || unpaidWalkIns.first !== null).toBe(true);
+    expect(missedCheckOuts.names.length).toBeLessThanOrEqual(missedCheckOuts.count);
+
+    // Checking someone out removes them from the list.
+    const first = inside.find((p) => p.kind === 'member');
+    const after = run(seed, actions.checkOut, { checkInId: first.checkInId }).state;
+    const d2 = buildDashboard(after, { now: NOW, includeRevenue: false });
+    expect(d2.frontDesk.inside.some((p) => p.key === first.key)).toBe(false);
+  });
+
   it('gives a member their payment and check-in notifications', () => {
     const andrea = byName(seed, 'Andrea Lim');
     const list = memberNotifications(seed, andrea.id, NOW);

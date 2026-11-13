@@ -56,6 +56,12 @@ variant="plainPrimary"`), the others fill **grey** (`variant="plain"`). This rep
 orange/grey header buttons in the designs. Buttons inside cards, forms and pop-ups keep the
 designs' filled styles.
 
+**Receptionist Dashboard (owner-approved, 13 Nov 2026):** same layout as `Main.dc.html`, but the
+Monthly Revenue card becomes **Currently Inside**, Revenue Analytics becomes **Who's Inside Now**
+(Check Out / Record Payment per person), Alerts show unpaid walk-ins and missed check-outs instead
+of expired memberships, and the header adds **Register Walk-in**. Settings is not in her sidebar;
+Change Password is in the menu under her name.
+
 **Payments receipt rules (designs added 11 Nov 2026 at the owner's request):** the receipt panel shows only
 when there is a payment to show: right after Record Payment, or after View / Print Receipt on a row.
 With no payments, Transaction History shows an empty state and the table uses the full width.

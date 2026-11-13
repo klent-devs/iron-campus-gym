@@ -1,4 +1,8 @@
-/** Sidebar pages, in the order of docs/design/Sidebar.dc.html. */
+/**
+ * Sidebar pages, in the order of docs/design/Sidebar.dc.html.
+ * `ownerOnly` pages are hidden for the Receptionist (her password change is in the menu under her
+ * name in the top bar instead).
+ */
 export const NAV_ITEMS = [
   { to: '/', label: 'Overview', icon: 'overview', end: true },
   { to: '/members', label: 'Members', icon: 'users' },
@@ -7,5 +11,5 @@ export const NAV_ITEMS = [
   { to: '/payments', label: 'Payments', icon: 'wallet' },
   { to: '/inventory', label: 'Inventory', icon: 'box' },
   { to: '/reports', label: 'Reports', icon: 'reports' },
-  { to: '/settings', label: 'Settings', icon: 'settings' },
+  { to: '/settings', label: 'Settings', icon: 'settings', ownerOnly: true },
 ];

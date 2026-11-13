@@ -221,6 +221,46 @@ export function buildDashboard(
   low.sort((a, b) => a.quantity - b.quantity || a.name.localeCompare(b.name));
   const brief = (item) => item && { name: item.name, quantity: item.quantity, unit: item.unit };
 
+  // Front desk (the Receptionist's Dashboard): who is inside now, unpaid walk-ins and check-ins
+  // left open from an earlier day. No money totals except what is still owed.
+  const memberById = new Map(members.map((m) => [m.id, m]));
+  const unpaid = (visit) => {
+    const p = ix.payment.get(visit.paymentId);
+    return Boolean(p && p.status === 'pending' && !p.method);
+  };
+  const inside = [
+    ...state.checkIns
+      .filter((c) => !c.timeOut && dayOf(c.timeIn) === today)
+      .map((c) => {
+        const m = memberById.get(c.memberId);
+        return {
+          key: `member:${c.id}`,
+          kind: 'member',
+          checkInId: c.id,
+          memberId: c.memberId,
+          name: m?.name ?? 'Member',
+          detail: [m?.code, m?.plan].filter(Boolean).join(' · '),
+          timeIn: c.timeIn,
+          unpaid: false,
+        };
+      }),
+    ...state.visits
+      .filter((v) => !v.timeOut && dayOf(v.timeIn) === today)
+      .map((v) => ({
+        key: `walkin:${v.id}`,
+        kind: 'walkin',
+        visitId: v.id,
+        name: ix.customer.get(v.customerId)?.name ?? 'Walk-in',
+        detail: `Walk-in · ${v.feeType === 'student' ? 'Student' : 'Regular'} rate`,
+        timeIn: v.timeIn,
+        unpaid: unpaid(v),
+      })),
+  ].sort((a, b) => b.timeIn.localeCompare(a.timeIn));
+  const unpaidVisits = state.visits.filter(unpaid).sort((a, b) => a.timeIn.localeCompare(b.timeIn));
+  const missed = state.checkIns
+    .filter((c) => !c.timeOut && dayOf(c.timeIn) < today)
+    .sort((a, b) => a.timeIn.localeCompare(b.timeIn));
+
   return {
     generatedAt: nowIso,
     today,
@@ -256,6 +296,23 @@ export function buildDashboard(
       }),
     },
     activities: activities.slice(0, 8),
+    frontDesk: {
+      inside,
+      unpaidWalkIns: {
+        count: unpaidVisits.length,
+        amount: roundMoney(unpaidVisits.reduce((sum, v) => sum + v.fee, 0)),
+        first: unpaidVisits[0]
+          ? {
+              name: ix.customer.get(unpaidVisits[0].customerId)?.name ?? 'Walk-in',
+              timeIn: unpaidVisits[0].timeIn,
+            }
+          : null,
+      },
+      missedCheckOuts: {
+        count: missed.length,
+        names: missed.map((c) => ix.member.get(c.memberId)?.name).filter(Boolean),
+      },
+    },
     alerts: {
       expiringSoon: {
         count: expiring.length,

@@ -4,7 +4,8 @@ import { formatChange, formatDayRange, formatPercentChange, weekdayName } from '
 
 /** The four summary cards at the top of the dashboard. */
 export function StatCards({ data }) {
-  const { members, revenue, attendance, walkIns } = data;
+  const { members, revenue, attendance, walkIns, capacity, frontDesk } = data;
+  const unpaidCount = frontDesk?.unpaidWalkIns.count ?? 0;
   const lastWeekday = weekdayName(attendance.compareDate);
   const attendanceChange = formatChange(attendance.change);
   const walkInChange = formatChange(walkIns.change);
@@ -39,6 +40,28 @@ export function StatCards({ data }) {
         />
       )}
 
+      {/* Receptionist: who is in the gym right now, in place of the money card. */}
+      {!revenue && (
+        <StatCard
+          label="Currently Inside"
+          icon="checkIn"
+          tone="brand"
+          value={
+            <>
+              {capacity.insideNow.toLocaleString('en-PH')}
+              {capacity.maxCapacity && (
+                <span className="font-sans text-[16px] font-medium text-ink-muted">
+                  {' '}
+                  / {capacity.maxCapacity}
+                </span>
+              )}
+            </>
+          }
+          note="Members and walk-ins right now"
+          title={`${capacity.membersInside} members and ${capacity.walkInsInside} walk-ins inside`}
+        />
+      )}
+
       <StatCard
         label="Today's Attendance"
         icon="checkIn"
@@ -58,7 +81,7 @@ export function StatCards({ data }) {
         note={
           walkIns.collectedToday !== null
             ? `${formatPeso(walkIns.collectedToday)} collected today`
-            : `vs last ${lastWeekday}`
+            : `vs last ${lastWeekday}${unpaidCount ? ` · ${unpaidCount} unpaid` : ''}`
         }
         title={`Walk-ins today, compared with this time last ${lastWeekday} (${walkIns.sameDayLastWeek})`}
       />

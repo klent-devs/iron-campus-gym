@@ -2,6 +2,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { LogoFull } from '../../assets/Logo.jsx';
 import { Icon } from '../ui/Icon.jsx';
 import { signOut } from '../../features/auth/api.js';
+import { isOwner, useStaff } from '../../lib/demo.js';
 import { NAV_ITEMS } from './navItems.js';
 
 const ITEM =
@@ -11,6 +12,8 @@ const ACTIVE = 'bg-brand font-bold text-ink';
 
 /** Main navigation (docs/design/Sidebar.dc.html). `onNavigate` closes the mobile drawer. */
 export function Sidebar({ onNavigate }) {
+  const owner = isOwner(useStaff());
+  const items = NAV_ITEMS.filter((item) => owner || !item.ownerOnly);
   return (
     <nav
       aria-label="Main"
@@ -20,7 +23,7 @@ export function Sidebar({ onNavigate }) {
         <LogoFull />
       </Link>
 
-      {NAV_ITEMS.map((item) => (
+      {items.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}

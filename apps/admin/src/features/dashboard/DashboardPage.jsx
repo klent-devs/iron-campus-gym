@@ -6,16 +6,22 @@ import { useApi } from '../../lib/useApi.js';
 import { getDashboard } from './api.js';
 import { AlertsPanel } from './components/AlertsPanel.jsx';
 import { CapacityGauge } from './components/CapacityGauge.jsx';
+import { InsideNowPanel } from './components/InsideNowPanel.jsx';
 import { RecentActivities } from './components/RecentActivities.jsx';
 import { RevenueChart } from './components/RevenueChart.jsx';
 import { StatCards } from './components/StatCards.jsx';
 
 const REFRESH_SECONDS = 30;
 
-/** Gym name with the motto underneath (owner's choice, 12 Nov 2026; replaces the greeting). */
-function PageHeader() {
+/**
+ * Gym name with the motto underneath (owner's choice, 12 Nov 2026; replaces the greeting).
+ * The Receptionist also gets Register Walk-in, one of her most common jobs.
+ */
+function PageHeader({ owner }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4">
+    // Extra room above and below so the title doesn't look squeezed between the top bar and the
+    // cards; the buttons are centred against the title + motto block (owner's choice, 13 Nov 2026).
+    <div className="flex flex-wrap items-center justify-between gap-4 pb-2 pt-3">
       <div className="flex-[1_1_280px] pl-1.5">
         <h1 className="text-[30px] font-extrabold leading-tight tracking-[0.03em]">
           IRON CAMPUS <span className="text-brand-text">GYM</span>
@@ -26,6 +32,11 @@ function PageHeader() {
         </p>
       </div>
       <div className="flex flex-wrap gap-2.5">
+        {!owner && (
+          <Button to="/walk-ins?register=1" variant="plain">
+            Register Walk-in
+          </Button>
+        )}
         <Button to="/attendance" variant="plain">
           Check In Member
         </Button>
@@ -151,9 +162,11 @@ export function DashboardPage() {
       <>
         {error && <StaleBanner error={error} updatedAt={data.generatedAt} onRetry={reload} />}
         <StatCards data={data} />
+        {/* Owner: capacity + revenue. Receptionist: capacity + who is inside (no money). */}
         <div className="flex flex-wrap gap-4">
           <CapacityGauge capacity={data.capacity} refreshSeconds={REFRESH_SECONDS} />
-          {data.revenueChart && (
+          {!owner && data.frontDesk && <InsideNowPanel inside={data.frontDesk.inside} />}
+          {owner && data.revenueChart && (
             <RevenueChart
               chart={data.revenueChart}
               range={range}
@@ -164,7 +177,7 @@ export function DashboardPage() {
         </div>
         <div className="flex flex-wrap gap-4">
           <RecentActivities activities={data.activities} today={data.today} />
-          <AlertsPanel alerts={data.alerts} />
+          <AlertsPanel alerts={data.alerts} frontDesk={owner ? null : data.frontDesk} />
         </div>
       </>
     );
@@ -172,7 +185,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <PageHeader />
+      <PageHeader owner={owner} />
       {body}
     </>
   );
