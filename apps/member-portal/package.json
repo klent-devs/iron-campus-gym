@@ -1,7 +1,30 @@
 {
   "name": "@icg/member-portal",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "IRON CAMPUS GYM — React member web app (mobile-friendly PWA) (built in milestone 9)"
+  "description": "IRON CAMPUS GYM — member web app (mobile-first PWA)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "@icg/demo-data": "*",
+    "@icg/shared": "*",
+    "@icg/tailwind-preset": "*",
+    "qrcode-generator": "^2.0.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.3.7"
+  }
 }

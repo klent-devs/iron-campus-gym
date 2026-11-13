@@ -4,7 +4,7 @@ import { Button } from '../../../components/ui/Button.jsx';
 import { Icon } from '../../../components/ui/Icon.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
 import { shake } from '../../../lib/motion.js';
-import { FieldError, INPUT, Label, inputBorder } from '../../walkins/components/formParts.jsx';
+import { FieldError, INPUT, Label, inputBorder } from '../../../components/ui/formParts.jsx';
 import {
   FIX_REASONS,
   checkedInPhrase,

@@ -13,6 +13,7 @@ import {
   Presence,
   STAT_GRID,
   StatCard,
+  SampleDataBadge,
   StatusBadge,
   Toast,
   useToast,
@@ -113,9 +114,7 @@ export function WalkInRecordsPage() {
         <div>
           <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
             Walk-in Records
-            <StatusBadge tone="warn" size="sm">
-              Sample data · not saved yet
-            </StatusBadge>
+            <SampleDataBadge />
           </h1>
           <p className="mt-1.5 text-[15px] text-ink-muted">
             Every day-pass visit. Kept separate from member attendance.

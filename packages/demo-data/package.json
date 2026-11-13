@@ -1,0 +1,14 @@
+{
+  "name": "@icg/demo-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON CAMPUS GYM sample data kept in the browser (no database or API). Used until the API is connected.",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "@icg/shared": "*"
+  }
+}

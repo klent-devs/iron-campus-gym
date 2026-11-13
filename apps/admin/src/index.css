@@ -14,6 +14,8 @@
 @layer base {
   html {
     color-scheme: dark;
+    /* Room for the sticky top bar when the page scrolls something into view. */
+    scroll-padding-top: 120px;
   }
   /* Stop the page "bouncing" past the top or bottom when scrolling with a touchpad or touchscreen. */
   html,
@@ -45,6 +47,52 @@
   }
   to {
     transform: scaleX(0);
+  }
+}
+
+/* Printing a report (Reports page: Print / Export PDF): black on white paper, nothing else. */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  #report-print,
+  #report-print * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+  }
+  #report-print {
+    border: 0 !important;
+  }
+  #report-print .rounded-btn {
+    border: 1px solid #bbb;
+  }
+  #report-print tr {
+    break-inside: avoid;
+  }
+}
+
+/* Printing one thing on its own (components/ui/PrintArea.jsx: receipts, QR cards). */
+@media screen {
+  #print-area {
+    display: none;
+  }
+}
+@media print {
+  html.print-area-active body > *:not(#print-area) {
+    display: none !important;
+  }
+  html.print-area-active #print-area {
+    display: block;
+    color: #000;
   }
 }
 

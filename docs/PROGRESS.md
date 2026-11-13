@@ -2,21 +2,119 @@
 
 Update this file at the end of every work session: what was finished, what is waiting, what is next.
 
-## Current status (12 Nov 2026)
+## Current status (13 Nov 2026)
+
+**Every screen of the admin website and the member portal is built and connected to one shared set
+of SAMPLE DATA kept in the browser (no database or API).** Staff can add and change everything
+(members, renewals, payments, check-ins, walk-ins, stock, plans, settings, staff) and it is saved in
+that browser. See `docs/demo-data.md`.
 
 **Milestone 1 — Setup: ✅ done** (local database created, migrated and working on this PC)
-**Milestone 2 — Admin app shell: 🟡 in progress** (app, layout, UI components and the **login
-screen (demo)** done; real Supabase sign-in, sign-in guard and staff roles still to do)
-**Dashboard (from milestone 7): ✅ built early** — real data from the local database
-**Walk-ins (from milestone 5): 🟡 screens built on sample data** — Walk-in Records page and the
-Register Walk-in pop-up; not connected to the database yet
-**Attendance (milestone 4): 🟡 screens built on sample data** — QR scanner page and Attendance
-Records with Fix missed check-out; not connected to the database yet
+**Milestones 2–7 (admin website) — screens ✅ on sample data**: sample sign-in with Owner /
+Receptionist roles, members, plans, renewal, attendance, walk-ins, payments + receipts, inventory,
+dashboard, reports, settings, staff accounts. Still to do for each: connect to the API / database
+and real Supabase sign-in.
+**Milestone 9 — Member portal: ✅ screens on sample data** (`apps/member-portal`, open at
+http://localhost:5173/m/). Still to do: Supabase Auth and the member's own data from the cloud.
+**Milestones 8 and 10 (Supabase, sync, deployment): not started** (backend; left out on purpose).
 
-Next up: **connect the login screen to Supabase Auth** (a teammate is doing this) to complete
-milestone 2. It needs a Supabase project first (see "Waiting on you").
+Next up: **connect the screens to the API one area at a time** (start with members + payments),
+and the teammate's **Supabase Auth** for staff sign-in. Search for `TODO(api)` / `TODO(auth)`.
 
 ## Done
+
+### 13 Nov 2026 — All remaining screens on shared sample data (no database or API)
+
+Owner asked: build the remaining milestones without the database/backend, connect all the sample
+data, and make it possible to add things.
+
+- **New package `packages/demo-data`** (`docs/demo-data.md`): one sample data set (≈300 members,
+  periods, payments, check-ins, walk-ins, stock, staff, audit history from the 1st of last month),
+  saved in `localStorage`, shared by all tabs of the same address, with every action applying the
+  gym rules and Owner checks the API will need. 24 tests (`packages/demo-data/tests`).
+- **Connected the existing pages to it**: Walk-in Records, Register Walk-in, Attendance scanner and
+  records, Reports (sample data from the 1st of last month, made-up numbers before), Dashboard (same
+  shape as `GET /api/dashboard`; no longer calls the API). Walk-in fees and capacity come from
+  Settings. The old per-page sample data moved to `apps/admin/tests/fixtures` (only the helper tests
+  use it).
+- **Sample sign-in** (`features/auth/api.js`, `lib/demo.js`): checks the staff accounts, remembers
+  the session, sign-in guard on every page, Logout signs out, top bar shows the staff name and role.
+  The login page shows the two sample accounts (remove with Supabase). Receptionists: no revenue on
+  the Dashboard/Payments, no Payment Report, no Staff Accounts, no void/refund, plans and settings
+  read-only (checked in the actions too).
+- **Top bar**: working member search (name, Member ID or mobile; Enter opens the list) and an alerts
+  bell (missed check-outs, plans ending, stock, unpaid, transfers to confirm).
+- **Members** (`features/members`): list with search, status chips and pages; Add New Member (3
+  steps, summary, walk-in linked by number or from Walk-in → Make Member, change to give, success
+  screen with the real QR code, Print QR Card, Print Receipt and the member's app password); Member
+  Profile (current membership, QR, contact, payment / attendance / membership-period tabs, Edit
+  Information, View QR / Replace Code, Suspend, Lift Suspension (Owner; paused days are added back)).
+- **Membership Plans + Monitoring** and the **5-step Renewal** (`features/memberships`).
+- **Payments** (`features/payments`): summary tiles (Owner), Transaction History with
+  search/filters/pages, receipt panel (status notes for pending/voided/refunded), Record Payment
+  (product sale, collect unpaid, or go to Renew / Add Member), Print Receipt (80 mm or A4, browser
+  print window), Send by SMS (Ready, Sending, Sent, No internet; sample only, nothing is sent),
+  Collect Payment, Confirm Transfer, Void and Refund (Owner, reason, audit history, period
+  cancelled / stock returned).
+- **Inventory** (`features/inventory`): list with category chips, search, low/out-of-stock alert;
+  Add Item & Update Stock page (item form for the Owner, Stock In/Out with "stock after saving",
+  can't go below 0, item history).
+- **Settings** (gym info, payment methods incl. add, walk-in fees, capacity, change password, Start
+  Over with fresh sample data) and **Staff Accounts** (add/edit, reset password, disable/enable,
+  permissions, audit history). **Help** page with short how-tos.
+- **Member portal** (`apps/member-portal`, milestone 9): Vite + React + Tailwind PWA (manifest,
+  offline service worker in production builds) under `/m/`: Login, Home, My Membership (How to renew
+  sheet), My QR Code (real QR with the logo), My Attendance (6-month bars), Payment History (View
+  Receipt, Download = Save as PDF), My Profile (edit email/number, change password, contact gym,
+  logout), Notifications (worked out from payments, check-ins and expiry; mark read).
+  `npm run dev:portal` / `npm run dev:web`; `npm run dev` now starts the portal too.
+- New shared UI: `PageHeader`, `SampleDataBadge`, `FilterChips`, `Pagination`, `Switch`, `Avatar`,
+  `QrCode` (`qrcode-generator` 2.0.4, MIT, no dependencies — added so the cards really scan),
+  `usePrint`, `TextField`, `ChoiceCards`, `SummaryRow`; form parts moved to
+  `components/ui/formParts.jsx`.
+- Checked in headless Chrome: every admin page and every portal screen opens with no console
+  errors; add member (walk-in linked), renewal, product sale + refund, stock below 0 blocked,
+  receptionist limits and data surviving a reload all work; no sideways scroll at 390 px.
+- **Left out**: the full-page `WalkInRegister.dc.html` (the Register Walk-in pop-up does the same
+  job); gym logo upload (needs cloud storage); real SMS.
+
+### 12 Nov 2026 — Reports page UI refinement (no data changes)
+
+- Report cards → one compact tab bar (icon + short name, description on hover) sharing a panel with
+  the filters, so the table shows without scrolling at 1920×1080. Tabs use arrow keys.
+- Orange only on the active sidebar item and Generate Report: quick-date chips use a grey selected
+  style; Print / Excel / PDF are one secondary **Export** menu (`components/ExportMenu.jsx`).
+- Quick-date chips now only fill in the dates; "Filters changed — click Generate to update." shows
+  above the report until Generate is pressed (switching tabs keeps the last generated dates).
+- Summary: "Gross collected" (renamed; placeholder until real net totals) is the big number;
+  "Voided / refunded" is smaller, muted, with an amber dot. Equal-height cards.
+- From/To boxes show the date as "Sun, 01 Nov 2026" underneath (the box itself follows the
+  computer's date format).
+- Search is hidden on the Payment Report (`searchable` flag per report in `REPORT_TYPES`).
+- Table capped at 960 px wide on large screens; report title smaller than the page title; logo
+  only on paper / PDF.
+- **Shared change:** the top bar stays pinned at the top while scrolling on screens 1024 px and
+  wider (all pages). Not on phones/tablets, where it wraps to 2–3 rows. `scroll-padding-top` keeps
+  "scroll to this row" clear of it.
+
+### 12 Nov 2026 — Reports (UI + sample data, no database)
+
+- **`/reports`** (`features/reports/ReportsPage.jsx`) from `Reports.dc.html`: 5 report cards
+  (Membership, Attendance, Walk-in, Payment, Inventory), From / To dates + optional Search +
+  Generate Report, quick dates (This month, Today, This week, Last month), report with summary
+  tiles, table and a total row. Opens on the Payment Report for this month, like the design.
+  - Bad dates are explained (From after To, To after today, more than a year). Changing dates or
+    search dims the report and says to press Generate Report.
+  - **Print** and **Export PDF** use the browser's print window; only the report prints, black on
+    white (`index.css` print rules; sidebar, top bar and messages have `print:hidden`). Export PDF
+    tells staff to pick "Save as PDF". **Export Excel** saves a `.csv` (opens in Excel; ₱ shows
+    correctly). A real `.xlsx` / one-click PDF would need a library — ask before adding one.
+- Sample records in `features/reports/demoData.js`: every date gets repeatable made-up check-ins,
+  membership sign-ups / renewals / expiries, walk-ins, stock movements and the payments that come
+  from them, so the reports agree with each other and Search works on member names, items and
+  transaction numbers. Plan prices from the reference seed. Tests: `apps/admin/tests/reports-demo.test.js`.
+- Not done yet: Payment Report is Owner-only (needs sign-in + an API role check); "generated by"
+  shows the time instead of the staff name until sign-in works.
 
 ### 12 Nov 2026 — Attendance: scanner + records (UI + sample data, no database)
 
@@ -325,15 +423,25 @@ milestone 2. It needs a Supabase project first (see "Waiting on you").
       (linked from the README): each needs their own PostgreSQL database and `.env`.
 - [ ] Before login: create a free Supabase project and put its URL and keys in `.env`
 
-## Next: finish Milestone 2 — connect staff login (login screen already built, demo only)
+## Next: connect the screens to the API, and Supabase sign-in
 
-Supabase Auth login (`AdminLogin.dc.html`), offline staff login (`docs/architecture.md`), staff
-roles. Replace the placeholder `apps/api/src/middleware/staffContext.js` with real token checks,
-add a sign-in guard around the admin routes, fill in the Topbar user and Logout. Search for
-`TODO(auth)`.
+- Supabase Auth login (`AdminLogin.dc.html`), offline staff login (`docs/architecture.md`), staff
+  roles. Replace the body of `signIn()` in `features/auth/api.js` and the session in `lib/demo.js`,
+  and the placeholder `apps/api/src/middleware/staffContext.js`. The sign-in guard, Topbar user and
+  Logout are already wired. Search for `TODO(auth)`.
+- API endpoints for members, payments, attendance, walk-ins, inventory, settings and staff, with the
+  same rules as `packages/demo-data/src/actions.js`; then move each page from the sample data to the
+  API (`TODO(api)`), removing its "Sample data" badge.
 
 ## Known gaps / follow-ups
 
+- **Sample data lives in one browser.** Two front-desk PCs don't see each other's changes, and
+  clearing the browser's site data wipes them. Fine for trying the screens; not for real use.
+- Sample staff and member passwords are stored as plain text in the browser (sample only).
+- The admin JS bundle is now about 1.4 MB (Recharts + zod + sample data). Fine on the local PC;
+  split pages with `import()` later if needed.
+- Missed check-out rule in the sample data: a check-in left open from an earlier day doesn't block
+  today's check-in (same as the earlier demo). Confirm with the owner before building the API.
 - **No login yet:** every API request is treated as the owner. This is safe only because the API
   listens on 127.0.0.1. Don't set `API_HOST=0.0.0.0` before login exists.
 - **Expenses** aren't recorded anywhere, so the chart shows ₱0 expenses with a note. Adding expense

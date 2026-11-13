@@ -1,7 +1,6 @@
 import { buildQrPayload } from '@icg/shared';
 import { describe, expect, it } from 'vitest';
 import {
-  createDemoData,
   decideScan,
   findMembers,
   gymTimeToIso,
@@ -12,6 +11,7 @@ import {
   summarizeDay,
   visitsThisMonth,
 } from '../src/features/attendance/demoData.js';
+import { createDemoData } from './fixtures/attendanceDesign.js';
 
 // 10:42 AM in Manila on Mon 09 Nov 2026, like the design.
 const NOW = new Date('2026-11-09T02:42:00Z');

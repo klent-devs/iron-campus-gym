@@ -28,6 +28,10 @@ export const ICONS = {
   alert: 'M12 7v6M12 17v.5M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z',
   refresh: 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7',
   clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+  // Reports: print and save a file
+  printer:
+    'M7 9V3h10v6M7 17H4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3M7 14h10v7H7z',
+  download: 'M12 4v11M7 10l5 5 5-5M4 20h16',
   // QR scanner (docs/design/Attendance.dc.html)
   question: 'M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.5V14M12 17v.5',
   camera:
@@ -42,6 +46,22 @@ export const ICONS = {
   dumbbell: 'M5 7h2.5v10H5zM16.5 7H19v10h-2.5zM2.5 9.5H5v5H2.5zM19 9.5h2.5v5H19zM7.5 12h9',
   wrench:
     'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5 2.5-2.5z',
+  // Members, payments, inventory, settings
+  edit: 'M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4',
+  plus: 'M12 5v14M5 12h14',
+  receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2V3zM9 8h6M9 12h6',
+  message: 'M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z',
+  ban: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8',
+  arrowLeft: 'M19 12H5M11 6l-6 6 6 6',
+  arrowUp: 'M12 19V5M6 11l6-6 6 6',
+  arrowDown: 'M12 5v14M6 13l6 6 6-6',
+  key: 'M14 10a4 4 0 1 0-1.2 2.8L20 20M17 17l2-2M15 15l2-2',
+  shield: 'M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z',
+  bank: 'M3 10 12 4l9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18',
+  history: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 8v4l3 2',
+  calendarCheck:
+    'M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 10h18M8 3v4M16 3v4M9 15l2 2 4-4',
+  card: 'M3 6h18v12H3zM3 10h18M7 15h4',
 };
 
 /**

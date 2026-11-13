@@ -1,34 +1,24 @@
 /**
- * Attendance sample data kept in memory for this browser tab (DEMO, not saved anywhere).
- * Changes survive moving between pages but are lost on reload.
+ * Attendance on the shared SAMPLE DATA (lib/demo.js → packages/demo-data), kept in this browser.
+ * The rules are checked twice, like with the real API: here (decideScan, for the wording) and in
+ * the sample data's checkIn action (one open check-in, expired/suspended rejected).
  * TODO(api): replace these actions with calls to the attendance API (features/attendance/api.js).
  */
-import { useSyncExternalStore } from 'react';
+import { actions, attendanceView } from '@icg/demo-data';
 import { todayInGym } from '@icg/shared';
-import { createDemoData, decideScan, missedCheckOuts, visitsThisMonth } from './demoData.js';
-
-let state = null;
-const listeners = new Set();
-let nextId = 1;
-
-function getState() {
-  if (!state) state = createDemoData();
-  return state;
-}
-
-function setState(update) {
-  state = update(getState());
-  listeners.forEach((listener) => listener());
-}
-
-function subscribe(listener) {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
-}
+import { demo, runAction, useDemoData } from '../../lib/demo.js';
+import { useNow } from '../../lib/useNow.js';
+import { decideScan, missedCheckOuts, visitsThisMonth } from './demoData.js';
 
 /** { members, checkIns, rejections } — re-renders when they change. */
 export function useAttendanceDemo() {
-  return useSyncExternalStore(subscribe, getState);
+  const today = todayInGym(useNow(60_000));
+  return attendanceView(useDemoData(), today);
+}
+
+/** Most people allowed inside at once, from Settings → Gym Capacity. */
+export function useCapacity() {
+  return useDemoData().settings.maxCapacity;
 }
 
 /**
@@ -37,31 +27,24 @@ export function useAttendanceDemo() {
  * @returns {object} the decision from decideScan() plus { at, checkIn, visits, missed }
  */
 export function scanMember({ memberId, mode = 'auto' }, now = new Date()) {
-  const { members, checkIns } = getState();
   const today = todayInGym(now);
+  const { members, checkIns } = attendanceView(demo.getState(), today);
   const member = memberId ? members.find((m) => m.id === memberId) : null;
   const decision = decideScan({ member, checkIns, today, mode });
-  const at = now.toISOString();
   let checkIn = decision.open;
 
   if (decision.kind === 'granted') {
-    checkIn = { id: `new-a${nextId++}`, memberId: member.id, timeIn: at, timeOut: null };
-    setState((s) => ({ ...s, checkIns: [checkIn, ...s.checkIns] }));
+    checkIn = runAction(actions.checkIn, { memberId: member.id }).checkIn;
   } else if (decision.kind === 'checkout') {
-    checkIn = { ...decision.open, timeOut: at };
-    setState((s) => ({
-      ...s,
-      checkIns: s.checkIns.map((c) => (c.id === checkIn.id ? checkIn : c)),
-    }));
+    checkIn = runAction(actions.checkOut, { checkInId: decision.open.id }).checkIn;
   } else if (['expired', 'suspended', 'invalid'].includes(decision.kind)) {
-    const rejection = { id: `new-r${nextId++}`, at, kind: decision.kind, memberId };
-    setState((s) => ({ ...s, rejections: [...s.rejections, rejection] }));
+    runAction(actions.recordRejection, { kind: decision.kind, memberId });
   }
 
-  const after = getState().checkIns;
+  const after = attendanceView(demo.getState(), today).checkIns;
   return {
     ...decision,
-    at,
+    at: checkIn?.timeOut ?? checkIn?.timeIn ?? new Date().toISOString(),
     checkIn,
     visits: member ? visitsThisMonth(after, member.id, today) : 0,
     // Their check-in from an earlier day that still has no time out (needs fixing).
@@ -75,16 +58,9 @@ export function checkOutMember(memberId, now = new Date()) {
 }
 
 /**
- * Fix a missed check-out: save the time out staff entered and why.
- * TODO(api): Owner or receptionist (last 48 hours only); writes to audit_logs on the server.
+ * Fix a missed check-out: save the time out staff entered and why (goes to the audit history).
+ * TODO(api): receptionists may only fix the last 48 hours; the server checks it.
  */
-export function fixTimeOut(checkInId, timeOutIso, reason, now = new Date()) {
-  setState((s) => ({
-    ...s,
-    checkIns: s.checkIns.map((c) =>
-      c.id === checkInId && !c.timeOut
-        ? { ...c, timeOut: timeOutIso, fix: { reason, at: now.toISOString() } }
-        : c,
-    ),
-  }));
+export function fixTimeOut(checkInId, timeOutIso, reason) {
+  return runAction(actions.fixTimeOut, { checkInId, timeOut: timeOutIso, reason });
 }

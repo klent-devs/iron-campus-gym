@@ -1,5 +1,5 @@
-/** Small form pieces shared by the walk-in pop-ups (styles from docs/design/WalkIn.dc.html). */
-import { Icon } from '../../../components/ui/Icon.jsx';
+/** Small form pieces shared by every form (styles from docs/design/WalkIn.dc.html). */
+import { Icon } from './Icon.jsx';
 
 export const INPUT =
   'h-[50px] w-full rounded-btn border bg-sidebar px-3.5 text-[16px] text-ink outline-none ' +
@@ -131,6 +131,103 @@ export function InfoBox({ label, children, valueClassName = '' }) {
     <div className="min-w-0 rounded-btn bg-card-2 p-3">
       <div className="text-[13px] text-ink-muted">{label}</div>
       <b className={`block ${valueClassName}`}>{children}</b>
+    </div>
+  );
+}
+
+/**
+ * Label + text box + error message in one, for the longer forms (members, plans, stock, settings).
+ * Pass `as="select"` for a dropdown (with <option> children). Extra props go to the input.
+ * @param {{ id: string, label: React.ReactNode, hint?: string, error?: string,
+ *           as?: 'input'|'select', className?: string }} props
+ */
+export function TextField({
+  id,
+  label,
+  hint,
+  error,
+  as: Tag = 'input',
+  className = '',
+  children,
+  ...props
+}) {
+  return (
+    <div className={`min-w-0 ${className}`}>
+      <Label htmlFor={id} hint={hint}>
+        {label}
+      </Label>
+      <Tag
+        id={id}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`${INPUT} ${inputBorder(error)} ${Tag === 'select' ? 'cursor-pointer pr-9' : ''} ${
+          props.readOnly ? 'cursor-default bg-card-2 text-ink-muted' : ''
+        }`}
+        {...props}
+      >
+        {children}
+      </Tag>
+      <FieldError id={`${id}-error`}>{error}</FieldError>
+    </div>
+  );
+}
+
+/** Pick-one cards with a name and a second line (plans in Add Member and Renewal). */
+export function ChoiceCards({ labelId, value, onChange, options, columns = 4 }) {
+  const grid =
+    columns === 2
+      ? 'grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2'
+      : 'grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2 xl:grid-cols-4';
+  return (
+    <div role="radiogroup" aria-labelledby={labelId} className={grid}>
+      {options.map((o) => {
+        const on = o.value === value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            disabled={o.disabled}
+            onClick={() => onChange(o.value)}
+            className={`relative min-h-[68px] rounded-btn border px-3.5 py-2.5 pr-8 text-left text-[15px] font-semibold transition duration-150 motion-safe:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 ${
+              on
+                ? 'border-brand bg-brand/[0.1] text-ink shadow-[inset_0_0_0_1px_rgb(255_61_10)]'
+                : 'border-line bg-sidebar text-ink-soft hover:border-ink-faint hover:text-ink'
+            }`}
+          >
+            {o.label}
+            {o.detail && (
+              <span className="mt-0.5 block text-[13px] font-medium text-ink-muted">
+                {o.detail}
+              </span>
+            )}
+            {on && (
+              <span
+                aria-hidden="true"
+                className="absolute right-2.5 top-2.5 inline-flex h-[18px] w-[18px] items-center justify-center rounded-full bg-brand text-ink"
+              >
+                <Icon name="check" size={11} strokeWidth={3.5} />
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Row of label → value (summaries, receipts, profile details).
+ * @param {{ label: React.ReactNode, children: React.ReactNode, strong?: boolean }} props
+ */
+export function SummaryRow({ label, children, className = '' }) {
+  return (
+    <div
+      className={`flex items-baseline justify-between gap-3 border-t border-line py-2.5 text-[15px] text-ink-soft ${className}`}
+    >
+      <span>{label}</span>
+      <b className="text-right text-ink">{children}</b>
     </div>
   );
 }

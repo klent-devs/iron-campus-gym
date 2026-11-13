@@ -1,0 +1,50 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/poppins/800.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-base font-sans text-ink antialiased;
+    overscroll-behavior-y: none;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-base;
+  }
+}
+
+/* Printing / saving a receipt as PDF: only the receipt, on white. */
+@media screen {
+  #print-area {
+    display: none;
+  }
+}
+@media print {
+  html.print-area-active body > *:not(#print-area) {
+    display: none !important;
+  }
+  html.print-area-active,
+  html.print-area-active body {
+    background: #fff !important;
+  }
+  html.print-area-active #print-area {
+    display: block;
+    color: #000;
+  }
+}

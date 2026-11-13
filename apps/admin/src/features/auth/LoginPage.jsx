@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { staffLoginSchema } from '@icg/shared';
 import { LogoMark } from '../../assets/Logo.jsx';
 import { Icon } from '../../components/ui/Icon.jsx';
@@ -10,6 +10,7 @@ import { readRememberedLogin, saveRememberedLogin } from './rememberedLogin.js';
 /** Staff sign-in page (docs/design/AdminLogin.dc.html). Shown without the sidebar and top bar. */
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const loginId = useId();
   const passwordId = useId();
   const [initialLogin] = useState(readRememberedLogin);
@@ -43,7 +44,7 @@ export function LoginPage() {
     try {
       await signIn(parsed.data);
       saveRememberedLogin(parsed.data.login, parsed.data.rememberMe);
-      navigate('/', { replace: true });
+      navigate(location.state?.from ?? '/', { replace: true });
     } catch (err) {
       setFormError(err?.message || "Couldn't sign in. Please try again.");
       setBusy(false);
@@ -171,6 +172,18 @@ export function LoginPage() {
             )}
             {busy ? 'Signing In…' : 'Sign In'}
           </button>
+
+          {/* SAMPLE DATA ONLY. TODO(auth): remove this box when Supabase sign-in is connected. */}
+          <Notice tone="info" title="Sample accounts (no real sign-in yet)">
+            <span className="mt-1 block">
+              Owner: <b className="font-mono text-ink">marco.owner</b> /{' '}
+              <b className="font-mono text-ink">owner1234</b>
+            </span>
+            <span className="block">
+              Receptionist: <b className="font-mono text-ink">joy.frontdesk</b> /{' '}
+              <b className="font-mono text-ink">frontdesk1</b>
+            </span>
+          </Notice>
         </form>
       </section>
     </div>

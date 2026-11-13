@@ -14,8 +14,10 @@ demo.
 - Tests: Vitest (+ Supertest for the API). Lint: ESLint. Format: Prettier.
 
 ## Commands (run from the repo root)
-- `npm run dev` — start the API (http://localhost:4000, health at `/api/health`) and the admin
-  website (http://localhost:5173, proxies `/api` to the API). `dev:api` / `dev:admin` start one.
+- `npm run dev` — start the API (http://localhost:4000, health at `/api/health`), the admin
+  website (http://localhost:5173, proxies `/api` to the API) and the member portal (shown at
+  http://localhost:5173/m/). `dev:api` / `dev:admin` / `dev:portal` start one; `dev:web` starts
+  admin + portal without the API.
 - DB tests (`apps/api/tests/*.db.test.js`) run only with `TEST_DATABASE_URL` set to a separate test DB.
 - `npm run db:migrate` / `npm run db:seed` / `npm run db:reset`
 - `npm test` — all tests; `npm run lint`; `npm run format`
@@ -67,15 +69,19 @@ before building a screen.
 Update it at the end of every work session.
 
 1. ✅ Setup: workspaces, shared package, Tailwind preset, schema, seeds
-2. 🟡 Admin app shell: Vite + Tailwind, Sidebar/Topbar, UI components and login screen (demo) done — Supabase Auth sign-in, guard and staff roles still to do
-3. Members & memberships (list, add, profile, plans, monitoring, renewal)
-4. 🟡 Attendance (QR scanner, check-in/out, records, fix missed check-out) — scanner + records built on sample data, not connected yet
-5. 🟡 Walk-ins & payments (register, records, convert to member, receipts, void/refund) — walk-in records + register pop-up built on sample data, not connected yet
-6. Inventory (items, stock in/out, low/out-of-stock alerts)
-7. 🟡 Dashboard done — reports (PDF/Excel/print), settings, staff accounts still to do
+2. 🟡 Admin app shell: done on sample data (sample sign-in, guard, Owner/Receptionist roles) — Supabase Auth still to do
+3. 🟡 Members & memberships: all screens done on sample data — API still to do
+4. 🟡 Attendance: scanner + records done on sample data — API still to do
+5. 🟡 Walk-ins & payments: all screens (receipts, SMS, void/refund) done on sample data — API still to do
+6. 🟡 Inventory: screens done on sample data — API still to do
+7. 🟡 Dashboard, reports, settings, staff accounts: done on sample data — API still to do
 8. Supabase schema + RLS, sync service
-9. Member portal (PWA)
+9. 🟡 Member portal (PWA): all screens done on sample data (`/m/`) — Supabase still to do
 10. Hardening: tests, backups, deployment to the front-desk PC
+
+**Sample data:** until the API is connected, both apps run on `packages/demo-data` (kept in the
+browser, see `docs/demo-data.md`). New features: add the action there with the same rules the API
+will use, and read/write through `lib/demo.js`.
 
 More detail: `README.md`, `docs/SETUP.md` (developer setup), `docs/architecture.md`, `docs/database.md`,
 `docs/api.md`.

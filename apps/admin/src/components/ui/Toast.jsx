@@ -25,7 +25,7 @@ function ToastCard({ toast, onClose }) {
   const leaving = useLeaving();
   const t = TONES[toast.tone ?? 'success'];
   return (
-    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex justify-end">
+    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex justify-end print:hidden">
       <div
         role="status"
         className={`relative flex w-full max-w-[380px] items-start gap-3 overflow-hidden rounded-[14px] border bg-sidebar px-4 py-3.5 text-sm text-ink-soft shadow-[0_20px_40px_rgba(0,0,0,0.45)] ${t.border} ${

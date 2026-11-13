@@ -28,7 +28,7 @@ export function AppLayout() {
           scrolling the page (lib/smoothScroll.js). */}
       <aside
         data-scroll-lock
-        className="sticky top-0 hidden h-screen w-[260px] shrink-0 overflow-hidden lg:block"
+        className="sticky top-0 hidden h-screen w-[260px] shrink-0 overflow-hidden lg:block print:!hidden"
       >
         <Sidebar />
       </aside>
@@ -62,8 +62,14 @@ export function AppLayout() {
       )}
 
       {/* One spacing size everywhere: 16 px around the page and between every block (gap-4). */}
-      <main className="flex min-w-0 flex-1 flex-col gap-4 p-4">
-        <Topbar onOpenMenu={() => setMenuOpen(true)} />
+      <main className="flex min-w-0 flex-1 flex-col gap-4 p-4 print:p-0">
+        {/* The top bar stays at the top while the page scrolls, on a solid background so content
+            slides under it cleanly (the extra 12 px of background hides content just below it).
+            Only from 1024 px: on phones the bar wraps to 2–3 rows and would cover too much.
+            Printing (e.g. a report) leaves out the menu and the top bar. */}
+        <div className="z-30 -mx-4 -mb-3 -mt-4 bg-base px-4 pb-3 pt-4 lg:sticky lg:top-0 print:hidden">
+          <Topbar onOpenMenu={() => setMenuOpen(true)} />
+        </div>
         <Outlet />
       </main>
     </div>

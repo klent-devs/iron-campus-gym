@@ -11,9 +11,8 @@ import { Icon } from '../../components/ui/Icon.jsx';
 import { Modal } from '../../components/ui/Modal.jsx';
 import { shake } from '../../lib/motion.js';
 import { useNow } from '../../lib/useNow.js';
-import { FieldError, IconInput, Label, OptionGroup } from './components/formParts.jsx';
+import { FieldError, IconInput, Label, OptionGroup } from '../../components/ui/formParts.jsx';
 import {
-  DEMO_FEES,
   FEE_TYPE_LABELS,
   METHOD_ICONS,
   WALKIN_PAYMENT_METHODS,
@@ -21,7 +20,7 @@ import {
   methodName,
   visitDate,
 } from './demoData.js';
-import { registerVisit, useWalkinDemo } from './demoStore.js';
+import { registerVisit, useWalkinDemo, useWalkinFees } from './demoStore.js';
 
 const PAY_LATER = 'later';
 
@@ -30,11 +29,12 @@ const PAY_LATER = 'later';
  * opening starts with an empty form. Time in is set when staff confirm.
  * While staff type a name, past walk-in customers with that name are offered, so a regular is
  * picked (with their number) instead of being typed in again.
- * DEMO: saves to the in-memory sample data (demoStore.js), not the database.
+ * SAMPLE DATA: saves to the sample data kept in this browser (demoStore.js), not the database.
  */
 export function QuickWalkInModal({ onClose, onRegistered, initialName = '' }) {
   const now = useNow(60_000);
   const { customers, visits } = useWalkinDemo();
+  const fees = useWalkinFees();
   const ids = { name: useId(), phone: useId(), fee: useId(), method: useId(), past: useId() };
   const [name, setName] = useState(initialName);
   const [phone, setPhone] = useState('');
@@ -43,7 +43,7 @@ export function QuickWalkInModal({ onClose, onRegistered, initialName = '' }) {
   const [method, setMethod] = useState('cash');
   const [errors, setErrors] = useState({});
 
-  const fee = DEMO_FEES[feeType];
+  const fee = fees[feeType];
   const payLater = method === PAY_LATER;
 
   // Visits per customer, newest first, for the "Been here before?" list.
@@ -90,7 +90,14 @@ export function QuickWalkInModal({ onClose, onRegistered, initialName = '' }) {
       document.getElementById(next.customerName ? ids.name : ids.phone)?.focus();
       return;
     }
-    const result = registerVisit(parsed.data);
+    let result;
+    try {
+      result = registerVisit({ ...parsed.data, walkinCustomerId: pickedId });
+    } catch (err) {
+      setErrors({ customerName: err.message });
+      shake(document.getElementById(ids.name));
+      return;
+    }
     onRegistered(result);
     onClose();
   }
@@ -231,10 +238,10 @@ export function QuickWalkInModal({ onClose, onRegistered, initialName = '' }) {
             labelId={ids.fee}
             value={feeType}
             onChange={setFeeType}
-            options={Object.keys(DEMO_FEES).map((type) => ({
+            options={Object.keys(fees).map((type) => ({
               value: type,
               label: FEE_TYPE_LABELS[type],
-              detail: formatPeso(DEMO_FEES[type]),
+              detail: formatPeso(fees[type]),
             }))}
           />
         </div>

@@ -12,10 +12,13 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail --names api,admin --prefix-colors yellow,magenta \"npm:dev:api\" \"npm:dev:admin\"",
+    "dev": "concurrently --kill-others-on-fail --names api,admin,portal --prefix-colors yellow,magenta,cyan \"npm:dev:api\" \"npm:dev:admin\" \"npm:dev:portal\"",
+    "dev:web": "concurrently --kill-others-on-fail --names admin,portal --prefix-colors magenta,cyan \"npm:dev:admin\" \"npm:dev:portal\"",
     "dev:api": "npm run dev --workspace @icg/api",
     "dev:admin": "npm run dev --workspace @icg/admin",
+    "dev:portal": "npm run dev --workspace @icg/member-portal",
     "build:admin": "npm run build --workspace @icg/admin",
+    "build:portal": "npm run build --workspace @icg/member-portal",
     "db:migrate": "npm run db:migrate --workspace @icg/api",
     "db:rollback": "npm run db:rollback --workspace @icg/api",
     "db:seed": "npm run db:seed --workspace @icg/api",

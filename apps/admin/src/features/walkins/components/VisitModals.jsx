@@ -10,7 +10,8 @@ import {
   formatPhone,
   methodName,
 } from '../demoData.js';
-import { InfoBox, Label, OptionGroup } from './formParts.jsx';
+import { useWalkinPrices } from '../demoStore.js';
+import { InfoBox, Label, OptionGroup } from '../../../components/ui/formParts.jsx';
 
 function Actions({ children }) {
   return <div className="mt-[22px] flex flex-wrap justify-end gap-2.5">{children}</div>;
@@ -105,8 +106,9 @@ const shortDay = (iso) =>
 
 /** View History side panel: visits, money spent and the "Make Member" button. */
 export function WalkInHistoryDrawer({ customer, visits, onClose }) {
+  const prices = useWalkinPrices();
   const today = todayInGym();
-  const h = customerHistory(customer, visits, today);
+  const h = customerHistory(customer, visits, today, prices);
   return (
     <Modal
       open
@@ -172,7 +174,7 @@ export function WalkInHistoryDrawer({ customer, visits, onClose }) {
 
       <div className="flex-1" />
       {/* TODO(api): pass the walk-in customer to Add Member so their visits move to the profile. */}
-      <Button to="/members/new" variant="primary" className="h-[52px]">
+      <Button to={`/members/new?walkin=${customer.id}`} variant="primary" className="h-[52px]">
         Make Member
       </Button>
       <p className="text-[13px] text-ink-muted">

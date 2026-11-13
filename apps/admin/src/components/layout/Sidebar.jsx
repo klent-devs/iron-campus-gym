@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { LogoFull } from '../../assets/Logo.jsx';
 import { Icon } from '../ui/Icon.jsx';
+import { signOut } from '../../features/auth/api.js';
 import { NAV_ITEMS } from './navItems.js';
 
 const ITEM =
@@ -44,8 +45,15 @@ export function Sidebar({ onNavigate }) {
         <Icon name="help" strokeWidth={1.9} />
         <span>Help</span>
       </NavLink>
-      {/* Demo: goes back to the sign-in page. TODO(auth): sign out of Supabase first. */}
-      <Link to="/login" onClick={onNavigate} className={`${ITEM} ${IDLE}`}>
+      {/* Sample sign-in: forget who is signed in, then the sign-in page. TODO(auth): Supabase. */}
+      <Link
+        to="/login"
+        onClick={() => {
+          signOut();
+          onNavigate?.();
+        }}
+        className={`${ITEM} ${IDLE}`}
+      >
         <Icon name="logout" strokeWidth={1.9} />
         <span>Logout</span>
       </Link>

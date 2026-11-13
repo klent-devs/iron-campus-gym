@@ -1,0 +1,14 @@
+{
+  "name": "IRON CAMPUS GYM",
+  "short_name": "Iron Campus",
+  "description": "Your membership, QR code, visits and payments.",
+  "start_url": "/m/",
+  "scope": "/m/",
+  "display": "standalone",
+  "background_color": "#090A0C",
+  "theme_color": "#090A0C",
+  "icons": [
+    { "src": "/m/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/m/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

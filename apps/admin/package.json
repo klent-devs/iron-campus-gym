@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "IRON CAMPUS GYM — React + Vite + Tailwind admin website",
+  "description": "IRON CAMPUS GYM \u00e2\u20ac\u201d React + Vite + Tailwind admin website",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,8 +12,10 @@
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
+    "@icg/demo-data": "*",
     "@icg/shared": "*",
     "@icg/tailwind-preset": "*",
+    "qrcode-generator": "^2.0.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",

@@ -1,6 +1,6 @@
 /**
- * Walk-ins — SAMPLE DATA AND SCREEN LOGIC, NOT CONNECTED TO THE DATABASE YET.
- * Everything here lives in the browser and is lost on reload.
+ * Walk-ins — SCREEN LOGIC (filters, counts, wording). The records come from the shared sample
+ * data (demoStore.js → packages/demo-data), kept in this browser.
  *
  * TODO(api): when the walk-in API is built (milestone 5), load visits/customers from it and send
  * Register / Record Payment / Complete Visit to it. The filtering, counting and wording helpers
@@ -13,9 +13,9 @@
  */
 import { DEFAULT_PAYMENT_METHODS, addDays, formatPeso, todayInGym } from '@icg/shared';
 
-/** Day-pass prices. TODO(api): read from gym settings (the owner sets them in Settings). */
+/** Starting day-pass prices (the screens read the current ones from Settings). */
 export const DEMO_FEES = Object.freeze({ regular: 100, student: 80 });
-/** Monthly plan price, for the "make them a member" hint. TODO(api): read from plans. */
+/** Starting Monthly plan price (the screens read the current one from the plans). */
 export const DEMO_MONTHLY_PLAN_PRICE = 1200;
 
 export const FEE_TYPE_LABELS = Object.freeze({ regular: 'Regular', student: 'Student' });
@@ -38,52 +38,6 @@ export const DATE_RANGES = Object.freeze({
 });
 
 export const STATUS_FILTERS = Object.freeze(['All', 'Inside', 'Completed', 'Unpaid']);
-
-const MINUTE = 60_000;
-const DAY_MINUTES = 24 * 60;
-
-/**
- * Sample walk-ins from docs/design/WalkInRecords.dc.html. Times are set back from `now` by the
- * same gaps as in the design (where it is 10:52 AM), so the screen looks right at any hour.
- */
-export function createDemoData(now = new Date()) {
-  const at = (minutesAgo) => new Date(now.getTime() - minutesAgo * MINUTE).toISOString();
-  const customers = [
-    { id: 'c1', name: 'Ella Bautista', phone: null },
-    { id: 'c2', name: 'Kenji Ramos', phone: '09173301182' },
-    { id: 'c3', name: 'Trisha Gomez', phone: '09951203381' },
-    { id: 'c4', name: 'Nathan Lopez', phone: null },
-    { id: 'c5', name: 'Lara Santos', phone: '09664102259' },
-    { id: 'c6', name: 'Joanna Flores', phone: '09163305590' },
-    { id: 'c7', name: 'Ryan Pascual', phone: '09190042287' },
-    { id: 'c8', name: 'Mae Dizon', phone: null },
-  ];
-  const visit = (id, customerId, feeType, inAgo, outAgo, paymentMethod, status) => ({
-    id,
-    customerId,
-    feeType,
-    fee: DEMO_FEES[feeType],
-    timeIn: at(inAgo),
-    timeOut: outAgo === null ? null : at(outAgo),
-    paymentStatus: status ?? (paymentMethod ? 'paid' : 'unpaid'),
-    paymentMethod,
-  });
-  const visits = [
-    visit('v1', 'c1', 'regular', 8, null, 'cash'),
-    visit('v2', 'c2', 'regular', 50, null, 'cash'),
-    visit('v3', 'c3', 'regular', 97, null, 'gcash'),
-    visit('v4', 'c4', 'regular', 132, null, null),
-    visit('v5', 'c5', 'student', 72, 22, 'gcash'),
-    visit('v6', 'c6', 'regular', 202, 107, 'cash'),
-    visit('v7', 'c7', 'regular', 237, 152, 'cash'),
-    visit('v8', 'c8', 'student', 272, 191, 'cash', 'refunded'),
-    // Ryan's earlier visits, so View History has something to show.
-    visit('v9', 'c7', 'regular', 3 * DAY_MINUTES + 242, 3 * DAY_MINUTES + 167, 'cash'),
-    visit('v10', 'c7', 'regular', 6 * DAY_MINUTES + 230, 6 * DAY_MINUTES + 141, 'gcash'),
-    visit('v11', 'c7', 'regular', 8 * DAY_MINUTES + 157, 8 * DAY_MINUTES + 72, 'cash'),
-  ];
-  return { customers, visits };
-}
 
 /** Gym (Manila) date of a visit, 'YYYY-MM-DD'. */
 export const visitDate = (visit) => todayInGym(new Date(visit.timeIn));
@@ -175,7 +129,12 @@ export function formatPhone(phone) {
 }
 
 /** Everything the View History panel shows for one customer. */
-export function customerHistory(customer, visits, today) {
+export function customerHistory(
+  customer,
+  visits,
+  today,
+  prices = { fee: DEMO_FEES.regular, monthly: DEMO_MONTHLY_PLAN_PRICE },
+) {
   const own = visits
     .filter((v) => v.customerId === customer.id)
     .sort((a, b) => b.timeIn.localeCompare(a.timeIn));
@@ -185,12 +144,11 @@ export function customerHistory(customer, visits, today) {
     .filter((v) => v.paymentStatus === 'paid')
     .reduce((sum, v) => sum + v.fee, 0);
   const firstName = customer.name.split(' ')[0];
-  const fee = DEMO_FEES.regular;
-  const breakEven = Math.ceil(DEMO_MONTHLY_PLAN_PRICE / fee);
+  const breakEven = Math.ceil(prices.monthly / prices.fee);
   const suggestion =
     thisMonth.length >= 4
       ? `${firstName} has spent ${formatPeso(spent)} this month. A Monthly plan ` +
-        `(${formatPeso(DEMO_MONTHLY_PLAN_PRICE)}) pays off at ${breakEven} visits — worth ` +
+        `(${formatPeso(prices.monthly)}) pays off at ${breakEven} visits — worth ` +
         'offering if they train 3× a week.'
       : '';
   return {

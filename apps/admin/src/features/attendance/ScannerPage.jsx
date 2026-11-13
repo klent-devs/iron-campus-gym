@@ -14,6 +14,7 @@ import {
   Presence,
   STAT_GRID,
   StatCard,
+  SampleDataBadge,
   StatusBadge,
   Toast,
   useToast,
@@ -27,7 +28,6 @@ import { QuickWalkInModal } from '../walkins/QuickWalkInModal.jsx';
 import { CameraScanner } from './components/CameraScanner.jsx';
 import { ScanResultPanel } from './components/ScanResultPanel.jsx';
 import {
-  DEMO_CAPACITY,
   findMembers,
   initials,
   memberStatus,
@@ -35,7 +35,7 @@ import {
   shortDuration,
   summarizeDay,
 } from './demoData.js';
-import { checkOutMember, scanMember, useAttendanceDemo } from './demoStore.js';
+import { checkOutMember, scanMember, useAttendanceDemo, useCapacity } from './demoStore.js';
 
 const RISE = 'motion-safe:animate-rise';
 const rise = (n) => ({ animationDelay: `${n * 50}ms` });
@@ -71,6 +71,7 @@ const typingInField = (target) =>
  */
 export function ScannerPage() {
   const { members, checkIns, rejections } = useAttendanceDemo();
+  const capacity = useCapacity();
   const walkins = useWalkinDemo();
   const now = useNow(30_000);
   const today = todayInGym(now);
@@ -217,9 +218,7 @@ export function ScannerPage() {
         <div>
           <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
             Attendance
-            <StatusBadge tone="warn" size="sm">
-              Sample data · not saved yet
-            </StatusBadge>
+            <SampleDataBadge />
           </h1>
           <p className="mt-1.5 text-[15px] text-ink-muted">
             Scan once to check in. Scan again to check out.
@@ -250,7 +249,7 @@ export function ScannerPage() {
               {inside.length}
               <span className="font-sans text-[16px] font-medium text-ink-muted">
                 {' '}
-                / {DEMO_CAPACITY}
+                / {capacity}
               </span>
             </Pop>
           }

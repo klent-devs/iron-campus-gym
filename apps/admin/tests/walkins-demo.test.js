@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   countByStatus,
-  createDemoData,
   customerHistory,
   dateRange,
   findExistingCustomer,
@@ -12,6 +11,7 @@ import {
   visitMeta,
   visitsInRange,
 } from '../src/features/walkins/demoData.js';
+import { createDemoData } from './fixtures/walkinsDesign.js';
 
 // 10:52 AM in Manila on Mon 09 Nov 2026, like the design.
 const NOW = new Date('2026-11-09T02:52:00Z');

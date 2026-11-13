@@ -129,8 +129,7 @@ function describe(result) {
           ],
       note: 'Offer a renewal, or register today’s visit as a walk-in.',
       actions: [
-        // TODO(members): go straight to this member's renewal when milestone 3 is built.
-        { label: 'Renew Membership', to: '/members', variant: 'primary' },
+        { label: 'Renew Membership', to: `/members/renew?member=${member.id}`, variant: 'primary' },
         { label: 'Register Walk-in', walkIn: true },
       ],
     };
@@ -146,7 +145,7 @@ function describe(result) {
         ['Balance', member.balance ? formatPeso(member.balance) : '₱0.00'],
       ],
       note: 'Only the Owner can lift a suspension. Ask the member to settle the balance first.',
-      actions: [{ label: 'View Profile', to: '/members' }],
+      actions: [{ label: 'View Profile', to: `/members/${member.id}` }],
     };
   }
   return {

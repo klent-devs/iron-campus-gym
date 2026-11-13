@@ -1,6 +1,7 @@
 import { DEFAULT_REVENUE_RANGE, formatTime } from '@icg/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, EmptyState, Icon, STAT_GRID, Skeleton } from '../../components/ui/index.js';
+import { isOwner, useDemoData, useStaff } from '../../lib/demo.js';
 import { useApi } from '../../lib/useApi.js';
 import { getDashboard } from './api.js';
 import { AlertsPanel } from './components/AlertsPanel.jsx';
@@ -127,7 +128,13 @@ function StaleBanner({ error, updatedAt, onRetry }) {
 /** Admin Dashboard (docs/design/Main.dc.html). */
 export function DashboardPage() {
   const [range, setRange] = useState(DEFAULT_REVENUE_RANGE);
-  const load = useCallback((signal) => getDashboard(range, signal), [range]);
+  const staff = useStaff();
+  const owner = isOwner(staff);
+  const sample = useDemoData(); // reload as soon as the sample data changes
+  const load = useCallback(
+    () => getDashboard(range, { includeRevenue: owner, version: sample }),
+    [range, owner, sample],
+  );
   const { data, error, loading, refreshing, reload } = useApi(load, {
     refreshMs: REFRESH_SECONDS * 1000,
   });
