@@ -214,8 +214,9 @@ export function ScannerPage() {
 
   return (
     <>
-      <div className={`flex flex-wrap items-end justify-between gap-4 px-1 pt-1 ${RISE}`}>
-        <div>
+      {/* Same header spacing and alignment as every other page (components/ui/PageHeader.jsx). */}
+      <div className={`flex flex-wrap items-center justify-between gap-4 pb-2 pt-3 ${RISE}`}>
+        <div className="min-w-0 pl-1.5">
           <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
             Attendance
             <SampleDataBadge />

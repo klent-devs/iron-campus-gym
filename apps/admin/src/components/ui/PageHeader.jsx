@@ -4,13 +4,15 @@ import { SampleDataBadge } from './SampleDataBadge.jsx';
 /**
  * Page title row: optional breadcrumb, title (with the sample-data badge), a line underneath and
  * the page's buttons on the right (they wrap under the title on phones).
+ * Same spacing and alignment as the Dashboard header: room above and below the title, the title
+ * indented 6 px, and the buttons centred against the title block (owner's choice, 13 Nov 2026).
  * @param {{ title: React.ReactNode, subtitle?: React.ReactNode, actions?: React.ReactNode,
  *           crumbs?: { to?: string, label: string }[], sample?: boolean, className?: string }} props
  */
 export function PageHeader({ title, subtitle, actions, crumbs, sample = true, className = '' }) {
   return (
-    <div className={`flex flex-wrap items-end justify-between gap-4 px-1 pt-1 ${className}`}>
-      <div className="min-w-0">
+    <div className={`flex flex-wrap items-center justify-between gap-4 pb-2 pt-3 ${className}`}>
+      <div className="min-w-0 pl-1.5">
         {crumbs && (
           <nav aria-label="Breadcrumb" className="mb-1.5 text-sm text-ink-muted">
             {crumbs.map((c, i) => (

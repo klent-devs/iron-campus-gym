@@ -147,7 +147,7 @@ export function ReportsPage() {
 
   return (
     <>
-      <div className={`px-1 pt-1 print:hidden ${RISE}`}>
+      <div className={`pb-2 pl-1.5 pt-3 print:hidden ${RISE}`}>
         <h1 className="flex flex-wrap items-center gap-3 text-[26px] font-bold">
           Reports
           <SampleDataBadge />

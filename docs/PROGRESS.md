@@ -23,6 +23,28 @@ and the teammate's **Supabase Auth** for staff sign-in. Search for `TODO(api)` /
 
 ## Done
 
+### 13 Nov 2026 — Receptionist Dashboard (owner-approved mockup)
+
+Same layout as the Owner's Dashboard, with the money parts swapped for front-desk information:
+- 2nd card **Currently Inside** (e.g. 14 / 60) instead of Monthly Revenue; the Walk-in card notes
+  "· 1 unpaid" instead of pesos collected.
+- **Who's Inside Now** (`features/dashboard/components/InsideNowPanel.jsx`) beside Gym Capacity
+  instead of Revenue Analytics: newest 5 members and walk-ins with time in and **Check Out**; an
+  unpaid walk-in gets **Record Payment** instead. "View all" opens Attendance.
+- **Alerts** for her: expiring soon, **unpaid walk-ins** (Record Payment), **missed check-outs**
+  from an earlier day (Fix Time Out), low stock (See Inventory). Expired memberships stay on Members.
+- Header gets **Register Walk-in** (`/walk-ins?register=1` opens the pop-up). The Dashboard title
+  has more room above and below, and the header buttons are centred against the title and motto
+  (both roles). **Every page** now uses the same header spacing and centring
+  (`components/ui/PageHeader.jsx`, plus the Attendance, Attendance Records, Walk-in Records,
+  Reports and Member Profile headers), and all page-header buttons are the same size and font
+  (44 px, Inter 14 px semibold, `plain` / `plainPrimary`); "+ REGISTER WALK-IN" became
+  "+ Register Walk-in".
+- **Settings** is hidden from her sidebar (`ownerOnly` in `navItems.js`); her **Change Password**
+  and **Log Out** are in the new menu under her name in the top bar (for the Owner too).
+- Data: `buildDashboard()` in `packages/demo-data` now returns `frontDesk` (inside list, unpaid
+  walk-ins, missed check-outs), with a test. The real API should return the same shape.
+
 ### 13 Nov 2026 — Fixes after reviewing the sample-data screens
 
 - **Camera QR scanning works on Windows.** Chrome/Edge have no built-in QR reader on Windows, so

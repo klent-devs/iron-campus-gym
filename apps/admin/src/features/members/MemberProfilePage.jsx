@@ -106,7 +106,7 @@ export function MemberProfilePage() {
   return (
     <>
       {printArea}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+      <div className="flex flex-wrap items-center justify-between gap-3 pl-1.5 pt-3">
         <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
           <Link to="/members" className="font-medium text-brand-text hover:text-ink">
             Members
