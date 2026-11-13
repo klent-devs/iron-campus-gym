@@ -234,7 +234,8 @@ export function PaymentsPage() {
                     setter(e.target.value);
                     setPage(1);
                   }}
-                  className={`${INPUT} ${inputBorder()} h-11 w-auto cursor-pointer pr-8 text-sm`}
+                  // Not INPUT: its w-full beat w-auto, so each dropdown stretched to a full row.
+                  className={`${inputBorder()} h-11 w-auto cursor-pointer rounded-btn border bg-sidebar pl-3.5 pr-8 text-sm text-ink outline-none transition focus-visible:ring-0 focus-visible:ring-offset-0`}
                 >
                   {opts.map(([v, l]) => (
                     <option key={v} value={v}>

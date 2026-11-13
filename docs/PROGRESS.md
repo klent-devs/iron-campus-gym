@@ -33,8 +33,10 @@ and the teammate's **Supabase Auth** for staff sign-in. Search for `TODO(api)` /
 - **The page no longer scrolls behind open pop-ups** (`data-scroll-lock` on the `Modal` backdrop).
 - **Payments and Walk-in Records fit a 1280–1366 px laptop** without sideways scrolling: long
   payment types and notes wrap, the date shows the time underneath, and action buttons wrap.
-- Still open (frontend): the Payments filter dropdowns stretch to full width and stack.
-  Backend-time decisions: a check-in left open from an earlier day (one open check-in per member),
+- Payments filter dropdowns (type, method, status) no longer stretch to full width: they sit in
+  one row beside the search box on a 1366 px laptop (they used `INPUT`, whose `w-full` beat
+  `w-auto`).
+- Backend-time decisions: a check-in left open from an earlier day (one open check-in per member),
   product sales by Bank Transfer counted as paid before the Owner confirms.
 
 ### 13 Nov 2026 — All remaining screens on shared sample data (no database or API)
