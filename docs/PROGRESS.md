@@ -23,6 +23,20 @@ and the teammate's **Supabase Auth** for staff sign-in. Search for `TODO(api)` /
 
 ## Done
 
+### 13 Nov 2026 — Fixes after reviewing the sample-data screens
+
+- **Camera QR scanning works on Windows.** Chrome/Edge have no built-in QR reader on Windows, so
+  `lib/qrReader.js` falls back to **jsQR** (new library in `apps/admin`, Apache-2.0, no
+  dependencies, loaded only when the camera opens). Checked in Chrome with a fake camera showing a
+  member's QR: "Access granted" within half a second. Tests: `apps/admin/tests/qr-reader.test.js`.
+  The camera is also turned off if staff leave the page while it is still starting.
+- **The page no longer scrolls behind open pop-ups** (`data-scroll-lock` on the `Modal` backdrop).
+- **Payments and Walk-in Records fit a 1280–1366 px laptop** without sideways scrolling: long
+  payment types and notes wrap, the date shows the time underneath, and action buttons wrap.
+- Still open (frontend): the Payments filter dropdowns stretch to full width and stack.
+  Backend-time decisions: a check-in left open from an earlier day (one open check-in per member),
+  product sales by Bank Transfer counted as paid before the Owner confirms.
+
 ### 13 Nov 2026 — All remaining screens on shared sample data (no database or API)
 
 Owner asked: build the remaining milestones without the database/backend, connect all the sample

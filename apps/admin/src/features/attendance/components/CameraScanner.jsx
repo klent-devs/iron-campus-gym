@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../../components/ui/Button.jsx';
 import { Icon } from '../../../components/ui/Icon.jsx';
+import { createQrReader } from '../../../lib/qrReader.js';
 
 const FRAME =
   'M4 54V16A12 12 0 0 1 16 4h38M176 4h38a12 12 0 0 1 12 12v38M226 176v38a12 12 0 0 1-12 12h-38M54 226H16A12 12 0 0 1 4 214v-38';
@@ -26,8 +27,8 @@ function cameraError(error) {
 
 /**
  * QR Code Scanner card body (docs/design/Attendance.dc.html): camera picture with the orange frame.
- * Reads codes with the browser's built-in QR reader (BarcodeDetector) where it exists. Where it
- * doesn't, the picture still shows and staff use the USB scanner or type the Member ID.
+ * Reads codes with lib/qrReader.js: the browser's built-in reader where it exists (Mac, Android),
+ * otherwise jsQR, which is what works on the Windows front-desk PC.
  * @param {{ onScan: (text: string) => void }} props
  */
 export function CameraScanner({ onScan }) {
@@ -36,7 +37,7 @@ export function CameraScanner({ onScan }) {
   const onScanRef = useRef(onScan);
   const [status, setStatus] = useState('off');
   const [message, setMessage] = useState('');
-  const canRead = typeof window !== 'undefined' && 'BarcodeDetector' in window;
+  const mountedRef = useRef(true);
 
   useEffect(() => {
     onScanRef.current = onScan;
@@ -62,15 +63,14 @@ export function CameraScanner({ onScan }) {
         video: { facingMode: 'environment', width: { ideal: 1280 } },
         audio: false,
       });
+      // Staff left the page while the camera was starting: turn it straight off again.
+      if (!mountedRef.current) {
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
       streamRef.current = stream;
       if (videoRef.current) videoRef.current.srcObject = stream;
       setStatus('on');
-      if (!canRead) {
-        setMessage(
-          'This browser shows the camera but cannot read QR codes from it. ' +
-            'Use the USB scanner or type the Member ID.',
-        );
-      }
     } catch (error) {
       setStatus('error');
       setMessage(cameraError(error));
@@ -79,22 +79,28 @@ export function CameraScanner({ onScan }) {
 
   // Read QR codes from the picture a few times a second while the camera is on.
   useEffect(() => {
-    if (status !== 'on' || !canRead) return undefined;
-    let detector;
-    try {
-      detector = new window.BarcodeDetector({ formats: ['qr_code'] });
-    } catch {
-      return undefined;
-    }
+    if (status !== 'on') return undefined;
+    let read = null;
+    let stopped = false;
+    createQrReader()
+      .then((reader) => {
+        if (!stopped) read = reader;
+      })
+      .catch(() => {
+        if (!stopped) {
+          setMessage(
+            "The camera can't read QR codes here. Use the USB scanner or type the Member ID.",
+          );
+        }
+      });
     let last = { text: '', at: 0 };
     let busy = false;
     const timer = setInterval(async () => {
       const video = videoRef.current;
-      if (busy || !video || video.readyState < 2) return;
+      if (busy || !read || !video || video.readyState < 2) return;
       busy = true;
       try {
-        const [code] = await detector.detect(video);
-        const text = code?.rawValue;
+        const text = await read(video);
         const now = Date.now();
         if (text && (text !== last.text || now - last.at > REPEAT_MS)) {
           last = { text, at: now };
@@ -106,11 +112,20 @@ export function CameraScanner({ onScan }) {
         busy = false;
       }
     }, 250);
-    return () => clearInterval(timer);
-  }, [status, canRead]);
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+  }, [status]);
 
   // Turn the camera off when leaving the page.
-  useEffect(() => () => streamRef.current?.getTracks().forEach((t) => t.stop()), []);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    };
+  }, []);
 
   const s = STATUS[status];
   const live = status === 'on';

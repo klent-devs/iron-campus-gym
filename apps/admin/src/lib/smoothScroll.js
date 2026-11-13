@@ -12,7 +12,7 @@ import { useEffect } from 'react';
  * - anything inside a box that scrolls on its own (sidebar, tables, pop-ups) while it can still scroll
  * - people who turned on "reduce motion" / "show animations: off" in Windows
  *
- * Inside an area marked `data-scroll-lock` (the sidebar menu) the page behind never moves: the area
+ * Inside an area marked `data-scroll-lock` (the sidebar menu, pop-ups) the page behind never moves: the area
  * scrolls itself if it is taller than the window, otherwise the wheel does nothing.
  * - keyboard, scrollbar dragging and touch screens (already smooth in the browser)
  */

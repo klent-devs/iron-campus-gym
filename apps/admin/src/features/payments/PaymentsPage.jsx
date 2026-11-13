@@ -288,10 +288,13 @@ export function PaymentsPage() {
                         <td className="whitespace-nowrap border-t border-line px-4 py-3 font-semibold">
                           {p.customerName}
                           {p.note && (
-                            <div className="text-xs font-normal text-ink-muted">{p.note}</div>
+                            <div className="max-w-[200px] whitespace-normal text-xs font-normal text-ink-muted">
+                              {p.note}
+                            </div>
                           )}
                         </td>
-                        <td className="whitespace-nowrap border-t border-line px-4 py-3 text-ink-soft">
+                        {/* Long types (e.g. product names) wrap so the table fits a 1366 px laptop. */}
+                        <td className="min-w-[140px] max-w-[200px] border-t border-line px-4 py-3 text-ink-soft">
                           {p.typeLabel}
                         </td>
                         <td
@@ -309,13 +312,15 @@ export function PaymentsPage() {
                           {p.methodLabel}
                         </td>
                         <td className="whitespace-nowrap border-t border-line px-4 py-3 text-ink-soft">
-                          {formatDate(dayOf(p.at)).slice(0, 6)}, {formatTime(p.at)}
+                          {formatDate(dayOf(p.at)).slice(0, 6)}
+                          <span className="block text-xs text-ink-muted">{formatTime(p.at)}</span>
                         </td>
                         <td className="border-t border-line px-4 py-3">
                           <StatusBadge tone={PAYMENT_TONE[p.status]}>{p.statusLabel}</StatusBadge>
                         </td>
-                        <td className="whitespace-nowrap border-t border-line px-4 py-3 text-right">
-                          <span className="inline-flex gap-2">
+                        <td className="border-t border-line px-4 py-3 text-right">
+                          {/* Buttons stack on narrow laptops so the table never needs a sideways scroll. */}
+                          <span className="flex flex-wrap justify-end gap-2">
                             <Button size="sm" onClick={() => setSelected(p)}>
                               View
                             </Button>

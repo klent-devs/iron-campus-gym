@@ -300,7 +300,9 @@ export function WalkInRecordsPage() {
                       <StatusBadge tone={pay.tone}>{pay.text}</StatusBadge>
                     </td>
                     <td className="border-t border-line px-3 py-3">
-                      <div className="flex justify-end gap-1.5">
+                      {/* Wraps onto a second line when a row has all three buttons, so the table
+                          fits a 1366 px laptop without sideways scrolling. */}
+                      <div className="flex flex-wrap justify-end gap-1.5">
                         {v.paymentStatus === 'unpaid' && (
                           <Button
                             size="sm"

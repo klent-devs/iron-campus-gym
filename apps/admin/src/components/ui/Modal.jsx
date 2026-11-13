@@ -90,7 +90,10 @@ export function Modal({
   const width = drawer ? 'max-w-[440px]' : size === 'lg' ? 'max-w-[560px]' : 'max-w-[480px]';
 
   return createPortal(
+    // data-scroll-lock: the mouse wheel over a pop-up never scrolls the page behind it
+    // (lib/smoothScroll.js). A pop-up taller than the window still scrolls itself.
     <div
+      data-scroll-lock
       className={`fixed inset-0 z-50 flex overflow-y-auto overflow-x-hidden ${
         drawer ? 'justify-end bg-black/60' : 'items-start justify-center bg-black/70 px-4 py-[10vh]'
       } ${
