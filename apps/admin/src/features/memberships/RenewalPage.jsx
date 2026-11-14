@@ -360,10 +360,19 @@ export function RenewalPage() {
 
           {step < 6 && (
             <div className="mt-6 flex justify-between gap-2.5 border-t border-line pt-5">
-              <Button onClick={() => setStep(Math.max(1, step - 1))} disabled={step === 1}>
+              <Button
+                className="h-12 min-w-[120px]"
+                onClick={() => setStep(Math.max(1, step - 1))}
+                disabled={step === 1}
+              >
                 Back
               </Button>
-              <Button variant="primary" onClick={next} disabled={step > 1 && !member}>
+              <Button
+                variant="primary"
+                className="h-12 min-w-[140px]"
+                onClick={next}
+                disabled={step > 1 && !member}
+              >
                 {step === 5 ? 'Save Renewal' : 'Next'}
               </Button>
             </div>

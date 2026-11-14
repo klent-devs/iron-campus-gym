@@ -1,5 +1,6 @@
 import {
   MEMBERSHIP_STATUS,
+  dateFormat,
   daysBetween,
   formatDate,
   formatDuration,
@@ -113,7 +114,6 @@ export function MemberProfilePage() {
           </Link>{' '}
           / {member.name}
         </nav>
-        <SampleDataBadge />
       </div>
 
       <section className="flex flex-wrap items-center gap-5 rounded-card border border-line bg-card p-[22px] motion-safe:animate-rise">
@@ -122,6 +122,8 @@ export function MemberProfilePage() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-[26px] font-bold">{member.name}</h1>
             <StatusBadge tone={STATUS_TONE[member.status]}>{member.statusLabel}</StatusBadge>
+            {/* Beside the title, like on every other page. */}
+            <SampleDataBadge />
           </div>
           <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[15px] text-ink-soft">
             <span>
@@ -415,11 +417,11 @@ const TD = 'whitespace-nowrap border-t border-line px-4 py-3';
 function PaymentTable({ payments }) {
   if (!payments.length) return <EmptyState compact icon="wallet" title="No payments yet" />;
   return (
-    <table className="w-full min-w-[640px] border-collapse text-sm">
+    // Fits the card on a 1366 px laptop: the description wraps instead of the table scrolling.
+    <table className="w-full min-w-[480px] border-collapse text-sm">
       <thead>
         <tr>
           <th className={TH}>Transaction No.</th>
-          <th className={TH}>Date</th>
           <th className={TH}>Description</th>
           <th className={TH}>Method</th>
           <th className={`${TH} text-right`}>Amount</th>
@@ -436,9 +438,12 @@ function PaymentTable({ payments }) {
               <Link to={`/payments?txn=${p.txnNo}`} className="hover:text-brand-text">
                 {p.txnNo}
               </Link>
+              {/* Date under the number (like the Payments page), so the table fits the card. */}
+              <span className="block font-sans text-xs text-ink-muted">
+                {formatDate(dayOf(p.at))}
+              </span>
             </td>
-            <td className={TD}>{formatDate(dayOf(p.at))}</td>
-            <td className={TD}>{p.description}</td>
+            <td className={`${TD} !whitespace-normal`}>{p.description}</td>
             <td className={TD}>{p.methodLabel}</td>
             <td
               className={`${TD} text-right font-bold ${p.status === 'voided' ? 'text-ink-muted line-through' : ''}`}
@@ -456,7 +461,7 @@ function PaymentTable({ payments }) {
 }
 
 const longDay = (d) =>
-  new Intl.DateTimeFormat('en-GB', {
+  dateFormat('en-GB', {
     weekday: 'short',
     day: '2-digit',
     month: 'short',

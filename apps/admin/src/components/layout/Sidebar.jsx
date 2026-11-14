@@ -58,7 +58,7 @@ export function Sidebar({ onNavigate }) {
         className={`${ITEM} ${IDLE}`}
       >
         <Icon name="logout" strokeWidth={1.9} />
-        <span>Logout</span>
+        <span>Log Out</span>
       </Link>
     </nav>
   );

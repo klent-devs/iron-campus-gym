@@ -395,7 +395,7 @@ export function ScannerPage() {
                 onClick={() =>
                   handleQr(s.code ?? buildQrPayload(memberById.get(s.memberId).qrToken))
                 }
-                className="h-9 rounded-full border border-line px-3 text-[13px] font-semibold text-ink-soft transition hover:bg-card-2 hover:text-ink motion-safe:active:scale-95"
+                className="h-11 rounded-full border border-line px-4 text-[13px] font-semibold text-ink-soft transition hover:bg-card-2 hover:text-ink motion-safe:active:scale-95"
               >
                 {s.label}
                 {s.hint && <span className="font-normal text-ink-muted"> · {s.hint}</span>}

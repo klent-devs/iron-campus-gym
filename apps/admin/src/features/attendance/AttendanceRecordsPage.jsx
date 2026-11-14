@@ -9,8 +9,11 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
+  FilterSelect,
   Icon,
+  Pagination,
   Presence,
+  SearchBox,
   SampleDataBadge,
   StatusBadge,
   Toast,
@@ -40,6 +43,8 @@ const EMPTY_WHEN = {
   pick: 'on this day',
 };
 
+const PAGE_SIZE = 25;
+
 /**
  * Attendance Records (docs/design/AttendanceRecords.dc.html): every member check-in and check-out.
  * Visits from an earlier day with no time out stay at the top until someone fixes them.
@@ -56,6 +61,7 @@ export function AttendanceRecordsPage() {
   const [flash, setFlash] = useState(null); // { id, n }
   // Rows fixed on this page stay at the top (with "Fixed") until the date filter changes.
   const [justFixed, setJustFixed] = useState([]);
+  const [page, setPage] = useState(1);
   const [toast, showToast, hideToast] = useToast();
 
   useEffect(() => {
@@ -99,7 +105,11 @@ export function AttendanceRecordsPage() {
       );
     })
     .sort((a, b) => b.timeIn.localeCompare(a.timeIn));
-  const shown = [...pinned, ...rows];
+  const all = [...pinned, ...rows];
+  // 25 a page, like Members and Payments (the busiest day has 150+ check-ins).
+  const pageCount = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const shown = all.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const fixing = fixingId && checkIns.find((c) => c.id === fixingId);
   const fixingMember = fixing && memberById.get(fixing.memberId);
@@ -165,39 +175,30 @@ export function AttendanceRecordsPage() {
         style={rise(2)}
       >
         <div className="flex flex-wrap items-center gap-3 p-4">
-          <label className="flex h-[46px] max-w-[360px] flex-[1_1_260px] items-center gap-2.5 rounded-btn border border-line bg-sidebar px-3.5 text-ink-muted transition focus-within:border-brand">
-            <Icon name="search" size={18} />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search member"
-              placeholder="Search member name or ID"
-              className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-muted focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-          </label>
-          <span className="relative inline-flex">
-            <select
-              aria-label="Date"
-              value={range}
-              onChange={(e) => {
-                setRange(e.target.value);
-                setJustFixed([]);
-              }}
-              className="h-[46px] appearance-none rounded-btn border border-line bg-sidebar pl-3.5 pr-10 text-[15px] text-ink"
-            >
-              {Object.keys(RECORD_RANGES).map((key) => (
-                <option key={key} value={key}>
-                  {rangeLabel(key)}
-                </option>
-              ))}
-            </select>
-            <Icon
-              name="chevronDown"
-              size={16}
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-soft"
-            />
-          </span>
+          <SearchBox
+            label="Search member"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Search member name or ID"
+          />
+          <FilterSelect
+            label="Date"
+            value={range}
+            onChange={(e) => {
+              setRange(e.target.value);
+              setJustFixed([]);
+              setPage(1);
+            }}
+          >
+            {Object.keys(RECORD_RANGES).map((key) => (
+              <option key={key} value={key}>
+                {rangeLabel(key)}
+              </option>
+            ))}
+          </FilterSelect>
           {range === 'pick' && (
             <input
               type="date"
@@ -208,8 +209,9 @@ export function AttendanceRecordsPage() {
                 if (!e.target.value) return;
                 setPicked(e.target.value);
                 setJustFixed([]);
+                setPage(1);
               }}
-              className="h-[46px] rounded-btn border border-line bg-sidebar px-3.5 text-[15px] text-ink [color-scheme:dark] motion-safe:animate-drop-in"
+              className="h-11 rounded-btn border border-line bg-sidebar px-3.5 text-[15px] text-ink [color-scheme:dark] motion-safe:animate-drop-in"
             />
           )}
         </div>
@@ -257,7 +259,7 @@ export function AttendanceRecordsPage() {
                     <td className="border-t border-line px-3 py-3">
                       {c.timeOut ? (
                         <span className="inline-flex items-center gap-2">
-                          <span className="text-danger-text">
+                          <span className="text-ink-soft">
                             <span aria-hidden="true">↗ </span>
                             {formatTime(c.timeOut)}
                           </span>
@@ -272,11 +274,11 @@ export function AttendanceRecordsPage() {
                       ) : isMissing ? (
                         <span className="font-semibold text-warning-text">No time out</span>
                       ) : (
-                        <span className="font-semibold text-brand-text">Still inside</span>
+                        <span className="font-semibold text-brand-text">Inside</span>
                       )}
                     </td>
                     <td className="border-t border-line px-3 py-3">
-                      {c.timeOut ? formatDuration(c.timeIn, c.timeOut) : isMissing ? '—' : 'Inside'}
+                      {c.timeOut ? formatDuration(c.timeIn, c.timeOut) : '—'}
                     </td>
                     <td className="border-t border-line px-3 py-3 text-right">
                       {isMissing && (
@@ -295,7 +297,7 @@ export function AttendanceRecordsPage() {
               })}
             </tbody>
           </table>
-          {shown.length === 0 && (
+          {all.length === 0 && (
             <div className="px-5 py-12 text-center motion-safe:animate-fade-in">
               <b className="font-heading text-[17px] font-semibold">Nothing here</b>
               <p className="mt-1.5 text-ink-muted">
@@ -307,6 +309,15 @@ export function AttendanceRecordsPage() {
           )}
         </div>
 
+        {all.length > PAGE_SIZE && (
+          <Pagination
+            page={current}
+            pageSize={PAGE_SIZE}
+            total={all.length}
+            onPage={setPage}
+            noun="check-ins"
+          />
+        )}
         <div className="border-t border-line px-4 py-3.5 text-sm text-ink-muted">
           Today: {stats.total} {stats.total === 1 ? 'check-in' : 'check-ins'} · {stats.checkedOut}{' '}
           {stats.checkedOut === 1 ? 'check-out' : 'check-outs'} · average stay {stats.averageStay}
@@ -323,6 +334,7 @@ export function AttendanceRecordsPage() {
               fixTimeOut(fixing.id, timeOutIso, reason);
               setFixingId(null);
               setJustFixed((ids) => [fixing.id, ...ids]);
+              setPage(1);
               setFlash((f) => ({ id: fixing.id, n: (f?.n ?? 0) + 1 }));
               showToast({
                 title: 'Time out saved',

@@ -251,7 +251,7 @@ function useAlerts() {
     if (out || low)
       list.push({
         icon: 'box',
-        tone: out ? 'text-danger-text' : 'text-[#FF7A50]',
+        tone: out ? 'text-danger-text' : 'text-brand-text',
         text: `${out ? `${out} out of stock` : ''}${out && low ? ', ' : ''}${low ? `${low} running low` : ''}`,
         to: '/inventory',
       });

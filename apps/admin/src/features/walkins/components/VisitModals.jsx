@@ -1,4 +1,11 @@
-import { formatDate, formatDuration, formatPeso, formatTime, todayInGym } from '@icg/shared';
+import {
+  dateFormat,
+  formatDate,
+  formatDuration,
+  formatPeso,
+  formatTime,
+  todayInGym,
+} from '@icg/shared';
 import { useId, useState } from 'react';
 import { Button } from '../../../components/ui/Button.jsx';
 import { Modal } from '../../../components/ui/Modal.jsx';
@@ -100,9 +107,7 @@ export function CompleteVisitModal({ visit, customer, onClose, onConfirm }) {
 }
 
 const shortDay = (iso) =>
-  new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(
-    new Date(`${iso}T00:00:00Z`),
-  );
+  dateFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(new Date(`${iso}T00:00:00Z`));
 
 /** View History side panel: visits, money spent and the "Make Member" button. */
 export function WalkInHistoryDrawer({ customer, visits, onClose }) {

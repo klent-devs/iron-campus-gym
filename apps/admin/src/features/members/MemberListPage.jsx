@@ -7,9 +7,10 @@ import {
   Button,
   EmptyState,
   FilterChips,
-  Icon,
+  FilterSelect,
   PageHeader,
   Pagination,
+  SearchBox,
   StatusBadge,
 } from '../../components/ui/index.js';
 import { useDemoData } from '../../lib/demo.js';
@@ -17,6 +18,19 @@ import { useToday } from '../../lib/useToday.js';
 import { STATUS_FILTERS, formatPhone } from './helpers.js';
 
 const PAGE_SIZE = 25;
+
+/** How the list can be ordered. Name A–Z is the easiest for the front desk to scan. */
+const SORTS = {
+  name: { label: 'Name (A–Z)', compare: (a, b) => a.name.localeCompare(b.name) },
+  expiring: {
+    label: 'Expires first',
+    compare: (a, b) => (a.endDate ?? '9999').localeCompare(b.endDate ?? '9999'),
+  },
+  newest: {
+    label: 'Newest members',
+    compare: (a, b) => b.memberSince.localeCompare(a.memberSince) || b.code.localeCompare(a.code),
+  },
+};
 
 /**
  * Member list (docs/design/Members.dc.html): search by name, Member ID or mobile number, filter by
@@ -30,6 +44,7 @@ export function MemberListPage() {
   const status = params.get('status') ?? 'all';
   const [query, setQuery] = useState(params.get('q') ?? '');
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState('name');
 
   useEffect(() => {
     document.title = 'Members · IRON CAMPUS GYM';
@@ -50,7 +65,9 @@ export function MemberListPage() {
     for (const m of searched) c[m.status] = (c[m.status] ?? 0) + 1;
     return c;
   }, [searched]);
-  const rows = status === 'all' ? searched : searched.filter((m) => m.status === status);
+  const rows = (status === 'all' ? searched : searched.filter((m) => m.status === status))
+    .slice()
+    .sort(SORTS[sort].compare);
   const pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const setStatus = (value) => {
@@ -75,7 +92,7 @@ export function MemberListPage() {
               Renew Membership
             </Button>
             <Button to="/members/new" variant="plainPrimary">
-              + Add New Member
+              + Add Member
             </Button>
           </>
         }
@@ -83,26 +100,37 @@ export function MemberListPage() {
 
       <section className="overflow-hidden rounded-card border border-line bg-card motion-safe:animate-rise">
         <div className="flex flex-wrap items-center gap-3 p-4">
-          <label className="flex h-[46px] min-w-0 max-w-[380px] flex-[1_1_280px] items-center gap-2.5 rounded-btn border border-line bg-sidebar px-3.5 text-ink-muted focus-within:border-brand">
-            <Icon name="search" size={18} />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              aria-label="Search member"
-              placeholder="Search Member — name, ID or mobile no."
-              className="min-w-0 flex-1 border-0 bg-transparent text-sm text-ink outline-none placeholder:text-ink-muted focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-          </label>
+          <SearchBox
+            label="Search member"
+            className="w-full max-w-[320px] flex-[1_1_220px]"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Name, Member ID or mobile no."
+          />
           <FilterChips
             label="Filter by membership status"
             value={status}
             onChange={setStatus}
             options={STATUS_FILTERS.map((f) => ({ ...f, count: counts[f.value] ?? 0 }))}
           />
+          <FilterSelect
+            label="Sort members"
+            className="ml-auto"
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value);
+              setPage(1);
+            }}
+          >
+            {Object.entries(SORTS).map(([key, { label }]) => (
+              <option key={key} value={key}>
+                Sort: {label}
+              </option>
+            ))}
+          </FilterSelect>
         </div>
 
         <div className="overflow-x-auto">

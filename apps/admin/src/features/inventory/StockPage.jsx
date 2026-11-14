@@ -22,6 +22,7 @@ import {
   EmptyState,
   Label,
   PageHeader,
+  Pagination,
   TextField,
   Toast,
   useToast,
@@ -61,6 +62,9 @@ const itemForm = (item) =>
       }
     : blankItem;
 
+/** Stock changes shown at a time in the item's history (older ones on the next pages). */
+const HISTORY_PAGE = 15;
+
 /**
  * Add Item & Update Stock (docs/design/StockMovement.dc.html): add or edit an item (Owner),
  * Stock In / Stock Out with the stock after saving, and the item's history.
@@ -98,6 +102,7 @@ export function StockPage() {
   const [form, setForm] = useState(() => itemForm(isNew ? null : item));
   const [itemErrors, setItemErrors] = useState({});
   const [toast, showToast, hideToast] = useToast();
+  const [historyPage, setHistoryPage] = useState(1);
 
   useEffect(() => {
     document.title = 'Items & Stock · IRON CAMPUS GYM';
@@ -109,6 +114,7 @@ export function StockPage() {
     setFormFor(itemKey);
     setForm(itemForm(isNew ? null : item));
     setItemErrors({});
+    setHistoryPage(1);
   }
   useEffect(() => {
     if (window.location.hash === '#history') document.getElementById('history')?.scrollIntoView();
@@ -200,7 +206,7 @@ export function StockPage() {
     : stockStatus(after, item?.reorderLevel ?? 0) === 'out_of_stock'
       ? 'text-danger-text'
       : stockStatus(after, item?.reorderLevel ?? 0) === 'low_stock'
-        ? 'text-[#FF7A50]'
+        ? 'text-brand-text'
         : 'text-success-text';
   const setF = (k) => (e) => {
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -211,6 +217,11 @@ export function StockPage() {
     <>
       <PageHeader
         title="Add Item & Update Stock"
+        subtitle={
+          owner
+            ? 'Add or edit an item on the left. Record stock coming in or going out on the right.'
+            : 'Record stock coming in or going out. Every change is kept in the item’s history.'
+        }
         crumbs={[{ to: '/inventory', label: 'Inventory' }, { label: 'Items & Stock' }]}
       />
       <div className="flex flex-wrap items-start gap-4">
@@ -428,7 +439,7 @@ export function StockPage() {
                 >
                   <span className="text-[15px] text-ink-soft">Stock after saving</span>
                   <span className="font-heading text-[20px] font-bold">
-                    <span className="text-[#FF7A50]">{item.quantity}</span> →{' '}
+                    <span className="text-brand-text">{item.quantity}</span> →{' '}
                     <span className={afterTone}>
                       {tooMany ? '—' : after} {item.unit}
                     </span>
@@ -448,7 +459,7 @@ export function StockPage() {
                 className="h-[54px] text-[16px]"
                 disabled={!item || tooMany}
               >
-                {mode === 'in' ? 'Add Stock' : 'Remove Stock'}
+                {mode === 'in' ? 'Save Stock In' : 'Save Stock Out'}
               </Button>
             </form>
           )}
@@ -461,34 +472,47 @@ export function StockPage() {
           <EmptyState compact icon="history" title="No stock changes yet" />
         ) : (
           <ul className="mt-3">
-            {history.slice(0, 40).map((h) => (
-              <li
-                key={h.id}
-                className="flex flex-wrap items-center gap-x-3.5 gap-y-1 border-t border-line py-3 text-sm"
-              >
-                <b
-                  className={`w-12 font-heading text-[15px] ${
-                    h.quantity > 0
-                      ? 'text-success-text'
-                      : h.quantity < 0
-                        ? 'text-danger-text'
-                        : 'text-ink-muted'
-                  }`}
+            {history
+              .slice((historyPage - 1) * HISTORY_PAGE, historyPage * HISTORY_PAGE)
+              .map((h) => (
+                <li
+                  key={h.id}
+                  className="flex flex-wrap items-center gap-x-3.5 gap-y-1 border-t border-line py-3 text-sm"
                 >
-                  {h.quantity > 0 ? `+${h.quantity}` : h.quantity < 0 ? `−${-h.quantity}` : '±0'}
-                </b>
-                <span className="min-w-0 flex-1">
-                  {STOCK_MOVEMENT_TYPES[h.type]?.label ?? h.type}
-                  {h.remarks && <span className="text-ink-muted"> · {h.remarks}</span>}
-                </span>
-                <span className="text-ink-muted">{shortName(staffName(data, h.staffId))}</span>
-                <span className="w-[130px] text-right text-ink-muted">
-                  {formatDate(h.date).slice(0, 6)}
-                  {dayOf(h.at) === h.date && `, ${formatTime(h.at)}`}
-                </span>
-              </li>
-            ))}
+                  <b
+                    className={`w-12 font-heading text-[15px] ${
+                      h.quantity > 0
+                        ? 'text-success-text'
+                        : h.quantity < 0
+                          ? 'text-danger-text'
+                          : 'text-ink-muted'
+                    }`}
+                  >
+                    {h.quantity > 0 ? `+${h.quantity}` : h.quantity < 0 ? `−${-h.quantity}` : '±0'}
+                  </b>
+                  <span className="min-w-0 flex-1">
+                    {STOCK_MOVEMENT_TYPES[h.type]?.label ?? h.type}
+                    {h.remarks && <span className="text-ink-muted"> · {h.remarks}</span>}
+                  </span>
+                  <span className="text-ink-muted">{shortName(staffName(data, h.staffId))}</span>
+                  <span className="w-[130px] text-right text-ink-muted">
+                    {formatDate(h.date).slice(0, 6)}
+                    {dayOf(h.at) === h.date && `, ${formatTime(h.at)}`}
+                  </span>
+                </li>
+              ))}
           </ul>
+        )}
+        {history.length > HISTORY_PAGE && (
+          <div className="-mx-[22px] -mb-[22px] mt-3">
+            <Pagination
+              page={Math.min(historyPage, Math.ceil(history.length / HISTORY_PAGE))}
+              pageSize={HISTORY_PAGE}
+              total={history.length}
+              onPage={setHistoryPage}
+              noun="stock changes"
+            />
+          </div>
         )}
       </section>
       <Toast toast={toast} onClose={hideToast} />

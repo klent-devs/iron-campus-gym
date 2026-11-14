@@ -116,7 +116,7 @@ export function AlertsPanel({ alerts, frontDesk = null }) {
               {...view.stock}
               action={
                 <Button to="/inventory" size="sm">
-                  {desk ? 'See Inventory' : 'Add Stock'}
+                  {desk ? 'See Inventory' : 'Stock In'}
                 </Button>
               }
             />

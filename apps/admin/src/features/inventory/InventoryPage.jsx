@@ -6,10 +6,11 @@ import {
   EmptyState,
   FilterChips,
   Icon,
-  INPUT,
   PageHeader,
+  STAT_GRID,
+  SearchBox,
+  StatCard,
   StatusBadge,
-  inputBorder,
 } from '../../components/ui/index.js';
 import { isOwner, useDemoData, useStaff } from '../../lib/demo.js';
 
@@ -23,7 +24,7 @@ const listNames = (items) => {
 
 const QTY_TONE = {
   [STOCK_STATUS.OUT_OF_STOCK]: 'text-danger-text',
-  [STOCK_STATUS.LOW_STOCK]: 'text-[#FF7A50]',
+  [STOCK_STATUS.LOW_STOCK]: 'text-brand-text',
   [STOCK_STATUS.IN_STOCK]: 'text-ink',
 };
 
@@ -54,22 +55,7 @@ export function InventoryPage() {
       return rank[a.status] - rank[b.status] || a.name.localeCompare(b.name);
     });
 
-  const tile = (label, value, tone = '') => (
-    <div
-      className={`rounded-card border bg-card px-5 py-[18px] ${
-        tone === 'low' ? 'border-brand/50' : tone === 'out' ? 'border-danger/50' : 'border-line'
-      }`}
-    >
-      <span className="text-sm text-ink-muted">{label}</span>
-      <b
-        className={`mt-1 block font-heading text-[30px] ${
-          tone === 'low' ? 'text-[#FF7A50]' : tone === 'out' ? 'text-danger-text' : ''
-        }`}
-      >
-        {value}
-      </b>
-    </div>
-  );
+  const count = (c) => items.filter((i) => c === 'All' || i.category === c).length;
 
   return (
     <>
@@ -78,11 +64,11 @@ export function InventoryPage() {
         subtitle="Drinks, supplements and supplies. Gym machines and weights are not listed here."
         actions={
           <>
+            <Button to="/inventory/stock?mode=in" variant="plain" icon="arrowUp">
+              Stock In
+            </Button>
             <Button to="/inventory/stock?mode=out" variant="plain" icon="arrowDown">
               Stock Out
-            </Button>
-            <Button to="/inventory/stock?mode=in" variant="plain" icon="arrowUp">
-              Add Stock
             </Button>
             {owner && (
               <Button to="/inventory/stock?new=1" variant="plainPrimary">
@@ -93,17 +79,38 @@ export function InventoryPage() {
         }
       />
 
-      <div className="grid grid-cols-2 gap-4 min-[1100px]:grid-cols-4">
-        {tile('Total Items', items.length)}
-        {tile(
-          'Available Stock',
-          <>
-            {items.reduce((s, i) => s + i.quantity, 0).toLocaleString('en-PH')}{' '}
-            <span className="font-sans text-[15px] font-medium text-ink-muted">pcs</span>
-          </>,
-        )}
-        {tile('Low Stock', low.length, 'low')}
-        {tile('Out of Stock', out.length, 'out')}
+      <div className={STAT_GRID}>
+        <StatCard
+          label="Total Items"
+          icon="box"
+          value={items.length}
+          note="Products and supplies"
+        />
+        <StatCard
+          label="Available Stock"
+          icon="check"
+          value={
+            <>
+              {items.reduce((s, i) => s + i.quantity, 0).toLocaleString('en-PH')}{' '}
+              <span className="font-sans text-[15px] font-medium text-ink-muted">pcs</span>
+            </>
+          }
+          note="All items together"
+        />
+        <StatCard
+          label="Low Stock"
+          icon="alert"
+          tone={low.length ? 'brand' : 'default'}
+          value={low.length}
+          note={low.length ? 'Order more soon' : 'Nothing running low'}
+        />
+        <StatCard
+          label="Out of Stock"
+          icon="ban"
+          tone={out.length ? 'danger' : 'default'}
+          value={out.length}
+          note={out.length ? 'Can’t be sold now' : 'Everything is in stock'}
+        />
       </div>
 
       {(out.length > 0 || low.length > 0) && (
@@ -121,34 +128,31 @@ export function InventoryPage() {
             {low.length > 0 && `${listNames(low)} ${low.length === 1 ? 'is' : 'are'} running low.`}
           </span>
           <Button size="sm" to={`/inventory/stock?mode=in&item=${(out[0] ?? low[0]).id}`}>
-            Add Stock
+            Stock In
           </Button>
         </div>
       )}
 
       <section className="overflow-hidden rounded-card border border-line bg-card">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
+        {/* Same order as Members: search box first, then the filter buttons with counts. */}
+        <div className="flex flex-wrap items-center gap-3 border-b border-line p-4">
+          <SearchBox
+            label="Search items"
+            className="w-full max-w-[280px] flex-[1_1_200px]"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search items"
+          />
           <FilterChips
             label="Category"
             value={category}
             onChange={setCategory}
-            options={['All', ...INVENTORY_CATEGORIES].map((c) => ({ value: c, label: c }))}
+            options={['All', ...INVENTORY_CATEGORIES].map((c) => ({
+              value: c,
+              label: c,
+              count: count(c),
+            }))}
           />
-          <label className="relative">
-            <span className="sr-only">Search items</span>
-            <Icon
-              name="search"
-              size={16}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
-            />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search items"
-              className={`${INPUT} ${inputBorder()} h-11 w-[220px] pl-9 text-sm`}
-            />
-          </label>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[960px] border-collapse text-sm">
@@ -166,7 +170,9 @@ export function InventoryPage() {
             <tbody>
               {rows.map((i) => (
                 <tr key={i.id} className="transition-colors hover:bg-brand/10">
-                  <td className="border-t border-line px-4 py-3 font-semibold">{i.name}</td>
+                  <td className="min-w-[180px] border-t border-line px-4 py-3 font-semibold">
+                    {i.name}
+                  </td>
                   <td className="whitespace-nowrap border-t border-line px-4 py-3 text-ink-soft">
                     {i.category}
                   </td>
@@ -185,11 +191,9 @@ export function InventoryPage() {
                   </td>
                   <td className="whitespace-nowrap border-t border-line px-4 py-3 text-right">
                     <span className="inline-flex gap-1.5">
+                      {/* One button for both: the stock page has the Stock In / Stock Out switch. */}
                       <Button size="sm" to={`/inventory/stock?mode=in&item=${i.id}`}>
-                        Stock In
-                      </Button>
-                      <Button size="sm" to={`/inventory/stock?mode=out&item=${i.id}`}>
-                        Stock Out
+                        Update Stock
                       </Button>
                       {owner && (
                         <Button size="sm" to={`/inventory/stock?edit=1&item=${i.id}`}>

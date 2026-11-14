@@ -18,6 +18,7 @@ import {
   MEMBERSHIP_STATUS,
   addDays,
   canEnter,
+  dateFormat,
   daysBetween,
   formatTime,
   isMemberCode,
@@ -182,7 +183,7 @@ export function matchesMember(member, query) {
  * 5 minutes, never after 10:00 PM (closing) that day. Returns 'HH:MM' (24-hour, for <input>).
  */
 export function suggestedTimeOut(timeInIso) {
-  const [h, m] = new Intl.DateTimeFormat('en-GB', {
+  const [h, m] = dateFormat('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
@@ -204,7 +205,7 @@ export function gymTimeToIso(date, hhmm) {
 /** "checked in 08 Nov at 5:02 PM" */
 export function checkedInPhrase(timeInIso) {
   const day = dayOf(timeInIso);
-  const short = new Intl.DateTimeFormat('en-GB', {
+  const short = dateFormat('en-GB', {
     day: '2-digit',
     month: 'short',
     timeZone: 'UTC',

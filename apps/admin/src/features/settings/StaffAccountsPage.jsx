@@ -83,6 +83,7 @@ export function StaffAccountsPage() {
     <>
       <PageHeader
         title="Staff Accounts"
+        subtitle="Who can sign in to the admin website, and what each role can do."
         crumbs={[{ to: '/settings', label: 'Settings' }, { label: 'Staff Accounts' }]}
         actions={
           <Button variant="plainPrimary" onClick={() => setDialog({ kind: 'edit', staff: null })}>
@@ -195,7 +196,7 @@ export function StaffAccountsPage() {
       <div className="flex flex-wrap items-start gap-4">
         <section className="flex-[1_1_300px] rounded-card border border-line bg-card p-[22px]">
           <div className="flex items-center justify-between">
-            <h2 className="text-[18px] font-semibold">Administrator / Owner</h2>
+            <h2 className="text-[18px] font-semibold">Owner</h2>
             <StatusBadge tone="low">Full access</StatusBadge>
           </div>
           <ul className="mt-3">
@@ -229,7 +230,7 @@ export function StaffAccountsPage() {
         </section>
         <section className="min-w-0 flex-[1.2_1_340px] rounded-card border border-line bg-card p-[22px]">
           <h2 className="text-[18px] font-semibold">Audit History</h2>
-          <ul className="mt-3 max-h-[420px] overflow-y-auto">
+          <ul className="scrollbar-thin mt-3 max-h-[420px] overflow-y-auto pr-1">
             {auditView(data)
               .slice(0, 50)
               .map((l) => (

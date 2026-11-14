@@ -23,6 +23,42 @@ and the teammate's **Supabase Auth** for staff sign-in. Search for `TODO(api)` /
 
 ## Done
 
+### 14 Nov 2026 — Attendance pages open in 0.2 s instead of 4–6 s
+
+Opening Attendance took ~3 s and Attendance Records ~4.5 s (owner reported ~6 s). Cause: the shared
+`todayInGym` / `formatTime` built a new `Intl.DateTimeFormat` on every call, and those pages call
+them for each of the 5,000+ check-ins. New `dateFormat(locale, options)` in
+`packages/shared/src/utils/dates.js` makes each formatter once and reuses it; `gymClock.js`, the
+attendance/reports/walk-in helpers and the member portal use it too. Every admin page now opens in
+under 0.35 s (measured at 1366 px, both roles). Also: highlighted summary cards (Currently Inside,
+Today's Collections, Low Stock) no longer have an orange border; only problem cards stay red.
+
+### 13 Nov 2026 — UI polish: same buttons, filters, cards and words on every page
+
+Owner asked to polish every page for both accounts. Checked all 17 pages as Owner and Receptionist
+at 1366 px, then fixed:
+- **Every button is at least 44 px tall**: `Button size="sm"` is now 44 px (table buttons, pages).
+- **One filter row style**: new `SearchBox` and `FilterSelect` in `components/ui/formParts.jsx`
+  (44 px, own arrow) on Members, Attendance Records, Walk-ins, Payments, Inventory and the Dashboard
+  chart; all filter buttons use `FilterChips` (44 px, with counts — Inventory and Membership
+  Monitoring now show counts too). Form dropdowns (`TextField as="select"`) get the same arrow.
+- **One summary-card style**: Payments and Inventory use `StatCard` (icon + title) like the
+  Dashboard, Attendance and Walk-ins. Money always has centavos (₱205,440.00), also on plan cards.
+- **Dates**: every date box shows the written date underneath ("Fri, 13 Nov 2026"); Settings
+  opening/closing times are picked from a list in "6:00 AM" form.
+- **Same words**: "+ Add Member" everywhere, "Stock In" / "Stock Out" (no "Add Stock"),
+  "Log Out", "Inside" (not "Still inside"); check-out times are grey instead of red.
+- **Long lists have pages** (25 a page): Attendance Records, Walk-ins; Stock history 15 a page.
+- **Brand colours only**: removed the hard-coded #FF7A50 / #2A2C31.
+- "Only the Owner can open this page" now looks like "Page not found" (card + orange button).
+- Pages: Members sorted by name with a Sort dropdown; Payments rows have View + Print on one line;
+  Inventory rows have Update Stock / Edit / History; Walk-ins show at most two buttons (an unpaid
+  walk-in shows Record Payment instead of Complete Visit); Member Profile payment table fits the
+  card; Renew buttons bigger; Reports tabs look like the profile tabs; Settings has real example
+  text, no "Owner only" labels, Save Changes in the bottom bar only; the Receptionist's page is
+  called **Change Password**; Plans: no duplicate Add button, Receptionist sees no empty form box;
+  Staff Accounts has a description and a slim scrollbar.
+
 ### 13 Nov 2026 — Receptionist Dashboard (owner-approved mockup)
 
 Same layout as the Owner's Dashboard, with the money parts swapped for front-desk information:

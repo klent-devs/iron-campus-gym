@@ -22,7 +22,8 @@ const VARIANTS = {
 
 const SIZES = {
   md: 'h-11 min-w-touch px-[18px] text-sm', // 44 px
-  sm: 'h-9 px-3.5 text-[13px]',
+  // Small text, but still 44 px tall so it is easy to click (rule: buttons ≥ 44 px).
+  sm: 'h-11 px-3.5 text-[13px]',
 };
 
 /**

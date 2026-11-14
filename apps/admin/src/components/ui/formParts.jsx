@@ -1,5 +1,16 @@
 /** Small form pieces shared by every form (styles from docs/design/WalkIn.dc.html). */
+import { formatDate } from '@icg/shared';
 import { Icon } from './Icon.jsx';
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+/**
+ * "2026-11-13" → "Fri, 13 Nov 2026". Shown under date boxes, because the box itself shows the
+ * computer's own format (13/11/2026) and the rest of the system writes dates like 13 Nov 2026.
+ */
+export function dateWithWeekday(isoDate) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate ?? '')) return '';
+  return `${WEEKDAYS[new Date(`${isoDate}T00:00:00Z`).getUTCDay()]}, ${formatDate(isoDate)}`;
+}
 
 export const INPUT =
   'h-[50px] w-full rounded-btn border bg-sidebar px-3.5 text-[16px] text-ink outline-none ' +
@@ -10,6 +21,55 @@ export const inputBorder = (error) =>
   error
     ? 'border-danger shadow-[0_0_0_4px_rgb(227_77_77/0.14)]'
     : 'border-line hover:border-ink-faint focus:border-brand focus:shadow-[0_0_0_4px_rgb(255_61_10/0.14)]';
+
+/**
+ * Search box for the filter row above a table (Members, Attendance, Walk-ins, Payments,
+ * Inventory, Reports). 44 px tall, like the dropdowns and filter buttons beside it.
+ * @param {{ label: string, className?: string } & React.InputHTMLAttributes} props
+ */
+export function SearchBox({
+  label,
+  className = 'w-full max-w-[360px] flex-[1_1_240px]',
+  ...props
+}) {
+  return (
+    <label
+      className={`flex h-11 min-w-0 items-center gap-2.5 rounded-btn border border-line bg-sidebar px-3.5 text-ink-muted transition hover:border-ink-faint focus-within:border-brand ${className}`}
+    >
+      <Icon name="search" size={18} className="flex-none" />
+      <input
+        type="search"
+        aria-label={label}
+        className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-muted focus-visible:ring-0 focus-visible:ring-offset-0"
+        {...props}
+      />
+    </label>
+  );
+}
+
+/**
+ * Dropdown for a filter row (date range, type, method, status). 44 px tall, our own arrow
+ * (the browser's arrow looks different on Windows). Pass `<option>` children.
+ * @param {{ label: string, className?: string } & React.SelectHTMLAttributes} props
+ */
+export function FilterSelect({ label, className = '', children, ...props }) {
+  return (
+    <span className={`relative inline-flex min-w-0 ${className}`}>
+      <select
+        aria-label={label}
+        className="h-11 w-full min-w-0 cursor-pointer appearance-none rounded-btn border border-line bg-sidebar pl-3.5 pr-10 text-sm font-medium text-ink outline-none transition hover:border-ink-faint focus:border-brand focus-visible:ring-0 focus-visible:ring-offset-0"
+        {...props}
+      >
+        {children}
+      </select>
+      <Icon
+        name="chevronDown"
+        size={16}
+        className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-soft"
+      />
+    </span>
+  );
+}
 
 /** Label with an optional grey hint, e.g. "Contact Number (optional)". */
 export function Label({ htmlFor, id, hint, children }) {
@@ -156,17 +216,31 @@ export function TextField({
       <Label htmlFor={id} hint={hint}>
         {label}
       </Label>
-      <Tag
-        id={id}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={`${INPUT} ${inputBorder(error)} ${Tag === 'select' ? 'cursor-pointer pr-9' : ''} ${
-          props.readOnly ? 'cursor-default bg-card-2 text-ink-muted' : ''
-        }`}
-        {...props}
-      >
-        {children}
-      </Tag>
+      <span className="relative block">
+        <Tag
+          id={id}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className={`${INPUT} ${inputBorder(error)} ${Tag === 'select' ? 'cursor-pointer appearance-none pr-10' : ''} ${
+            props.type === 'date' || props.type === 'time' ? '[color-scheme:dark]' : ''
+          } ${props.readOnly ? 'cursor-default bg-card-2 text-ink-muted' : ''}`}
+          {...props}
+        >
+          {children}
+        </Tag>
+        {Tag === 'select' && (
+          <Icon
+            name="chevronDown"
+            size={16}
+            className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-soft"
+          />
+        )}
+      </span>
+      {props.type === 'date' && !error && (
+        <span className="mt-1 block text-[12px] text-ink-muted">
+          {dateWithWeekday(props.value) || 'Choose a date'}
+        </span>
+      )}
       <FieldError id={`${id}-error`}>{error}</FieldError>
     </div>
   );
@@ -177,7 +251,8 @@ export function ChoiceCards({ labelId, value, onChange, options, columns = 4 }) 
   const grid =
     columns === 2
       ? 'grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2'
-      : 'grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2 xl:grid-cols-4';
+      : // 4 across only on wide screens, so names like "Student Monthly" stay on one line.
+        'grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2 min-[1500px]:grid-cols-4';
   return (
     <div role="radiogroup" aria-labelledby={labelId} className={grid}>
       {options.map((o) => {

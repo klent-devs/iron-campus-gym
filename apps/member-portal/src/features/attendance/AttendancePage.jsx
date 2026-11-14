@@ -1,13 +1,11 @@
-import { addMonths, formatDuration, formatTime } from '@icg/shared';
+import { addMonths, dateFormat, formatDuration, formatTime } from '@icg/shared';
 import { dayOf, indexes } from '@icg/demo-data';
 import { Box, Screen } from '../../components/ui.jsx';
 import { shortDay } from '../../lib/format.js';
 import { useMemberInfo } from '../../lib/useMemberInfo.js';
 
 const monthName = (m) =>
-  new Intl.DateTimeFormat('en-GB', { month: 'long', timeZone: 'UTC' }).format(
-    new Date(`${m}-01T00:00:00Z`),
-  );
+  dateFormat('en-GB', { month: 'long', timeZone: 'UTC' }).format(new Date(`${m}-01T00:00:00Z`));
 
 /** My Attendance (docs/design/MAttendance.dc.html). */
 export function AttendancePage() {

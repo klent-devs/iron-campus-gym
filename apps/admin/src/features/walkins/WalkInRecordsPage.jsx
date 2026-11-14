@@ -10,8 +10,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Button,
-  Icon,
+  FilterChips,
+  FilterSelect,
+  Pagination,
   Presence,
+  SearchBox,
   STAT_GRID,
   StatCard,
   SampleDataBadge,
@@ -54,6 +57,8 @@ const EMPTY_WHEN = {
   month: 'this month',
 };
 
+const PAGE_SIZE = 25;
+
 /**
  * Walk-in Records (docs/design/WalkInRecords.dc.html) with the Register Walk-in pop-up
  * (docs/design/WalkIn.dc.html). DEMO: runs on sample data in the browser; nothing is saved.
@@ -65,6 +70,7 @@ export function WalkInRecordsPage() {
   const [range, setRange] = useState('today');
   const [status, setStatus] = useState('All');
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   // /walk-ins?register=1 (the Receptionist's "Register Walk-in" button) opens the pop-up straight away.
   const [params, setParams] = useSearchParams();
   const [registerOpen, setRegisterOpen] = useState(() => params.get('register') === '1');
@@ -101,11 +107,14 @@ export function WalkInRecordsPage() {
   const stats = summarize(todays);
   const inRange = useMemo(() => visitsInRange(visits, range, today), [visits, range, today]);
   const counts = countByStatus(inRange);
-  const shown = inRange
+  const all = inRange
     .filter(
       (v) => matchesStatus(v, status) && matchesSearch(customerById.get(v.customerId), search),
     )
     .sort((a, b) => b.timeIn.localeCompare(a.timeIn));
+  // 25 a page, like Members, Payments and Attendance Records.
+  const current = Math.min(page, Math.max(1, Math.ceil(all.length / PAGE_SIZE)));
+  const shown = all.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const selected = dialog && visits.find((v) => v.id === dialog.visitId);
   const selectedCustomer = selected && customerById.get(selected.customerId);
@@ -188,58 +197,39 @@ export function WalkInRecordsPage() {
         style={rise(5)}
       >
         <div className="flex flex-wrap items-center gap-3 border-b border-line p-4">
-          <label className="flex h-[46px] max-w-[320px] flex-[1_1_240px] items-center gap-2.5 rounded-btn border border-line bg-sidebar px-3.5 text-ink-muted focus-within:border-brand">
-            <Icon name="search" size={18} />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search walk-in customer"
-              placeholder="Search customer name or number"
-              className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-muted focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-          </label>
-          <span className="relative inline-flex">
-            <select
-              aria-label="Date"
-              value={range}
-              onChange={(e) => setRange(e.target.value)}
-              className="h-[46px] appearance-none rounded-btn border border-line bg-sidebar pl-3.5 pr-10 text-[15px] text-ink"
-            >
-              {Object.keys(DATE_RANGES).map((key) => (
-                <option key={key} value={key}>
-                  {rangeLabel(key)}
-                </option>
-              ))}
-            </select>
-            <Icon
-              name="chevronDown"
-              size={16}
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-soft"
-            />
-          </span>
+          <SearchBox
+            label="Search walk-in customer"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Search customer name or number"
+          />
+          <FilterSelect
+            label="Date"
+            value={range}
+            onChange={(e) => {
+              setRange(e.target.value);
+              setPage(1);
+            }}
+          >
+            {Object.keys(DATE_RANGES).map((key) => (
+              <option key={key} value={key}>
+                {rangeLabel(key)}
+              </option>
+            ))}
+          </FilterSelect>
           <div className="flex-1" />
-          <div role="group" aria-label="Show" className="flex flex-wrap gap-2">
-            {STATUS_FILTERS.map((key) => {
-              const on = key === status;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  aria-pressed={on}
-                  onClick={() => setStatus(key)}
-                  className={
-                    'h-10 rounded-full border px-3.5 text-[13px] font-semibold transition duration-150 motion-safe:active:scale-95 ' +
-                    (on
-                      ? 'border-brand bg-brand text-ink'
-                      : 'border-line bg-transparent text-ink-soft hover:bg-card-2 hover:text-ink')
-                  }
-                >
-                  {key} <span className="opacity-75">{counts[key]}</span>
-                </button>
-              );
-            })}
-          </div>
+          <FilterChips
+            label="Show"
+            value={status}
+            onChange={(v) => {
+              setStatus(v);
+              setPage(1);
+            }}
+            options={STATUS_FILTERS.map((key) => ({ value: key, label: key, count: counts[key] }))}
+          />
         </div>
 
         <div className="overflow-x-auto">
@@ -285,7 +275,7 @@ export function WalkInRecordsPage() {
                     </td>
                     <td
                       className={`border-t border-line px-3 py-3 ${
-                        v.timeOut ? 'text-danger-text' : 'font-semibold text-brand-text'
+                        v.timeOut ? 'text-ink-soft' : 'font-semibold text-brand-text'
                       }`}
                     >
                       {v.timeOut ? (
@@ -307,9 +297,9 @@ export function WalkInRecordsPage() {
                       <StatusBadge tone={pay.tone}>{pay.text}</StatusBadge>
                     </td>
                     <td className="border-t border-line px-3 py-3">
-                      {/* Wraps onto a second line when a row has all three buttons, so the table
-                          fits a 1366 px laptop without sideways scrolling. */}
-                      <div className="flex flex-wrap justify-end gap-1.5">
+                      {/* At most two buttons: an unpaid walk-in pays first (Record Payment takes the
+                          place of Complete Visit, like Who's Inside Now on the Dashboard). */}
+                      <div className="flex justify-end gap-1.5 whitespace-nowrap">
                         {v.paymentStatus === 'unpaid' && (
                           <Button
                             size="sm"
@@ -319,7 +309,7 @@ export function WalkInRecordsPage() {
                             Record Payment
                           </Button>
                         )}
-                        {!v.timeOut && (
+                        {!v.timeOut && v.paymentStatus !== 'unpaid' && (
                           <Button
                             size="sm"
                             onClick={() => setDialog({ kind: 'out', visitId: v.id })}
@@ -340,7 +330,7 @@ export function WalkInRecordsPage() {
               })}
             </tbody>
           </table>
-          {shown.length === 0 && (
+          {all.length === 0 && (
             <div className="px-5 py-12 text-center motion-safe:animate-fade-in">
               <b className="font-heading text-[17px] font-semibold">Nothing here</b>
               <p className="mt-1.5 text-ink-muted">
@@ -352,6 +342,15 @@ export function WalkInRecordsPage() {
           )}
         </div>
 
+        {all.length > PAGE_SIZE && (
+          <Pagination
+            page={current}
+            pageSize={PAGE_SIZE}
+            total={all.length}
+            onPage={setPage}
+            noun="walk-ins"
+          />
+        )}
         <div className="flex flex-wrap justify-between gap-3 border-t border-line px-4 py-3.5 text-sm text-ink-muted">
           <span>
             {stats.total} {stats.total === 1 ? 'walk-in' : 'walk-ins'} today ·{' '}
@@ -372,6 +371,7 @@ export function WalkInRecordsPage() {
             setRange('today');
             setStatus('All');
             setSearch('');
+            setPage(1);
             flashRow(visit.id);
             showToast({
               title: `Walk-in registered · ${formatTime(visit.timeIn)}`,

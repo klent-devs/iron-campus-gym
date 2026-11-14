@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout.jsx';
-import { EmptyState } from './components/ui/index.js';
+import { Card, EmptyState } from './components/ui/index.js';
 import { Button } from './components/ui/Button.jsx';
 import { AttendanceRecordsPage } from './features/attendance/AttendanceRecordsPage.jsx';
 import { ScannerPage } from './features/attendance/ScannerPage.jsx';
@@ -39,12 +39,19 @@ function OwnerOnly() {
   const staff = useStaff();
   if (isOwner(staff)) return <Outlet />;
   return (
-    <EmptyState
-      icon="lock"
-      title="Only the Owner can open this page"
-      message="Ask the gym owner if something here needs to change."
-      action={<Button to="/">Back to Overview</Button>}
-    />
+    // Same look as "Page not found": a card with the message and an orange button.
+    <Card>
+      <EmptyState
+        icon="lock"
+        title="Only the Owner can open this page"
+        message="Ask the gym owner if something here needs to change."
+        action={
+          <Button to="/" variant="primary">
+            Go to Overview
+          </Button>
+        }
+      />
+    </Card>
   );
 }
 

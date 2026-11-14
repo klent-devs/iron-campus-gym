@@ -1,6 +1,7 @@
+import { dateFormat } from '@icg/shared';
 /** Small wording helpers for the member app. */
 
-const HOUR = new Intl.DateTimeFormat('en-GB', {
+const HOUR = dateFormat('en-GB', {
   hour: '2-digit',
   hourCycle: 'h23',
   timeZone: 'Asia/Manila',
@@ -16,7 +17,7 @@ export function visitPart(timeIn) {
 
 /** 'YYYY-MM-DD' → "Mon, 09 Nov". */
 export function shortDay(d) {
-  return new Intl.DateTimeFormat('en-GB', {
+  return dateFormat('en-GB', {
     weekday: 'short',
     day: '2-digit',
     month: 'short',

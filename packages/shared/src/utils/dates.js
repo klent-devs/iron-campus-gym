@@ -23,9 +23,26 @@ function fromUtc(ms) {
   return new Date(ms).toISOString().slice(0, 10);
 }
 
+const formatters = new Map();
+
+/**
+ * The same as `new Intl.DateTimeFormat(locale, options)`, but made only once and then reused.
+ * Making a formatter is slow (about half a millisecond). Pages that format thousands of dates
+ * (e.g. Attendance with 5,000 check-ins) took several seconds to open before this.
+ */
+export function dateFormat(locale, options) {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let f = formatters.get(key);
+  if (!f) {
+    f = new Intl.DateTimeFormat(locale, options);
+    formatters.set(key, f);
+  }
+  return f;
+}
+
 /** Today's date in the gym's timezone, e.g. '2026-11-09'. */
 export function todayInGym(now = new Date(), timeZone = GYM_TIMEZONE) {
-  return new Intl.DateTimeFormat('en-CA', {
+  return dateFormat('en-CA', {
     timeZone,
     year: 'numeric',
     month: '2-digit',
@@ -82,7 +99,7 @@ export function formatDate(isoDate) {
 /** ISO timestamp → '10:38 AM' in gym time. */
 export function formatTime(timestamp, timeZone = GYM_TIMEZONE) {
   if (!timestamp) return '—';
-  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone }).format(
+  return dateFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone }).format(
     new Date(timestamp),
   );
 }

@@ -2,7 +2,7 @@
  * Live clock helpers for the front desk: current gym time, greeting and whether the gym is open.
  * Always uses the gym's time zone (Asia/Manila), whatever the PC's own time zone is set to.
  */
-import { GYM_TIMEZONE, formatDate, todayInGym } from './dates.js';
+import { GYM_TIMEZONE, dateFormat, formatDate, todayInGym } from './dates.js';
 
 /** Minutes after the gym closes are counted as "closing soon" when they are this close. */
 export const CLOSING_SOON_MINUTES = 60;
@@ -42,7 +42,7 @@ export function formatTimeOfDay(value) {
 
 /** The gym's wall-clock time right now: { hours: 0–23, minutes, seconds }. */
 export function gymTimeParts(now = new Date(), timeZone = GYM_TIMEZONE) {
-  const parts = new Intl.DateTimeFormat('en-GB', {
+  const parts = dateFormat('en-GB', {
     timeZone,
     hour: '2-digit',
     minute: '2-digit',
@@ -55,7 +55,7 @@ export function gymTimeParts(now = new Date(), timeZone = GYM_TIMEZONE) {
 
 /** Big clock text: '10:42:15 AM' (or '10:42 AM' with seconds: false), in gym time. */
 export function formatClock(now = new Date(), { seconds = true, timeZone = GYM_TIMEZONE } = {}) {
-  return new Intl.DateTimeFormat('en-US', {
+  return dateFormat('en-US', {
     timeZone,
     hour: 'numeric',
     minute: '2-digit',
@@ -66,7 +66,7 @@ export function formatClock(now = new Date(), { seconds = true, timeZone = GYM_T
 }
 
 const weekdayIn = (now, timeZone, weekday) =>
-  new Intl.DateTimeFormat('en-US', { timeZone, weekday }).format(now);
+  dateFormat('en-US', { timeZone, weekday }).format(now);
 
 /** 'Wednesday, 11 Nov 2026' in gym time. */
 export function formatLongDate(now = new Date(), timeZone = GYM_TIMEZONE) {

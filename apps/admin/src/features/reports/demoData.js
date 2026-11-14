@@ -14,6 +14,7 @@ import {
   INVENTORY_CATEGORIES,
   STOCK_STATUS,
   addDays,
+  dateFormat,
   daysBetween,
   formatDate,
   formatPeso,
@@ -115,7 +116,7 @@ export function formatPeriod({ from, to }) {
 }
 
 const dayLabel = (date) =>
-  `${new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(
+  `${dateFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(
     new Date(`${date}T00:00:00Z`),
   )} ${formatDate(date).slice(0, 6)}`;
 const num = (n) => n.toLocaleString('en-PH');

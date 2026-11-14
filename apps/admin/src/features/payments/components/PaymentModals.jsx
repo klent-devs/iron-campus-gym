@@ -138,7 +138,7 @@ export function RecordPaymentModal({ onClose, onSaved, initialOwedId = null }) {
               Renew Membership
             </Button>
             <Button to="/members/new" icon="userAdd" className="h-14">
-              Add New Member
+              Add Member
             </Button>
           </div>
         )}

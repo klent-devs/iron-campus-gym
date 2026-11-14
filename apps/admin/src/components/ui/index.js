@@ -19,11 +19,13 @@ export { Switch } from './Switch.jsx';
 export {
   ChoiceCards,
   FieldError,
+  FilterSelect,
   IconInput,
   INPUT,
   InfoBox,
   Label,
   OptionGroup,
+  SearchBox,
   SummaryRow,
   TextField,
   inputBorder,

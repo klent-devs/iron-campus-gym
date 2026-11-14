@@ -25,7 +25,7 @@ const MONITOR_FILTERS = [
   { value: MEMBERSHIP_STATUS.EXPIRING_SOON, label: 'Expiring Soon' },
   { value: MEMBERSHIP_STATUS.EXPIRED, label: 'Expired' },
 ];
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 25; // same as Members, Payments and Attendance Records
 const emptyPlan = {
   id: null,
   name: '',
@@ -61,6 +61,16 @@ export function PlansPage() {
     const counts = {};
     for (const m of members) if (canEnter(m.status)) counts[m.planId] = (counts[m.planId] ?? 0) + 1;
     return counts;
+  }, [members]);
+  // Counts on the filter buttons, like on the Members page.
+  const monitorCounts = useMemo(() => {
+    const c = { all: 0 };
+    for (const m of members) {
+      if (!m.endDate || m.status === MEMBERSHIP_STATUS.SUSPENDED) continue;
+      c.all += 1;
+      c[m.status] = (c[m.status] ?? 0) + 1;
+    }
+    return c;
   }, [members]);
   const monitored = useMemo(
     () =>
@@ -148,27 +158,17 @@ export function PlansPage() {
     <>
       <PageHeader
         title="Membership Plans"
-        subtitle="Set your prices and watch who needs to renew."
-        crumbs={[{ to: '/members', label: 'Members' }, { label: 'Membership Plans' }]}
-        actions={
-          owner && (
-            <Button
-              variant="plainPrimary"
-              onClick={() => {
-                setForm(emptyPlan);
-                setErrors({});
-                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => document.getElementById(ids.name)?.focus(), 300);
-              }}
-            >
-              + Add Membership Plan
-            </Button>
-          )
+        subtitle={
+          owner
+            ? 'Set the prices and lengths of plans, and see who needs to renew.'
+            : 'Plans and prices for new members and renewals. Only the Owner can change them.'
         }
+        crumbs={[{ to: '/members', label: 'Members' }, { label: 'Membership Plans' }]}
       />
 
       <div className="flex flex-wrap items-start gap-4">
         <div className="grid min-w-0 flex-[2_1_560px] grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4">
+          {/* The Add Membership Plan form is always on the right, so there is no extra button for it. */}
           {data.plans.map((p) => (
             <article
               key={p.id}
@@ -185,12 +185,11 @@ export function PlansPage() {
                 </span>
               </div>
               <h3 className="mt-3.5 text-[19px] font-semibold">{p.name}</h3>
-              <div className="mt-1 font-heading text-[30px] font-bold">
-                {formatPeso(p.price).replace('.00', '')}
-                <span className="font-sans text-sm font-medium text-ink-muted">
-                  {' '}
-                  / {p.durationMonths} {p.durationMonths === 1 ? 'month' : 'months'}
-                </span>
+              <div className="mt-1 font-heading text-[26px] font-bold leading-tight">
+                {formatPeso(p.price)}
+              </div>
+              <div className="text-sm font-medium text-ink-muted">
+                for {p.durationMonths} {p.durationMonths === 1 ? 'month' : 'months'}
               </div>
               <p className="mb-4 mt-2 min-h-[42px] flex-1 text-sm leading-normal text-ink-muted">
                 {p.description}
@@ -200,7 +199,12 @@ export function PlansPage() {
                   <Button size="sm" icon="edit" className="flex-1" onClick={() => edit(p)}>
                     Edit
                   </Button>
-                  <Button size="sm" className="flex-1" onClick={() => toggle(p)}>
+                  <Button
+                    size="sm"
+                    icon={p.isActive ? 'ban' : 'check'}
+                    className="flex-1"
+                    onClick={() => toggle(p)}
+                  >
                     {p.isActive ? 'Deactivate' : 'Activate'}
                   </Button>
                 </div>
@@ -209,14 +213,14 @@ export function PlansPage() {
           ))}
         </div>
 
-        <section
-          ref={formRef}
-          className="w-full rounded-card border border-line bg-card p-[22px] lg:w-auto lg:flex-[1_1_320px]"
-        >
-          <h2 className="text-[18px] font-semibold">
-            {form.id ? `Edit ${form.name || 'Plan'}` : 'Add Membership Plan'}
-          </h2>
-          {owner ? (
+        {owner && (
+          <section
+            ref={formRef}
+            className="w-full rounded-card border border-line bg-card p-[22px] lg:w-auto lg:flex-[1_1_320px]"
+          >
+            <h2 className="text-[18px] font-semibold">
+              {form.id ? `Edit ${form.name || 'Plan'}` : 'Add Membership Plan'}
+            </h2>
             <form noValidate onSubmit={save} className="mt-4 flex flex-col gap-3.5">
               <TextField
                 id={ids.name}
@@ -278,13 +282,8 @@ export function PlansPage() {
                 renewals only.
               </p>
             </form>
-          ) : (
-            <p className="mt-3 text-sm text-ink-muted">
-              Only the Owner can add or change plans and prices. Ask the gym owner if a price is
-              wrong.
-            </p>
-          )}
-        </section>
+          </section>
+        )}
       </div>
 
       <section className="overflow-hidden rounded-card border border-line bg-card">
@@ -297,7 +296,7 @@ export function PlansPage() {
               setFilter(v);
               setPage(1);
             }}
-            options={MONITOR_FILTERS}
+            options={MONITOR_FILTERS.map((f) => ({ ...f, count: monitorCounts[f.value] ?? 0 }))}
           />
         </div>
         <div className="overflow-x-auto">

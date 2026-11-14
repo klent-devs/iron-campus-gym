@@ -181,13 +181,12 @@ export function ReportsPage() {
                 title={r.desc}
                 onClick={() => pickType(r.key)}
                 onKeyDown={(e) => onTabKey(e, index)}
-                className={`relative -mb-px inline-flex h-12 flex-none items-center gap-2.5 whitespace-nowrap rounded-t-btn border-b-2 px-5 text-[15px] font-semibold transition-colors focus-visible:ring-inset focus-visible:ring-offset-0 ${
-                  on
-                    ? 'border-ink bg-card-2 text-ink'
-                    : 'border-transparent text-ink-muted hover:bg-card-2/60 hover:text-ink'
+                // Same tabs as the Member Profile: orange line under the open one.
+                className={`relative -mb-px inline-flex h-12 flex-none items-center gap-2.5 whitespace-nowrap border-b-[3px] px-4 text-[15px] font-semibold transition-colors focus-visible:ring-inset focus-visible:ring-offset-0 ${
+                  on ? 'border-brand text-ink' : 'border-transparent text-ink-muted hover:text-ink'
                 }`}
               >
-                <Icon name={r.icon} size={20} className={on ? 'text-ink' : 'text-ink-dim'} />
+                <Icon name={r.icon} size={20} className={on ? 'text-brand-text' : 'text-ink-dim'} />
                 {r.short}
               </button>
             );
@@ -267,7 +266,7 @@ export function ReportsPage() {
                     setForm((f) => ({ ...f, ...p }));
                     setError('');
                   }}
-                  className={`h-9 rounded-full border px-3.5 text-[13px] font-semibold transition duration-150 motion-safe:active:scale-95 ${
+                  className={`h-11 rounded-full border px-4 text-[13px] font-semibold transition duration-150 motion-safe:active:scale-95 ${
                     on
                       ? 'border-ink-muted/70 bg-line text-ink'
                       : 'border-line text-ink-soft hover:bg-card-2 hover:text-ink'

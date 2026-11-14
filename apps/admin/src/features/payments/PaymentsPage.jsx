@@ -1,18 +1,27 @@
-import { PAYMENT_TYPE, addDays, addMonths, formatDate, formatPeso, formatTime } from '@icg/shared';
+import {
+  PAYMENT_TYPE,
+  addDays,
+  addMonths,
+  dateFormat,
+  formatDate,
+  formatPeso,
+  formatTime,
+} from '@icg/shared';
 import { PAYMENT_TONE, actions, dayOf, paymentsView } from '@icg/demo-data';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Button,
   EmptyState,
-  Icon,
-  INPUT,
+  FilterSelect,
   PageHeader,
   Pagination,
   Presence,
+  STAT_GRID,
+  SearchBox,
+  StatCard,
   StatusBadge,
   Toast,
-  inputBorder,
   usePrint,
   useToast,
 } from '../../components/ui/index.js';
@@ -109,7 +118,7 @@ export function PaymentsPage() {
       todayCount: todays.length,
       month: sum(inMonth),
       change,
-      lastMonthName: new Intl.DateTimeFormat('en-GB', { month: 'long', timeZone: 'UTC' }).format(
+      lastMonthName: dateFormat('en-GB', { month: 'long', timeZone: 'UTC' }).format(
         new Date(`${lastFrom}T00:00:00Z`),
       ),
       membership: sum(inMonth.filter((p) => isMembership(p.type))),
@@ -138,16 +147,6 @@ export function PaymentsPage() {
   };
 
   const methods = data.paymentMethods;
-  const tile = (label, value, note, accent = false) => (
-    <div className="rounded-card border border-line bg-card px-5 py-[18px]">
-      <span className="text-sm text-ink-muted">{label}</span>
-      <b className={`mt-1 block font-heading text-[28px] ${accent ? 'text-brand-text' : ''}`}>
-        {value}
-      </b>
-      <span className="text-[13px] text-ink-muted">{note}</span>
-    </div>
-  );
-  const shortPeso = (n) => formatPeso(n).replace(/\.00$/, '');
 
   return (
     <>
@@ -170,26 +169,38 @@ export function PaymentsPage() {
       />
 
       {owner && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 min-[1100px]:grid-cols-4">
-          {tile(
-            'Today’s Collections',
-            shortPeso(stats.today),
-            `${stats.todayCount} payments`,
-            true,
-          )}
-          {tile(
-            'Monthly Collections',
-            shortPeso(stats.month),
-            stats.change === null
-              ? 'Nothing to compare yet'
-              : `${stats.change >= 0 ? '▲' : '▼'} ${Math.abs(stats.change).toFixed(1)}% vs ${stats.lastMonthName}`,
-          )}
-          {tile('Membership Payments', shortPeso(stats.membership), 'This month')}
-          {tile(
-            'Walk-in Payments',
-            shortPeso(stats.walkin),
-            `This month · ${stats.walkinVisits} visits`,
-          )}
+        <div className={STAT_GRID}>
+          <StatCard
+            label="Today’s Collections"
+            icon="cash"
+            tone="brand"
+            value={formatPeso(stats.today)}
+            note={`${stats.todayCount} ${stats.todayCount === 1 ? 'payment' : 'payments'}`}
+          />
+          <StatCard
+            label="Monthly Collections"
+            icon="peso"
+            value={formatPeso(stats.month)}
+            delta={
+              stats.change === null
+                ? undefined
+                : `${stats.change >= 0 ? '▲' : '▼'} ${Math.abs(stats.change).toFixed(1)}%`
+            }
+            deltaTone={stats.change === null ? 'neutral' : stats.change >= 0 ? 'up' : 'down'}
+            note={stats.change === null ? 'Nothing to compare yet' : `vs ${stats.lastMonthName}`}
+          />
+          <StatCard
+            label="Memberships"
+            icon="users"
+            value={formatPeso(stats.membership)}
+            note="This month"
+          />
+          <StatCard
+            label="Walk-in Payments"
+            icon="walk"
+            value={formatPeso(stats.walkin)}
+            note={`This month · ${stats.walkinVisits} visits`}
+          />
         </div>
       )}
 
@@ -198,24 +209,16 @@ export function PaymentsPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 p-4">
             <h2 className="text-[18px] font-semibold">Transaction History</h2>
             <div className="flex flex-wrap gap-2.5">
-              <label className="relative">
-                <span className="sr-only">Search transactions</span>
-                <Icon
-                  name="search"
-                  size={16}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
-                />
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => {
-                    setQuery(e.target.value);
-                    setPage(1);
-                  }}
-                  placeholder="Transaction no. or name"
-                  className={`${INPUT} ${inputBorder()} h-11 w-[200px] pl-9 text-sm`}
-                />
-              </label>
+              <SearchBox
+                label="Search transactions"
+                className="w-[250px]"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Transaction no. or name"
+              />
               {[
                 ['Type', type, setType, TYPES],
                 [
@@ -226,23 +229,21 @@ export function PaymentsPage() {
                 ],
                 ['Status', status, setStatus, STATUSES],
               ].map(([label, value, setter, opts]) => (
-                <select
+                <FilterSelect
                   key={label}
-                  aria-label={label}
+                  label={label}
                   value={value}
                   onChange={(e) => {
                     setter(e.target.value);
                     setPage(1);
                   }}
-                  // Not INPUT: its w-full beat w-auto, so each dropdown stretched to a full row.
-                  className={`${inputBorder()} h-11 w-auto cursor-pointer rounded-btn border bg-sidebar pl-3.5 pr-8 text-sm text-ink outline-none transition focus-visible:ring-0 focus-visible:ring-offset-0`}
                 >
                   {opts.map(([v, l]) => (
                     <option key={v} value={v}>
                       {l}
                     </option>
                   ))}
-                </select>
+                </FilterSelect>
               ))}
             </div>
           </div>
@@ -320,19 +321,27 @@ export function PaymentsPage() {
                           <StatusBadge tone={PAYMENT_TONE[p.status]}>{p.statusLabel}</StatusBadge>
                         </td>
                         <td className="border-t border-line px-4 py-3 text-right">
-                          {/* Buttons stack on narrow laptops so the table never needs a sideways scroll. */}
-                          <span className="flex flex-wrap justify-end gap-2">
+                          {/* Short labels so both buttons sit on one line on a 1366 px laptop. */}
+                          <span className="flex justify-end gap-1.5 whitespace-nowrap">
                             <Button size="sm" onClick={() => setSelected(p)}>
                               View
                             </Button>
                             <Button
                               size="sm"
+                              icon="printer"
+                              aria-label={`Print receipt ${p.txnNo}`}
+                              disabled={p.status !== 'paid'}
+                              title={
+                                p.status === 'paid'
+                                  ? undefined
+                                  : 'Only paid payments can be printed'
+                              }
                               onClick={() => {
                                 setSelected(p);
                                 if (p.status === 'paid') setDialog({ kind: 'print', payment: p });
                               }}
                             >
-                              Print Receipt
+                              Print
                             </Button>
                           </span>
                         </td>

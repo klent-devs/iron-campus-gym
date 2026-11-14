@@ -1,4 +1,4 @@
-import { addDays, formatDate, formatTime } from '@icg/shared';
+import { addDays, dateFormat, formatDate, formatTime } from '@icg/shared';
 import { actions, dayOf, memberNotifications } from '@icg/demo-data';
 import { Icon } from '../../components/Icon.jsx';
 import { Screen } from '../../components/ui.jsx';
@@ -17,7 +17,7 @@ function when(at, today) {
   const d = dayOf(at);
   if (d === today) return formatTime(at);
   if (d > addDays(today, -7))
-    return new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(
+    return dateFormat('en-GB', { weekday: 'short', timeZone: 'UTC' }).format(
       new Date(`${d}T00:00:00Z`),
     );
   return formatDate(d).slice(0, 6);

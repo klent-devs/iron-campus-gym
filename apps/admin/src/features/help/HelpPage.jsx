@@ -21,7 +21,7 @@ const TOPICS = [
     to: '/members/new',
     page: 'Add Member',
     steps: [
-      'Members → + Add New Member.',
+      'Members → + Add Member.',
       'Fill in the name and number, pick a plan, record the payment.',
       'Print the QR card. If they were a walk-in, their history is linked automatically.',
     ],
@@ -65,7 +65,7 @@ const TOPICS = [
     to: '/inventory',
     page: 'Inventory',
     steps: [
-      'Inventory → Add Stock for deliveries, Stock Out for items used, damaged or sold.',
+      'Inventory → Stock In for deliveries, Stock Out for items used, damaged or sold.',
       'Stock can’t go below 0. Every change is kept in the item’s history.',
     ],
   },

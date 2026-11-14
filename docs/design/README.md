@@ -69,6 +69,19 @@ Pending, voided and refunded payments show a status note on the receipt, and Pri
 disabled until a payment is Paid. The SMS text uses "PHP" instead of "₱" so it fits in one 160-character
 SMS. "OFFICIAL RECEIPT" wording is pending the gym accountant's advice (BIR rules).
 
+**UI polish (owner's request, 13 Nov 2026)** — differences from the designs, kept on purpose:
+- Small buttons (table rows, pages) are 44 px tall, not 36 px (rule: buttons ≥ 44 px).
+- Filter rows: search box, dropdowns and filter buttons are all 44 px, with counts on filter buttons.
+- Payments and Inventory summary cards use the Dashboard card style (icon + title).
+- Summary cards: only problem cards (Unpaid, Rejected Today, Out of Stock) have a red border; highlighted
+  cards (Currently Inside, Today's Collections, Low Stock) keep the grey border with an orange number (14 Nov 2026).
+- Inventory rows: **Update Stock**, Edit (Owner), History. Header: Stock In, Stock Out, + Add Item.
+- Payments rows: **View** and **Print** (printer icon). Members: sorted by name, with a Sort dropdown.
+- Walk-in rows: an unpaid walk-in shows Record Payment instead of Complete Visit.
+- Reports tabs use the Member Profile tab style (orange line under the open tab).
+- Settings: Save Changes only in the bar at the bottom (shows when something changed); times are
+  picked as "6:00 AM". The Receptionist's version is titled **Change Password**.
+
 ## Member portal
 
 `MLogin`, `MHome`, `MMembership`, `MQR`, `MAttendance`, `MPayments`, `MProfile`, `MNotifications`

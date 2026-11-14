@@ -23,6 +23,7 @@ const VALUE_TONES = {
 
 /**
  * `tone="danger"` gives a red border and red number (e.g. money still unpaid).
+ * `tone="brand"` gives an orange number only (e.g. people inside now).
  * `className` / `style` are for page animations; the size never changes, so every page matches.
  */
 export function StatCard({
@@ -41,11 +42,9 @@ export function StatCard({
     <section
       // The card is a size container so the big number can shrink with the card (cqi units).
       className={`flex min-w-0 flex-col gap-3 rounded-card border bg-card px-5 py-[18px] transition-colors duration-500 [container-type:inline-size] ${
-        tone === 'danger'
-          ? 'border-danger/50'
-          : tone === 'brand'
-            ? 'border-brand/45'
-            : 'border-line'
+        // Only problems (danger) get a coloured border. "brand" cards keep the plain grey border
+        // and show their number in orange (owner's choice, 14 Nov 2026).
+        tone === 'danger' ? 'border-danger/50' : 'border-line'
       } ${className}`}
       title={title}
       style={style}

@@ -1,4 +1,4 @@
-import { formatDate, formatDuration, formatPeso, formatTime } from '@icg/shared';
+import { dateFormat, formatDate, formatDuration, formatPeso, formatTime } from '@icg/shared';
 import { dayOf, indexes, memberNotifications, methodName, reminderDate } from '@icg/demo-data';
 import { Link } from 'react-router-dom';
 import { Icon, LogoMark } from '../../components/Icon.jsx';
@@ -7,11 +7,9 @@ import { visitPart } from '../../lib/format.js';
 import { STATUS_WORD, useMemberInfo } from '../../lib/useMemberInfo.js';
 
 const weekday = (d, style = 'long') =>
-  new Intl.DateTimeFormat('en-GB', { weekday: style, timeZone: 'UTC' }).format(
-    new Date(`${d}T00:00:00Z`),
-  );
+  dateFormat('en-GB', { weekday: style, timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`));
 const dayMonth = (d) =>
-  new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
+  dateFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
     new Date(`${d}T00:00:00Z`),
   );
 

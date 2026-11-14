@@ -31,7 +31,7 @@ export function planDetail(plan) {
   const length = plan.durationMonths
     ? `${plan.durationMonths} ${plan.durationMonths === 1 ? 'month' : 'months'}`
     : `${plan.durationDays} days`;
-  return `${formatPeso(plan.price).replace('.00', '')} · ${length}`;
+  return `${formatPeso(plan.price)} · ${length}`;
 }
 
 /** Field names from the sample data → the boxes on this form. */

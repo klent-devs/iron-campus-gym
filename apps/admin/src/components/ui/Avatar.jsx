@@ -12,7 +12,7 @@ export function Avatar({ name, size = 'sm', className = '' }) {
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex flex-none items-center justify-center rounded-full bg-[#2A2C31] font-heading font-semibold ${SIZES[size]} ${className}`}
+      className={`inline-flex flex-none items-center justify-center rounded-full bg-line font-heading font-semibold ${SIZES[size]} ${className}`}
     >
       {initials(name)}
     </span>

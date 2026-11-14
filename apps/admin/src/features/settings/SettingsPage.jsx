@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { LogoMark } from '../../assets/Logo.jsx';
 import {
   Button,
+  FilterSelect,
   Modal,
   PageHeader,
   Presence,
@@ -27,6 +28,21 @@ const SECTIONS = [
   ['pw', 'Change Password'],
   ['sample', 'Sample Data'],
 ];
+
+/** "06:00" → "6:00 AM", like every other time in the system. */
+const timeLabel = (hhmm) => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+};
+/** Opening and closing times to pick from: every 30 minutes (plus the saved one, if different). */
+const timeOptions = (current) => {
+  const list = Array.from(
+    { length: 48 },
+    (_, i) => `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`,
+  );
+  if (current && !list.includes(current)) list.push(current);
+  return list.sort();
+};
 
 const settingsForm = (s) => ({
   gymName: s.gymName,
@@ -67,8 +83,9 @@ export function SettingsPage() {
   };
 
   useEffect(() => {
-    document.title = 'Settings · IRON CAMPUS GYM';
-  }, []);
+    // The Receptionist only has her password here (she opens it from the menu under her name).
+    document.title = `${owner ? 'Settings' : 'Change Password'} · IRON CAMPUS GYM`;
+  }, [owner]);
 
   const dirty = JSON.stringify(form) !== JSON.stringify(settingsForm(data.settings));
   const set = (k) => (e) => {
@@ -111,19 +128,13 @@ export function SettingsPage() {
 
   return (
     <>
+      {/* Save Changes shows in a bar at the bottom as soon as something is changed. */}
       <PageHeader
-        title="Settings"
+        title={owner ? 'Settings' : 'Change Password'}
         subtitle={
           owner
-            ? 'Only the Owner can change these. Receptionists see Change Password only.'
-            : 'Only the Owner can change the gym settings. You can change your own password here.'
-        }
-        actions={
-          owner && (
-            <Button variant="plainPrimary" onClick={save} disabled={!dirty}>
-              Save Changes
-            </Button>
-          )
+            ? 'Gym details, payment methods, capacity and walk-in fees. Only you can change these.'
+            : 'Change the password you use to sign in. Gym settings are changed by the Owner.'
         }
       />
       <div className="flex flex-wrap items-start gap-4">
@@ -162,7 +173,7 @@ export function SettingsPage() {
         <div className="flex min-w-0 flex-[3_1_560px] flex-col gap-4">
           {owner && (
             <>
-              <Card id="info" title="Gym Information" owner>
+              <Card id="info" title="Gym Information">
                 <div className="my-[18px] flex flex-wrap items-center gap-[18px]">
                   <div className="flex h-[88px] w-[88px] items-center justify-center rounded-[20px] border border-line bg-sidebar">
                     <LogoMark size={56} />
@@ -192,7 +203,7 @@ export function SettingsPage() {
                   <TextField
                     id={ids.contact}
                     label="Contact Number"
-                    placeholder="[CONTACT NO.]"
+                    placeholder="e.g. 0917 123 4567"
                     value={form.contactNumber}
                     onChange={set('contactNumber')}
                     error={errors.contactNumber}
@@ -201,32 +212,36 @@ export function SettingsPage() {
                     id={ids.address}
                     className="sm:col-span-2"
                     label="Address"
-                    placeholder="[GYM ADDRESS]"
+                    placeholder="e.g. 123 Rizal Ave., Sampaloc, Manila"
                     value={form.address}
                     onChange={set('address')}
                   />
-                  <TextField
-                    id={ids.opens}
-                    label="Opening Time"
-                    type="time"
-                    value={form.opensAt}
-                    onChange={set('opensAt')}
-                    error={errors.opensAt}
-                  />
-                  <TextField
-                    id={ids.closes}
-                    label="Closing Time"
-                    type="time"
-                    value={form.closesAt}
-                    onChange={set('closesAt')}
-                    error={errors.closesAt}
-                  />
+                  {[
+                    [ids.opens, 'Opening Time', 'opensAt'],
+                    [ids.closes, 'Closing Time', 'closesAt'],
+                  ].map(([id, label, key]) => (
+                    <TextField
+                      key={key}
+                      id={id}
+                      as="select"
+                      label={label}
+                      value={form[key]}
+                      onChange={set(key)}
+                      error={errors[key]}
+                    >
+                      {timeOptions(form[key]).map((t) => (
+                        <option key={t} value={t}>
+                          {timeLabel(t)}
+                        </option>
+                      ))}
+                    </TextField>
+                  ))}
                 </div>
               </Card>
 
               <div className="flex flex-wrap items-start gap-4">
                 <PaymentMethodsCard showToast={showToast} />
-                <Card id="cap" title="Gym Capacity" owner className="flex-[1_1_300px]">
+                <Card id="cap" title="Gym Capacity" className="flex-[1_1_300px]">
                   <div className="mt-4">
                     <TextField
                       id={ids.cap}
@@ -257,21 +272,22 @@ export function SettingsPage() {
                         “Almost full” on the dashboard
                       </span>
                     </label>
-                    <select
+                    <FilterSelect
                       id={ids.warn}
+                      label="Warn the front desk at"
+                      className="w-[110px] flex-none"
                       value={form.warningPct}
                       onChange={set('warningPct')}
-                      className="h-11 w-[110px] cursor-pointer rounded-btn border border-line bg-sidebar px-3 text-[15px]"
                     >
                       <option value="90">90%</option>
                       <option value="80">80%</option>
                       <option value="70">70%</option>
-                    </select>
+                    </FilterSelect>
                   </div>
                 </Card>
               </div>
 
-              <Card id="fees" title="Walk-in Fees" owner>
+              <Card id="fees" title="Walk-in Fees">
                 <p className="mt-1 text-[13px] text-ink-muted">
                   Day-pass prices used by Register Walk-in. Past visits keep their price.
                 </p>
@@ -301,10 +317,8 @@ export function SettingsPage() {
                     You have changes that are not saved yet.
                   </span>
                   <span className="flex gap-2">
-                    <Button size="sm" onClick={() => setForm(settingsForm(data.settings))}>
-                      Undo
-                    </Button>
-                    <Button size="sm" variant="primary" onClick={save}>
+                    <Button onClick={() => setForm(settingsForm(data.settings))}>Undo</Button>
+                    <Button variant="primary" onClick={save}>
                       Save Changes
                     </Button>
                   </span>
@@ -315,29 +329,31 @@ export function SettingsPage() {
 
           <ChangePasswordCard showToast={showToast} />
 
-          <Card id="sample" title="Sample Data">
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              The database is not connected yet. Everything you add or change (members, payments,
-              check-ins, stock, settings) is saved <b>in this browser only</b>, and survives closing
-              the page. Another computer or browser has its own copy.
-              {!demo.persistent && (
-                <b className="mt-2 block text-warning-text">
-                  This browser is not saving changes (private window or blocked site data). They are
-                  lost when the page is closed.
-                </b>
+          {owner && (
+            <Card id="sample" title="Sample Data">
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                The database is not connected yet. Everything you add or change (members, payments,
+                check-ins, stock, settings) is saved <b>in this browser only</b>, and survives
+                closing the page. Another computer or browser has its own copy.
+                {!demo.persistent && (
+                  <b className="mt-2 block text-warning-text">
+                    This browser is not saving changes (private window or blocked site data). They
+                    are lost when the page is closed.
+                  </b>
+                )}
+              </p>
+              {owner && (
+                <Button
+                  variant="outline"
+                  icon="refresh"
+                  className="mt-4"
+                  onClick={() => setConfirmReset(true)}
+                >
+                  Start Over with Fresh Sample Data
+                </Button>
               )}
-            </p>
-            {owner && (
-              <Button
-                variant="outline"
-                icon="refresh"
-                className="mt-4"
-                onClick={() => setConfirmReset(true)}
-              >
-                Start Over with Fresh Sample Data
-              </Button>
-            )}
-          </Card>
+            </Card>
+          )}
         </div>
       </div>
 
@@ -379,7 +395,8 @@ export function SettingsPage() {
   );
 }
 
-function Card({ id, title, owner = false, className = '', children }) {
+/** A settings box. (No "Owner only" label: the whole page is the Owner's.) */
+function Card({ id, title, className = '', children }) {
   return (
     <section
       id={`settings-${id}`}
@@ -387,11 +404,6 @@ function Card({ id, title, owner = false, className = '', children }) {
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-[18px] font-semibold">{title}</h2>
-        {owner && (
-          <span className="inline-flex h-6 items-center rounded-full bg-brand/[0.14] px-2.5 text-xs font-bold text-[#FF7A50]">
-            Owner only
-          </span>
-        )}
       </div>
       {children}
     </section>
@@ -430,7 +442,7 @@ function PaymentMethodsCard({ showToast }) {
     }
   };
   return (
-    <Card id="pay" title="Payment Methods" owner className="flex-[1_1_300px]">
+    <Card id="pay" title="Payment Methods" className="flex-[1_1_300px]">
       <div className="mt-2.5">
         {data.paymentMethods.map((m) => (
           <div
